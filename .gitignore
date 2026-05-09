@@ -3,4 +3,5 @@ node_modules
 out
 .env*
 .DS_Store
+tsconfig.tsbuildinfo
 微信图片_*.jpg
