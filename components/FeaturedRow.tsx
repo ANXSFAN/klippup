@@ -23,13 +23,13 @@ export default function FeaturedRow({
     <section className="mt-5">
       <div className="max-w-[2000px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between mb-2">
-          <h3 className="text-[13px] font-semibold text-white/90">Featured</h3>
+          <h3 className="text-[13px] font-semibold text-ink/90">Featured</h3>
           <div className="hidden sm:flex items-center gap-1.5">
             <button
               type="button"
               onClick={() => scroll("left")}
               aria-label="scroll left"
-              className="w-7 h-7 rounded-full bg-white/[0.05] hover:bg-white/[0.1] flex items-center justify-center text-white/80 transition"
+              className="w-7 h-7 rounded-full bg-black/[0.04] hover:bg-black/[0.08] flex items-center justify-center text-black/70 transition"
             >
               <ChevronLeftIcon size={14} />
             </button>
@@ -37,7 +37,7 @@ export default function FeaturedRow({
               type="button"
               onClick={() => scroll("right")}
               aria-label="scroll right"
-              className="w-7 h-7 rounded-full bg-white/[0.05] hover:bg-white/[0.1] flex items-center justify-center text-white/80 transition"
+              className="w-7 h-7 rounded-full bg-black/[0.04] hover:bg-black/[0.08] flex items-center justify-center text-black/70 transition"
             >
               <ChevronRightIcon size={14} />
             </button>

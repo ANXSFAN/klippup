@@ -83,7 +83,7 @@ export default function CampaignModal({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full sm:max-w-[860px] sm:my-10 max-h-[100dvh] sm:max-h-[92vh] overflow-y-auto bg-[#0a0a0a] sm:rounded-card shadow-card border border-white/[0.08]"
+        className="relative w-full sm:max-w-[860px] sm:my-10 max-h-[100dvh] sm:max-h-[92vh] overflow-y-auto bg-bg sm:rounded-card shadow-card border border-line"
       >
         {/* mobile close */}
         <button
@@ -133,24 +133,24 @@ export default function CampaignModal({
         {/* body */}
         <div className="px-5 sm:px-6 pt-4 pb-8">
           {/* brand */}
-          <div className="flex items-center gap-2 text-[12.5px] text-white/85">
+          <div className="flex items-center gap-2 text-[12.5px] text-black/80">
             <BrandAvatar name={c.brand} size={20} />
             <span className="font-medium">{c.brand}</span>
             {c.brandVerified && <VerifiedIcon size={13} />}
           </div>
 
           {/* title */}
-          <h2 className="mt-2 text-[22px] sm:text-[26px] leading-[1.18] font-semibold text-white">
+          <h2 className="mt-2 text-[22px] sm:text-[26px] leading-[1.18] font-semibold text-ink">
             {c.title}
           </h2>
 
           {/* payout */}
           <div className="mt-3 flex items-center gap-3 flex-wrap">
             <div className="text-[14px] tabular-nums whitespace-nowrap">
-              <span className="font-semibold text-white">{formatMoney(c.raised)}</span>
-              <span className="text-white/45"> / {formatMoney(c.budget)}</span>
+              <span className="font-semibold text-ink">{formatMoney(c.raised)}</span>
+              <span className="text-black/45"> / {formatMoney(c.budget)}</span>
             </div>
-            <div className="flex-1 min-w-[140px] h-[3px] bg-white/10 rounded-full overflow-hidden">
+            <div className="flex-1 min-w-[140px] h-[3px] bg-black/[0.08] rounded-full overflow-hidden">
               <div className="h-full progress-fill" style={{ width: `${pct}%` }} />
             </div>
             <div className="flex items-center gap-1.5">
@@ -167,7 +167,7 @@ export default function CampaignModal({
           </div>
 
           {/* description */}
-          <p className="mt-4 text-[13.5px] leading-relaxed text-white/65">
+          <p className="mt-4 text-[13.5px] leading-relaxed text-black/65">
             {c.description}
           </p>
 
@@ -182,28 +182,28 @@ export default function CampaignModal({
             <button
               type="button"
               aria-label="share"
-              className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/15 transition flex items-center justify-center text-white/85"
+              className="w-9 h-9 rounded-full bg-black/[0.05] hover:bg-black/[0.09] transition flex items-center justify-center text-black/70"
             >
               <ShareIcon size={15} />
             </button>
           </div>
 
           {/* divider */}
-          <div className="mt-7 border-t border-white/[0.07]" />
+          <div className="mt-7 border-t border-line" />
 
           {/* requirements */}
           <Section title="Requirements">
-            <div className="text-[11.5px] text-white/40 mb-3">Content Requirements</div>
+            <div className="text-[11.5px] text-black/40 mb-3">Content Requirements</div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-7 gap-y-3">
               {defaultRequirements.slice(0, 5).map((r, i) => (
-                <p key={i} className="text-[12.5px] leading-relaxed text-white">
+                <p key={i} className="text-[12.5px] leading-relaxed text-ink">
                   {r}
                 </p>
               ))}
             </div>
             <button
               type="button"
-              className="mt-4 w-full flex items-center justify-center gap-1.5 text-[12px] text-white/60 hover:text-white transition"
+              className="mt-4 w-full flex items-center justify-center gap-1.5 text-[12px] text-black/55 hover:text-ink transition"
             >
               <span>Show more</span>
               <ChevronDownSmallIcon size={12} />
@@ -213,7 +213,7 @@ export default function CampaignModal({
           {/* Earnings + Analytics — side-by-side on lg, stacked on mobile */}
           <div className="mt-7 grid grid-cols-1 lg:grid-cols-2 gap-x-5 gap-y-7">
             <div>
-              <h4 className="text-[14px] font-semibold text-white mb-3">Earnings</h4>
+              <h4 className="text-[14px] font-semibold text-ink mb-3">Earnings</h4>
               <div className="grid grid-cols-2 gap-2.5">
                 {defaultEarnings.map((p) => (
                   <PlatformCard key={p.name} {...p} />
@@ -221,21 +221,21 @@ export default function CampaignModal({
               </div>
             </div>
             <div>
-              <h4 className="text-[14px] font-semibold text-white mb-3">Analytics</h4>
+              <h4 className="text-[14px] font-semibold text-ink mb-3">Analytics</h4>
               <div className="pill-glass rounded-2xl p-4 h-full flex flex-col">
                 <div className="flex items-center gap-1.5">
-                  <button className="px-3 py-1 rounded-full bg-white/[0.08] text-[12px] font-medium text-white">
+                  <button className="px-3 py-1 rounded-full bg-brand text-[12px] font-medium text-white shadow-[0_2px_6px_rgba(255,122,26,0.32)]">
                     Views
                   </button>
-                  <button className="px-3 py-1 rounded-full text-[12px] text-white/55 hover:text-white transition">
+                  <button className="px-3 py-1 rounded-full text-[12px] text-black/55 hover:text-ink transition">
                     Submissions
                   </button>
                 </div>
                 <div className="mt-3">
-                  <div className="text-[26px] font-semibold tabular-nums text-white leading-none">
+                  <div className="text-[26px] font-semibold tabular-nums text-ink leading-none">
                     {c.totalViews ?? "63.6万"}
                   </div>
-                  <div className="text-[11px] text-white/55 mt-1.5">Total views</div>
+                  <div className="text-[11px] text-black/55 mt-1.5">Total views</div>
                 </div>
                 <div className="mt-3 flex-1 min-h-[80px]">
                   <ViewsChart />
@@ -261,21 +261,21 @@ export default function CampaignModal({
                   key={i}
                   className="pill-glass rounded-2xl p-3.5 flex items-center gap-3"
                 >
-                  <div className="w-9 h-9 rounded-lg bg-white/[0.04] flex items-center justify-center shrink-0 text-white/85">
+                  <div className="w-9 h-9 rounded-lg bg-black/[0.05] flex items-center justify-center shrink-0 text-black/75">
                     {r.kind === "drive" ? <DriveIcon size={20} /> : <LinkIcon size={16} />}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-[13.5px] font-medium text-white truncate">
+                    <div className="text-[13.5px] font-medium text-ink truncate">
                       {r.name}
                     </div>
-                    <div className="text-[11.5px] text-white/55 truncate">
+                    <div className="text-[11.5px] text-black/55 truncate">
                       {r.subtitle}
                     </div>
                   </div>
                   <button
                     type="button"
                     aria-label="open"
-                    className="w-8 h-8 rounded-full hover:bg-white/[0.06] flex items-center justify-center text-white/55 hover:text-white transition shrink-0"
+                    className="w-8 h-8 rounded-full hover:bg-black/[0.05] flex items-center justify-center text-black/55 hover:text-ink transition shrink-0"
                   >
                     <ExternalLinkIcon size={14} />
                   </button>
@@ -291,7 +291,7 @@ export default function CampaignModal({
 
 function Tag({ children }: { children: React.ReactNode }) {
   return (
-    <span className="inline-flex items-center gap-1 text-[11px] font-medium text-white bg-white/[0.07] rounded-md px-1.5 py-[3px]">
+    <span className="inline-flex items-center gap-1 text-[11px] font-medium text-ink bg-black/[0.05] rounded-md px-1.5 py-[3px]">
       {children}
     </span>
   );
@@ -306,7 +306,7 @@ function Section({
 }) {
   return (
     <div className="mt-7">
-      <h4 className="text-[14px] font-semibold text-white mb-3">{title}</h4>
+      <h4 className="text-[14px] font-semibold text-ink mb-3">{title}</h4>
       {children}
     </div>
   );
@@ -328,14 +328,14 @@ function PlatformCard({
   return (
     <div className="pill-glass rounded-xl p-3 flex flex-col gap-2.5">
       <div className="flex items-center justify-between">
-        <span className="text-[13px] font-semibold text-white">{name}</span>
-        <span className="w-9 h-9 rounded-lg bg-white/[0.05] flex items-center justify-center text-white">
+        <span className="text-[13px] font-semibold text-ink">{name}</span>
+        <span className="w-9 h-9 rounded-lg bg-white border border-line flex items-center justify-center text-ink">
           {icon}
         </span>
       </div>
       <div className="text-[15px] font-bold tabular-nums leading-none">
-        <span className="text-white">{rate}</span>
-        <span className="text-white/50 text-[11px] font-medium ml-0.5">/1K views</span>
+        <span className="text-ink">{rate}</span>
+        <span className="text-black/50 text-[11px] font-medium ml-0.5">/1K views</span>
       </div>
       <div className="flex items-center gap-1.5 flex-wrap">
         <Pill>{min}</Pill>
@@ -352,9 +352,9 @@ function Pill({ children }: { children: React.ReactNode }) {
   const value = parts[0] ?? text;
   const label = parts.slice(1).join(" ");
   return (
-    <span className="inline-flex items-baseline gap-1 text-[11px] bg-white/[0.06] rounded-full px-2 py-[3px]">
-      <span className="font-semibold text-white">{value}</span>
-      {label && <span className="text-white/55">{label}</span>}
+    <span className="inline-flex items-baseline gap-1 text-[11px] bg-white border border-line rounded-full px-2 py-[3px]">
+      <span className="font-semibold text-ink">{value}</span>
+      {label && <span className="text-black/55">{label}</span>}
     </span>
   );
 }
@@ -370,18 +370,18 @@ function EarnerCard({
 }) {
   const fmt = (n: number) => n.toLocaleString("en-US");
   const starColor =
-    rank === 1 ? "#facc15" : rank === 2 ? "#cbd5e1" : rank === 3 ? "#d97706" : "#6b7280";
+    rank === 1 ? "#f59e0b" : rank === 2 ? "#94a3b8" : rank === 3 ? "#b45309" : "#9ca3af";
 
   return (
     <div className="pill-glass rounded-2xl p-3.5 flex items-center justify-between gap-2">
       <div className="flex flex-col gap-2 min-w-0">
         <div className="flex items-center gap-1.5">
-          <EyeIcon size={13} className="text-white/65" />
-          <span className="text-[14.5px] font-bold tabular-nums text-white">{fmt(views)}</span>
+          <EyeIcon size={13} className="text-black/55" />
+          <span className="text-[14.5px] font-bold tabular-nums text-ink">{fmt(views)}</span>
         </div>
         <div className="flex items-center gap-1.5">
           <BrandAvatar name={name} size={20} />
-          <span className="text-[12.5px] text-white truncate">{name}</span>
+          <span className="text-[12.5px] text-ink truncate">{name}</span>
         </div>
       </div>
       <StarCluster color={starColor} />
@@ -429,12 +429,12 @@ function ViewsChart() {
     >
       <defs>
         <linearGradient id="viewsFill" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stopColor="rgba(255,255,255,0.18)" />
-          <stop offset="100%" stopColor="rgba(255,255,255,0)" />
+          <stop offset="0%" stopColor="rgba(255,122,26,0.32)" />
+          <stop offset="100%" stopColor="rgba(255,122,26,0)" />
         </linearGradient>
       </defs>
       <path d={area} fill="url(#viewsFill)" />
-      <path d={path} fill="none" stroke="#ffffff" strokeWidth="1.6" />
+      <path d={path} fill="none" stroke="#FF7A1A" strokeWidth="1.8" />
     </svg>
   );
 }

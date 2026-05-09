@@ -51,18 +51,29 @@ function CardSurface({
             </span>
           </div>
         )}
-        <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-b from-transparent to-black/40" />
+        {/* bottom darken — keeps the artTitle legible on bright photos */}
+        <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-b from-transparent to-black/30" />
+        {/* image → info-area soft fade — barely-there wash of the card surface
+            (#F7F7F5) over the bottom ~10px so the seam with the info area softens
+            without obscuring the image */}
+        <div
+          className="absolute inset-x-0 bottom-0 h-3 pointer-events-none"
+          style={{
+            background:
+              "linear-gradient(to bottom, rgba(247,247,245,0) 0%, rgba(247,247,245,0.55) 100%)"
+          }}
+        />
       </div>
 
       {/* info */}
       <div className="px-3 pt-2 pb-2.5 flex flex-col">
         {/* brand row */}
-        <div className="flex items-center gap-1.5 text-[11px] text-white/85">
+        <div className="flex items-center gap-1.5 text-[11px] text-black/80">
           <BrandAvatar name={c.brand} size={16} />
           <span className="font-medium truncate max-w-[110px]">{c.brand}</span>
           {c.brandVerified && <VerifiedIcon size={11} />}
-          <span className="ml-0.5 text-white/45">{c.ageDays}d</span>
-          <PlusIcon size={10} className="ml-0.5 text-white/55" />
+          <span className="ml-0.5 text-black/40">{c.ageDays}d</span>
+          <PlusIcon size={10} className="ml-0.5 text-black/55" />
           <div className="flex items-center gap-0.5 ml-auto">
             {c.platforms.slice(0, 3).map((p) => (
               <span key={p} className="opacity-90">
@@ -73,7 +84,7 @@ function CardSurface({
         </div>
 
         {/* title */}
-        <h3 className="mt-1 text-[12.5px] font-semibold text-white truncate leading-tight">
+        <h3 className="mt-1 text-[12.5px] font-semibold text-ink truncate leading-tight">
           {c.title}
         </h3>
 
@@ -81,7 +92,7 @@ function CardSurface({
         {withExpand && (
           <div className="expand-pane">
             <div>
-              <p className="mt-2 text-[11.5px] leading-relaxed text-white/65 line-clamp-3">
+              <p className="mt-2 text-[11.5px] leading-relaxed text-black/65 line-clamp-3">
                 {c.description}
               </p>
               <div className="mt-2.5 flex items-center gap-2">
@@ -99,7 +110,7 @@ function CardSurface({
                   type="button"
                   onClick={(e) => e.stopPropagation()}
                   aria-label="share"
-                  className="w-7 h-7 rounded-full bg-white/[0.06] hover:bg-white/[0.12] transition flex items-center justify-center text-white/85 shrink-0"
+                  className="w-7 h-7 rounded-full bg-black/[0.04] hover:bg-black/[0.08] transition flex items-center justify-center text-black/70 shrink-0"
                 >
                   <ShareIcon size={12} />
                 </button>
@@ -111,10 +122,10 @@ function CardSurface({
         {/* payout */}
         <div className="mt-2 flex items-center gap-2">
           <div className="text-[11px] tabular-nums whitespace-nowrap">
-            <span className="font-semibold text-white">{formatMoney(c.raised)}</span>
-            <span className="text-white/40"> / {formatMoney(c.budget)}</span>
+            <span className="font-semibold text-ink">{formatMoney(c.raised)}</span>
+            <span className="text-black/40"> / {formatMoney(c.budget)}</span>
           </div>
-          <div className="flex-1 h-[2px] bg-white/[0.08] rounded-full overflow-hidden">
+          <div className="flex-1 h-[2px] bg-black/[0.08] rounded-full overflow-hidden">
             <div
               className="h-full progress-fill"
               style={{ width: `${Math.min(100, (c.raised / c.budget) * 100)}%` }}
@@ -124,11 +135,11 @@ function CardSurface({
 
         {/* bottom row */}
         <div className="mt-1.5 flex items-center justify-between">
-          <div className="flex items-center gap-1 text-[10.5px] text-white/55">
+          <div className="flex items-center gap-1 text-[10.5px] text-black/55">
             <PeopleIcon size={11} />
             <span className="tabular-nums">{c.participants}</span>
           </div>
-          <span className="text-[10px] font-medium text-white bg-white/[0.07] rounded px-1.5 py-[2px] tabular-nums">
+          <span className="text-[10px] font-medium text-ink bg-black/[0.05] rounded px-1.5 py-[2px] tabular-nums">
             {c.rate}
           </span>
         </div>
@@ -161,7 +172,7 @@ export default function CampaignCard({
             onOpen(c);
           }
         }}
-        className="absolute top-0 inset-x-0 group cursor-pointer origin-center transition-transform duration-[220ms] ease-out hover:-translate-y-[46px] hover:scale-[1.04] hover:z-30 focus-within:z-30 focus:outline-none [&:hover>div]:shadow-[0_24px_48px_rgba(0,0,0,0.6)]"
+        className="absolute top-0 inset-x-0 group cursor-pointer origin-center transition-transform duration-[220ms] ease-out hover:-translate-y-[46px] hover:scale-[1.04] hover:z-30 focus-within:z-30 focus:outline-none [&:hover>div]:shadow-[0_18px_42px_rgba(15,15,15,0.16)]"
       >
         <CardSurface c={c} onOpen={onOpen} withExpand={true} />
       </div>

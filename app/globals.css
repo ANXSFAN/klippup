@@ -3,12 +3,12 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 html, body {
-  background-color: #151515;
-  color: #ffffff;
+  background-color: #ffffff;
+  color: #18181B;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -23,81 +23,105 @@ body {
 
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 8px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.14); }
+::-webkit-scrollbar-thumb { background: #E2E2DE; border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: #C9C9C4; }
 
+/* progress fill — brand orange gradient */
 .progress-fill {
-  background: linear-gradient(90deg, #ffffff 0%, #d9d9d9 100%);
+  background: linear-gradient(90deg, #FF7A1A 0%, #FFA866 100%);
 }
 
+/* modal scrim — slightly tinted dim with subtle blur */
 .backdrop-dim {
-  background: rgba(0,0,0,0.7);
+  background: rgba(24,24,27,0.42);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
 }
 
-/* glass card surface — pure black interior with:
-   - subtle outer drop shadow lifting it off #151515
-   - top inset highlight (rim light) + bottom inset darken (depth)
-   - radial bottom-corner vignette + linear top-to-bottom sheen baked into background-image */
+/* card-glass — panel surface (#F7F7F5) recessed from the white page bg.
+   Solid warm-grey hairline + soft shadow keeps it grounded without looking heavy. */
 .card-glass {
-  background:
-    radial-gradient(140% 60% at 50% 100%, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0) 65%),
-    linear-gradient(180deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 38%, rgba(0,0,0,0.2) 100%),
-    #000000;
-  border: 1px solid rgba(255,255,255,0.06);
+  background: #F7F7F5;
+  border: 1px solid #ECECE9;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.07),
-    inset 0 -1px 0 rgba(0,0,0,0.5),
-    0 6px 18px rgba(0,0,0,0.35);
+    0 1px 2px rgba(24,24,27,0.03),
+    0 4px 12px rgba(24,24,27,0.04);
 }
 
 .card-glass:hover {
-  border-color: rgba(255,255,255,0.14);
+  border-color: #DDDDD7;
 }
 
-/* pill-glass — for nested cards inside dark surfaces (like the modal panel).
-   Sits at ~#1d1d1d, brighter than the panel underneath, with a top sheen
-   and bottom-edge darkening so it reads as a lifted pill on a darker bg. */
+/* pill-glass — nested surface inside cards/modal (one step deeper than panel). */
 .pill-glass {
-  background:
-    linear-gradient(180deg, rgba(255,255,255,0.055) 0%, rgba(255,255,255,0.02) 32%, rgba(0,0,0,0.18) 100%),
-    #1d1d1d;
-  border: 1px solid rgba(255,255,255,0.07);
+  background: #EFEFEC;
+  border: 1px solid #E4E4E0;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.08),
-    inset 0 -1px 0 rgba(0,0,0,0.35),
-    0 2px 8px rgba(0,0,0,0.25);
+    inset 0 1px 0 rgba(255,255,255,0.7);
 }
 
-/* Join Campaign button — white pill with a soft pink→peach→violet underglow */
+/* btn-join — primary CTA: glassy orange button with iridescent underglow.
+   Layered:
+   1) base: diagonal orange gradient for depth (lighter top-left → deeper bottom-right)
+   2) overlay: top-down sheen (white→transparent→subtle dark) baked into background-image
+      so it sits BELOW the text but ABOVE the base color
+   3) inset shadows: top white rim + bottom dark line → glass-edge feel
+   4) drop shadow tinted with brand orange so the button sits in a warm halo
+   5) ::after: blurred multi-stop iridescent (orange→peach→pink→cyan→orange) underglow */
 .btn-join {
   position: relative;
   isolation: isolate;
-  background: #ffffff;
-  color: #000;
+  color: #ffffff;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.08) 38%, rgba(0,0,0,0.06) 100%),
+    linear-gradient(135deg, #FFB066 0%, #FF7A1A 55%, #F26100 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.65),
+    inset 0 -1px 0 rgba(0,0,0,0.18),
+    0 1px 2px rgba(255,122,26,0.32),
+    0 8px 20px rgba(255,122,26,0.28);
+  text-shadow: 0 1px 0 rgba(0,0,0,0.14);
+  transition: background 180ms ease, box-shadow 180ms ease, transform 120ms ease;
 }
 .btn-join::after {
   content: "";
   position: absolute;
-  left: 10%;
-  right: 10%;
-  bottom: -10px;
-  height: 18px;
+  left: 4%;
+  right: 4%;
+  bottom: -12px;
+  height: 22px;
   background: linear-gradient(
     90deg,
-    rgba(255, 200, 220, 0.85) 0%,
-    rgba(255, 175, 160, 0.75) 35%,
-    rgba(200, 170, 255, 0.7) 70%,
-    rgba(180, 200, 255, 0.75) 100%
+    rgba(255, 122, 26, 0.65) 0%,
+    rgba(255, 200, 90, 0.55) 28%,
+    rgba(255, 130, 200, 0.5) 58%,
+    rgba(120, 200, 255, 0.5) 88%,
+    rgba(255, 122, 26, 0.6) 100%
   );
-  filter: blur(10px);
+  filter: blur(14px);
   border-radius: 999px;
   z-index: -1;
   pointer-events: none;
   opacity: 0.95;
 }
-.btn-join:hover { background: #fafafa; }
+.btn-join:hover {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.1) 38%, rgba(0,0,0,0.05) 100%),
+    linear-gradient(135deg, #FFC078 0%, #FF8A2A 55%, #FF6A0A 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.75),
+    inset 0 -1px 0 rgba(0,0,0,0.2),
+    0 2px 4px rgba(255,122,26,0.36),
+    0 10px 26px rgba(255,122,26,0.34);
+}
+.btn-join:active {
+  transform: translateY(0.5px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.5),
+    inset 0 -1px 0 rgba(0,0,0,0.22),
+    0 1px 2px rgba(255,122,26,0.3),
+    0 4px 10px rgba(255,122,26,0.24);
+}
 
 /* responsive auto-fill grids */
 .grid-cards {
@@ -133,6 +157,6 @@ body {
 }
 .card-hoverable:hover {
   transform: translateY(-2px);
-  box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+  box-shadow: 0 16px 36px rgba(24,24,27,0.12);
   z-index: 5;
 }

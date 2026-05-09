@@ -17,8 +17,16 @@ export default function Page() {
   const open = (c: Campaign) => setSelected(c);
   const close = () => setSelected(null);
 
-  // multi-slide hero: lead campaign + 2 from featured for carousel feel
-  const heroSlides = [heroCampaign, featured[0], featured[1]];
+  // single-slide hero with a full-bleed, high-res nordic landscape that pairs
+  // with the warm orange brand on the white page bg. Override .cover on the
+  // slide so the featured row's thumbnail isn't affected.
+  const heroSlides = [
+    {
+      ...heroCampaign,
+      cover:
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=2400&q=85&auto=format&fit=crop"
+    }
+  ];
 
   return (
     <main className="min-h-screen bg-bg text-white">

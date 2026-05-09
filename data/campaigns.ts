@@ -47,7 +47,7 @@ export const heroCampaign: Campaign = {
   brandVerified: true,
   title: "Ranger Outfitters Tactical Clipping",
   artTitle: "RANGER\nOUTFITTERS",
-  cover: u("photo-1521337581100-8ca9a73a5f79", 1400),
+  cover: u("photo-1492684223066-81342ee5ff30", 1400),
   description:
     "Cut and clip approved combat-gear footage. Push the brand into action-tagged channels and stack views across TikTok, Reels and Shorts.",
   category: "lifestyle",

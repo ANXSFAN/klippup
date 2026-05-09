@@ -35,7 +35,9 @@ export default function HeroCampaign({
         />
 
         {/* darken from left so left text stays legible */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/10 to-transparent" />
+        {/* darken from top-right so the artTitle keeps contrast on bright photos */}
+        <div className="absolute inset-0 bg-gradient-to-bl from-black/35 via-transparent to-transparent" />
 
         {/* art title in top-right (faint, behind primary text) */}
         {c.artTitle && (
@@ -62,20 +64,22 @@ export default function HeroCampaign({
           </div>
         )}
 
-        {/* primary label group — bottom-left */}
-        <div className="absolute left-4 sm:left-6 lg:left-8 bottom-10 sm:bottom-14 right-4 sm:right-6 lg:right-10 flex items-end justify-between gap-4 z-10">
+        {/* primary label group — pulled UP and slightly RIGHT into the upper-mid
+           portion of the photo, so it sits comfortably above the bottom
+           fade-to-white (which would otherwise wash out the white text) */}
+        <div className="absolute left-8 sm:left-14 lg:left-20 bottom-[18%] right-4 sm:right-6 lg:right-10 flex items-end justify-between gap-4 z-10">
           <div className="flex flex-col gap-2 max-w-[78%]">
             <h2
-              className="text-white font-semibold leading-[1.05]"
+              className="text-white font-semibold leading-[1.05] drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)]"
               style={{ fontSize: "clamp(22px, 2.4vw, 32px)" }}
             >
               {c.title}
             </h2>
-            <div className="flex items-center gap-2 text-[11.5px] sm:text-[12.5px] text-white/55">
+            <div className="flex items-center gap-2 text-[11.5px] sm:text-[12.5px] text-white/70 drop-shadow-[0_1px_8px_rgba(0,0,0,0.4)]">
               <span>{c.categoryLabel}</span>
-              <span className="text-white/30">·</span>
+              <span className="text-white/40">·</span>
               <span className="tabular-nums">{c.rate} views</span>
-              <span className="text-white/30">·</span>
+              <span className="text-white/40">·</span>
               <span className="tabular-nums">{formatMoney(c.budget)}</span>
             </div>
             <button
@@ -87,54 +91,62 @@ export default function HeroCampaign({
             </button>
           </div>
 
-          {/* carousel arrows on right */}
-          <div className="hidden sm:flex items-center gap-1.5 mb-1">
-            <button
-              type="button"
-              onClick={() => go("prev")}
-              aria-label="previous"
-              className="w-7 h-7 rounded-full bg-white/[0.08] hover:bg-white/[0.18] backdrop-blur transition flex items-center justify-center text-white/85"
-            >
-              <ChevronLeftIcon size={14} />
-            </button>
-            <button
-              type="button"
-              onClick={() => go("next")}
-              aria-label="next"
-              className="w-7 h-7 rounded-full bg-white/[0.08] hover:bg-white/[0.18] backdrop-blur transition flex items-center justify-center text-white/85"
-            >
-              <ChevronRightIcon size={14} />
-            </button>
+          {/* carousel arrows — only when there's more than one slide */}
+          {total > 1 && (
+            <div className="hidden sm:flex items-center gap-1.5 mb-1">
+              <button
+                type="button"
+                onClick={() => go("prev")}
+                aria-label="previous"
+                className="w-7 h-7 rounded-full bg-white/[0.12] hover:bg-white/[0.22] backdrop-blur transition flex items-center justify-center text-white/85"
+              >
+                <ChevronLeftIcon size={14} />
+              </button>
+              <button
+                type="button"
+                onClick={() => go("next")}
+                aria-label="next"
+                className="w-7 h-7 rounded-full bg-white/[0.12] hover:bg-white/[0.22] backdrop-blur transition flex items-center justify-center text-white/85"
+              >
+                <ChevronRightIcon size={14} />
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* dots — only when there's more than one slide. They sit on the white
+           fade end, so use ink colour to stay visible against the page bg */}
+        {total > 1 && (
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10">
+            {campaigns.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => setIdx(i)}
+                aria-label={`slide ${i + 1}`}
+                className={`h-[3px] rounded-full transition-all ${
+                  i === idx ? "w-6 bg-ink/85" : "w-2.5 bg-ink/25"
+                }`}
+              />
+            ))}
           </div>
-        </div>
+        )}
 
-        {/* dots — sit just inside the fade so they read on dark gradient */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10">
-          {campaigns.map((_, i) => (
-            <button
-              key={i}
-              type="button"
-              onClick={() => setIdx(i)}
-              aria-label={`slide ${i + 1}`}
-              className={`h-[3px] rounded-full transition-all ${
-                i === idx ? "w-6 bg-white/85" : "w-2.5 bg-white/25"
-              }`}
-            />
-          ))}
-        </div>
-
-        {/* SEAMLESS BOTTOM FADE — image dissolves into the page bg (#151515) over the lower ~55% so the page below feels continuous */}
+        {/* SEAMLESS BOTTOM FADE — image dissolves into the page bg (#ffffff) over
+           the lower ~32% so the join with the page below is invisible. Range is
+           shorter than before (was 55%) so the text group at bottom-[42%] stays
+           on the photo, not on the white wash. */}
         <div
           className="absolute inset-x-0 bottom-0 pointer-events-none"
           style={{
-            height: "55%",
+            height: "32%",
             background:
-              "linear-gradient(to bottom, rgba(21,21,21,0) 0%, rgba(21,21,21,0.35) 35%, rgba(21,21,21,0.78) 65%, rgba(21,21,21,1) 100%)"
+              "linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 45%, rgba(255,255,255,0.85) 80%, rgba(255,255,255,1) 100%)"
           }}
         />
       </div>
 
-      {/* trailer — a few pixels of #151515 under the image so the join with the next section is invisible */}
+      {/* trailer — a few px of #ffffff so the seam with the next section disappears */}
       <div className="h-2 bg-bg" />
     </section>
   );
