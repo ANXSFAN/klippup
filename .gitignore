@@ -2,6 +2,9 @@ node_modules
 .next
 out
 .env*
+!.env.example
 .DS_Store
 tsconfig.tsbuildinfo
 微信图片_*.jpg
+
+/app/generated/prisma

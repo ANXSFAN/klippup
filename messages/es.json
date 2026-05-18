@@ -1,0 +1,677 @@
+{
+  "metadata": {
+    "title": "KlippUp — Descubrir",
+    "description": "Descubre campañas de contenido y gana recompensas"
+  },
+  "common": {
+    "joinCampaign": "Unirse a la campaña",
+    "share": "Compartir",
+    "showMore": "Ver más",
+    "open": "Abrir",
+    "close": "Cerrar",
+    "daysShort": "{days} d",
+    "min": "Mín",
+    "max": "Máx"
+  },
+  "locale": {
+    "label": "Idioma",
+    "es": "Español",
+    "zh": "中文"
+  },
+  "hero": {
+    "poweredBy": "con tecnología de",
+    "rateViews": "{rate} visualizaciones",
+    "prev": "Anterior",
+    "next": "Siguiente",
+    "slide": "Diapositiva {n}"
+  },
+  "search": {
+    "placeholder": "Campañas y creadores",
+    "filter": "Filtrar",
+    "category": "Categoría",
+    "content": "Contenido"
+  },
+  "discover": {
+    "featured": "Destacados",
+    "allCampaigns": "Todas las campañas",
+    "scrollLeft": "Desplazar a la izquierda",
+    "scrollRight": "Desplazar a la derecha"
+  },
+  "modal": {
+    "expand": "Expandir",
+    "requirements": "Requisitos",
+    "contentRequirements": "Requisitos de contenido",
+    "earnings": "Ganancias",
+    "analytics": "Analíticas",
+    "viewsTab": "Visualizaciones",
+    "submissionsTab": "Envíos",
+    "totalViews": "Visualizaciones totales",
+    "totalViewsFallback": "636 K",
+    "topEarners": "Mayores ganadores",
+    "resources": "Recursos",
+    "perThousandViews": "/1K visualizaciones",
+    "campaignGuide": "Guía de la campaña",
+    "discordLink": "Enlace de Discord",
+    "defaultRequirements": [
+      "Envía a través del formulario de analíticas una vez alcanzado tu umbral mínimo de pago",
+      "La audiencia de Nivel 1 (EE. UU. / RU / CA / AU) debe representar al menos el 40 % de las visualizaciones",
+      "Sin lenguaje obsceno, menciones a la competencia ni contenido de fuentes no aprobadas",
+      "Cada clip debe incluir el segmento donde se explica el producto",
+      "Las republicaciones tipo spam y las subidas masivas de baja calidad no contarán para el pago"
+    ]
+  },
+  "auth": {
+    "or": "O",
+    "google": "Continuar con Google",
+    "logout": "Cerrar sesión",
+    "loggingOut": "Cerrando sesión…",
+    "roleCreator": "Soy creador",
+    "roleCreatorDesc": "Edita vídeos y gana con campañas",
+    "roleBrand": "Soy marca",
+    "roleBrandDesc": "Publica campañas y encuentra creadores",
+    "fields": {
+      "email": "Correo",
+      "password": "Contraseña",
+      "displayName": "Nombre",
+      "brandName": "Nombre de la marca"
+    },
+    "login": {
+      "title": "Iniciar sesión",
+      "subtitle": "Con correo y contraseña o con Google",
+      "submit": "Entrar",
+      "submitting": "Entrando…",
+      "noAccount": "¿No tienes cuenta?",
+      "signupLink": "Crear cuenta",
+      "error": "No se pudo iniciar sesión. Revisa tus datos."
+    },
+    "signup": {
+      "title": "Crear cuenta",
+      "subtitle": "Elige tu rol para empezar con KlippUp",
+      "submit": "Crear cuenta",
+      "submitting": "Creando…",
+      "haveAccount": "¿Ya tienes cuenta?",
+      "loginLink": "Iniciar sesión",
+      "created": "Cuenta creada",
+      "error": "No se pudo crear la cuenta. Inténtalo de nuevo."
+    }
+  },
+  "creator": {
+    "subtitle": "Creadores",
+    "nav": {
+      "dashboard": "Inicio",
+      "campaigns": "Campañas",
+      "submissions": "Mis envíos",
+      "earnings": "Ganancias",
+      "profile": "Perfil"
+    },
+    "dashboard": {
+      "welcome": "Hola, {name}",
+      "subtitle": "Explora campañas disponibles, gestiona tus envíos y revisa tus ganancias.",
+      "comingSoon": "Siguiente paso",
+      "comingSoonDesc": "Entra en «Campañas» para descubrir campañas activas y enviar tus clips.",
+      "browseCampaigns": "Ver campañas"
+    },
+    "campaignList": {
+      "title": "Campañas",
+      "subtitle": "Elige una campaña y envía tu clip para ganar.",
+      "empty": "Todavía no hay campañas disponibles.",
+      "mySubmissions": "{count} enviado(s)"
+    },
+    "campaignDetail": {
+      "about": "Sobre esta campaña",
+      "requirements": "Requisitos de contenido",
+      "mySubmissions": "Mis envíos",
+      "submitClip": "Enviar clip",
+      "noSubmissionsYet": "Aún no has enviado nada a esta campaña. Toca el botón para empezar.",
+      "progress": "Progreso",
+      "rate": "Tarifa",
+      "participants": "Participantes",
+      "platforms": "Plataformas",
+      "viewsClaimed": "{views} visualizaciones declaradas"
+    },
+    "submissionForm": {
+      "title": "Enviar clip",
+      "description": "Pega el enlace del vídeo publicado; detectaremos la plataforma automáticamente.",
+      "fields": {
+        "videoUrl": "Enlace del vídeo",
+        "platform": "Plataforma",
+        "viewsClaimed": "Visualizaciones declaradas (opcional)"
+      },
+      "platformPlaceholder": "Elige una plataforma",
+      "viewsClaimedHint": "Es una cifra orientativa; el pago se calcula tras revisión.",
+      "autoDetected": "Detectado: {platform}",
+      "submit": "Enviar",
+      "submitting": "Enviando…",
+      "cancel": "Cancelar",
+      "created": "Envío recibido, pendiente de revisión",
+      "errors": {
+        "INVALID": "Revisa el formulario",
+        "CAMPAIGN_NOT_FOUND": "Campaña no encontrada",
+        "CAMPAIGN_NOT_OPEN": "Esta campaña no acepta envíos ahora",
+        "PLATFORM_NOT_ALLOWED": "Esta campaña no acepta esa plataforma",
+        "UNAUTHENTICATED": "Inicia sesión primero",
+        "NOT_A_CREATOR": "Solo los creadores pueden enviar clips",
+        "GENERIC": "No se pudo enviar. Inténtalo de nuevo."
+      }
+    },
+    "submissionsPage": {
+      "title": "Mis envíos",
+      "subtitle": "Estado de revisión y ganancias de todos tus envíos.",
+      "empty": "Sin envíos.",
+      "all": "Todos",
+      "columns": {
+        "campaign": "Campaña",
+        "platform": "Plataforma",
+        "url": "Enlace",
+        "views": "Visualizaciones",
+        "earnings": "Ganancias",
+        "status": "Estado",
+        "submitted": "Enviado"
+      }
+    },
+    "submissionStatus": {
+      "PENDING": "En revisión",
+      "APPROVED": "Aprobado",
+      "REJECTED": "Rechazado",
+      "PAID": "Pagado"
+    },
+    "earnings": {
+      "title": "Ganancias",
+      "subtitle": "Total cobrado, pendiente de pago y envíos con ganancias.",
+      "stats": {
+        "totalEarned": "Cobrado",
+        "approvedUnpaid": "Aprobado sin pagar",
+        "pendingCount": "En revisión"
+      },
+      "breakdown": "Detalle",
+      "empty": "Sin movimientos."
+    },
+    "profilePage": {
+      "title": "Perfil",
+      "subtitle": "Actualiza tu nombre, redes sociales y método de cobro.",
+      "sections": {
+        "basics": "Información básica",
+        "socials": "Redes sociales",
+        "socialsHint": "Pega tu @usuario o el enlace a tu perfil. Vacío significa sin completar.",
+        "payout": "Método de cobro",
+        "payoutHint": "¿Cómo te enviamos el dinero? Por ahora pagamos manualmente — cuanto más concreto, mejor (correo PayPal / IBAN + titular / wallet, etc.)."
+      },
+      "fields": {
+        "displayName": "Nombre",
+        "email": "Correo (no editable)"
+      },
+      "socials": {
+        "tiktok": "TikTok",
+        "youtube": "YouTube",
+        "instagram": "Instagram",
+        "x": "X / Twitter",
+        "twitch": "Twitch",
+        "placeholder": "@usuario o enlace al perfil"
+      },
+      "payout": {
+        "method": "Método",
+        "methods": {
+          "paypal": "PayPal",
+          "bank": "Cuenta bancaria",
+          "other": "Otro"
+        },
+        "details": "Detalles del cobro",
+        "detailsPlaceholder": "Ejemplo:\nPayPal: tucorreo@email.com\nO banco: IBAN + titular"
+      },
+      "save": "Guardar",
+      "saving": "Guardando…",
+      "saved": "Guardado",
+      "saveError": "No se pudo guardar"
+    }
+  },
+  "brand": {
+    "subtitle": "Marcas",
+    "nav": {
+      "dashboard": "Inicio",
+      "campaigns": "Mis campañas",
+      "submissions": "Revisión",
+      "profile": "Perfil de marca"
+    },
+    "dashboard": {
+      "welcome": "Hola, {name}",
+      "subtitle": "Crea campañas y revisa los envíos de los creadores.",
+      "newCampaign": "Nueva campaña",
+      "reviewCta": "Revisar envíos",
+      "reviewCtaDesc": "Aprueba o rechaza los envíos pendientes; las ganancias se calculan al aprobarlos.",
+      "openReview": "Ir a revisión",
+      "stats": {
+        "campaigns": "Mis campañas",
+        "draftsAndPublished": "Borradores {drafts} · Publicadas {published}",
+        "pendingSubmissions": "Pendientes",
+        "totalSubmissions": "{count} envíos en total",
+        "approvedSubmissions": "Aprobados"
+      }
+    },
+    "campaignList": {
+      "title": "Mis campañas",
+      "new": "Nueva campaña",
+      "edit": "Editar",
+      "review": "Revisar",
+      "count": "{count} campañas",
+      "empty": "Aún no tienes campañas. Pulsa «Nueva campaña» arriba a la derecha para empezar.",
+      "columns": {
+        "campaign": "Campaña",
+        "category": "Categoría",
+        "status": "Estado",
+        "progress": "Progreso",
+        "pending": "Pendientes",
+        "total": "Total",
+        "created": "Creada",
+        "actions": "Acciones"
+      }
+    },
+    "campaignForm": {
+      "createTitle": "Nueva campaña",
+      "editTitle": "Editar campaña",
+      "subtitle": "Completa los datos principales. Tras guardar pasará a borrador y el equipo de KlippUp la revisará antes de publicar.",
+      "editSubtitle": "Actualiza los detalles de la campaña.",
+      "draftNotice": "Las campañas se guardan en borrador y necesitan que el equipo de KlippUp las apruebe antes de aparecer en la portada.",
+      "sections": {
+        "basics": "Información básica",
+        "classification": "Clasificación y plataformas",
+        "numbers": "Cifras",
+        "requirements": "Requisitos de contenido",
+        "earnings": "Ganancias por plataforma (opcional)"
+      },
+      "fields": {
+        "title": "Título",
+        "artTitle": "Título artístico (opcional)",
+        "description": "Descripción",
+        "cover": "Portada",
+        "poweredBy": "Con tecnología de (opcional)",
+        "category": "Categoría",
+        "categoryLabel": "Etiqueta personalizada (opcional)",
+        "platforms": "Plataformas admitidas",
+        "budget": "Presupuesto (número)",
+        "participants": "Participantes objetivo (opcional)",
+        "rate": "Tarifa (p. ej. $1/1K)",
+        "launchedAt": "Fecha de lanzamiento"
+      },
+      "requirementsEmpty": "Sin requisitos. Toca el botón para añadir uno.",
+      "addRequirement": "Añadir requisito",
+      "remove": "Quitar",
+      "earningsHint": "Deja en blanco las plataformas que no apliquen.",
+      "earningsCols": {
+        "rate": "Tarifa",
+        "min": "Mín",
+        "max": "Máx"
+      },
+      "submit": "Crear campaña",
+      "save": "Guardar",
+      "saving": "Guardando…",
+      "cancel": "Cancelar",
+      "created": "Campaña creada (borrador)",
+      "updated": "Guardado",
+      "errors": {
+        "INVALID": "Revisa el formulario",
+        "MISSING_BRAND_PROFILE": "Completa primero tu perfil de marca",
+        "NOT_FOUND": "Campaña no encontrada o sin permisos",
+        "ARCHIVED": "Las campañas archivadas no se pueden editar",
+        "UNAUTHENTICATED": "Inicia sesión primero",
+        "NOT_A_BRAND": "Solo las marcas pueden crear campañas",
+        "GENERIC": "No se pudo guardar. Inténtalo de nuevo."
+      }
+    },
+    "reviewPage": {
+      "title": "Revisión",
+      "subtitle": "Aprueba los envíos rellenando las visualizaciones verificadas y la cantidad a pagar, o recházalos indicando el motivo.",
+      "forCampaign": "Envíos para esta campaña",
+      "backToCampaigns": "Volver a mis campañas",
+      "editCampaign": "Editar campaña",
+      "all": "Todos",
+      "empty": "Sin envíos.",
+      "approve": "Aprobar",
+      "reject": "Rechazar",
+      "approveTitle": "Aprobar envío",
+      "rejectTitle": "Rechazar envío",
+      "confirmApprove": "Confirmar aprobación",
+      "confirmReject": "Confirmar rechazo",
+      "approved": "Aprobado",
+      "rejected": "Rechazado",
+      "error": "No se pudo completar",
+      "cancel": "Cancelar",
+      "saving": "Procesando…",
+      "creatorLabel": "Creador",
+      "viewsClaimedWas": "Declaradas: {views}",
+      "earningsCentsHint": "Importe en céntimos de dólar (123 = $1,23).",
+      "fields": {
+        "viewsVerified": "Visualizaciones verificadas",
+        "earningsCents": "Importe (céntimos)",
+        "notes": "Notas (opcional)",
+        "reason": "Motivo del rechazo"
+      },
+      "columns": {
+        "campaign": "Campaña",
+        "brand": "Marca",
+        "creator": "Creador",
+        "platform": "Plataforma",
+        "url": "Enlace",
+        "claimed": "Declarado",
+        "verified": "Verificado",
+        "earnings": "Importe",
+        "status": "Estado",
+        "actions": "Acciones"
+      },
+      "platformOwned": "Plataforma"
+    },
+    "profilePage": {
+      "title": "Perfil de marca",
+      "subtitle": "El nombre que pongas aquí se muestra en todas tus campañas.",
+      "verified": "Verificada",
+      "verifiedHint": "Insignia oficial otorgada por el equipo de KlippUp tras revisión.",
+      "sections": {
+        "basics": "Información básica"
+      },
+      "fields": {
+        "brandName": "Nombre de la marca",
+        "email": "Correo (no editable)",
+        "website": "Sitio web",
+        "description": "Descripción"
+      },
+      "save": "Guardar",
+      "saving": "Guardando…",
+      "saved": "Guardado",
+      "saveError": "No se pudo guardar"
+    }
+  },
+  "admin": {
+    "brand": "KlippUp",
+    "subtitle": "Administración",
+    "nav": {
+      "dashboard": "Panel",
+      "campaigns": "Campañas",
+      "submissions": "Envíos",
+      "payouts": "Pagos",
+      "users": "Usuarios",
+      "categories": "Categorías",
+      "platforms": "Plataformas",
+      "settings": "Ajustes"
+    },
+    "viewSite": "Ver el sitio",
+    "comingSoon": "Próximamente",
+    "comingSoonDesc": "Esta sección estará disponible pronto.",
+    "dashboard": {
+      "title": "Panel",
+      "subtitle": "Resumen de la plataforma",
+      "stats": {
+        "campaigns": "Campañas",
+        "published": "Publicadas",
+        "drafts": "Borradores",
+        "categories": "Categorías",
+        "platforms": "Plataformas",
+        "totalBudget": "Presupuesto total"
+      },
+      "charts": {
+        "byCategory": "Por categoría",
+        "byPlatform": "Por plataforma",
+        "byStatus": "Por estado",
+        "byMonth": "Nuevas (últimos 6 meses)",
+        "empty": "Sin datos"
+      }
+    },
+    "campaigns": {
+      "title": "Campañas",
+      "new": "Nueva campaña",
+      "empty": "Todavía no hay campañas.",
+      "count": "{count} campañas",
+      "columns": {
+        "campaign": "Campaña",
+        "brand": "Marca",
+        "owner": "Propietario",
+        "category": "Categoría",
+        "platforms": "Plataformas",
+        "placements": "Posiciones",
+        "progress": "Progreso",
+        "participants": "Participantes",
+        "status": "Estado",
+        "actions": "Acciones"
+      },
+      "platformOwner": "Plataforma",
+      "publish": "Publicar",
+      "publishHint": "Pasar «{name}» de borrador a publicada",
+      "published": "Publicada",
+      "publishError": "No se pudo publicar",
+      "status": {
+        "DRAFT": "Borrador",
+        "PUBLISHED": "Publicada",
+        "ARCHIVED": "Archivada"
+      },
+      "placements": {
+        "HERO": "Hero",
+        "FEATURED": "Destacado",
+        "GRID": "Cuadrícula"
+      },
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "none": "—",
+      "form": {
+        "createTitle": "Nueva campaña",
+        "editTitle": "Editar campaña",
+        "basics": "Información básica",
+        "brand": "Marca",
+        "brandVerified": "Marca verificada",
+        "title": "Título",
+        "artTitle": "Título artístico (opcional, una línea por renglón)",
+        "description": "Descripción",
+        "poweredBy": "Con tecnología de (opcional)",
+        "cover": "Portada",
+        "noCover": "Sin portada",
+        "upload": "Subir imagen",
+        "uploading": "Subiendo…",
+        "uploadError": "No se pudo subir la imagen",
+        "classification": "Clasificación y posición",
+        "category": "Categoría",
+        "categoryLabel": "Etiqueta personalizada (opcional)",
+        "platforms": "Plataformas",
+        "placements": "Posiciones en la portada",
+        "placementSlots": {
+          "HERO": "Hero",
+          "FEATURED": "Destacado",
+          "GRID": "Cuadrícula"
+        },
+        "hot": "Marcar como «hot»",
+        "status": "Estado",
+        "statuses": {
+          "DRAFT": "Borrador",
+          "PUBLISHED": "Publicada",
+          "ARCHIVED": "Archivada"
+        },
+        "numbers": "Cifras",
+        "raised": "Recaudado",
+        "budget": "Presupuesto",
+        "participants": "Participantes",
+        "rate": "Tarifa (p. ej. $1/1K)",
+        "launchedAt": "Fecha de lanzamiento",
+        "modalContent": "Contenido del modal de campaña",
+        "requirements": "Requisitos",
+        "addRequirement": "Añadir requisito",
+        "earnings": "Ganancias por plataforma",
+        "earningsHint": "Deja en blanco las plataformas que no apliquen.",
+        "rateLabel": "Tarifa",
+        "min": "Mín",
+        "max": "Máx",
+        "topEarners": "Mayores ganadores",
+        "views": "Visualizaciones",
+        "name": "Nombre",
+        "addEarner": "Añadir",
+        "resources": "Recursos",
+        "resourceName": "Nombre",
+        "resourceSubtitle": "Subtítulo",
+        "resourceKinds": {
+          "drive": "Google Drive",
+          "link": "Enlace"
+        },
+        "resourceUrl": "URL",
+        "addResource": "Añadir recurso",
+        "totalViews": "Visualizaciones totales (texto, p. ej. 3.8M)",
+        "viewsSeries": "Serie del gráfico (números separados por comas)",
+        "remove": "Quitar",
+        "save": "Guardar",
+        "saving": "Guardando…",
+        "cancel": "Cancelar",
+        "saveError": "No se pudo guardar",
+        "created": "Campaña creada",
+        "updated": "Campaña actualizada",
+        "deleted": "Campaña eliminada",
+        "deleteConfirm": "¿Eliminar «{name}»?"
+      }
+    },
+    "users": {
+      "title": "Usuarios",
+      "count": "{count} usuarios",
+      "selfHint": "No puedes cambiar tu propio rol",
+      "roleChanged": "Rol actualizado",
+      "verifyLabel": "Verificada",
+      "verifiedOn": "Verificación activada",
+      "verifiedOff": "Verificación desactivada",
+      "error": "No se pudo completar",
+      "role": {
+        "CREATOR": "Creador",
+        "BRAND": "Marca",
+        "ADMIN": "Admin"
+      },
+      "columns": {
+        "user": "Usuario",
+        "role": "Rol",
+        "campaigns": "Campañas",
+        "submissions": "Envíos",
+        "earned": "Cobrado",
+        "joined": "Alta",
+        "actions": "Acciones"
+      }
+    },
+    "submissions": {
+      "title": "Revisión global",
+      "subtitle": "Todos los envíos de todas las marcas; el equipo de KlippUp puede revisar o editar cualquier estado."
+    },
+    "payouts": {
+      "title": "Pagos manuales",
+      "subtitle": "Agrupa envíos aprobados y registra un pago al creador. Cada Payout es una transferencia real que ya hiciste.",
+      "stats": {
+        "pendingAmount": "Por pagar",
+        "acrossCreators": "{count} creador(es) pendientes",
+        "payoutsAll": "Pagos realizados",
+        "totalPaid": "Total pagado {amount}"
+      },
+      "pendingTitle": "Pendientes",
+      "pendingEmpty": "No hay envíos pendientes de pago.",
+      "historyTitle": "Historial",
+      "historyEmpty": "Aún no hay pagos.",
+      "noMethod": "Sin método",
+      "subsLabel": "envíos",
+      "recordPayment": "Registrar pago",
+      "payoutDetailsLabel": "Datos del creador",
+      "formTitle": "Pagar a {name}",
+      "totalLabel": "Total",
+      "method": "Método",
+      "methods": {
+        "paypal": "PayPal",
+        "bank": "Banco",
+        "other": "Otro"
+      },
+      "details": "Detalles (instantánea)",
+      "detailsPlaceholder": "Se rellena con los datos del creador — puedes editarlo",
+      "txnRef": "Referencia",
+      "txnRefPlaceholder": "Ej. ID de transacción PayPal o nº de operación bancaria",
+      "notes": "Notas (opcional)",
+      "confirm": "Confirmar pago",
+      "cancel": "Cancelar",
+      "saving": "Procesando…",
+      "paid": "Pago registrado",
+      "errors": {
+        "INVALID": "Revisa el formulario",
+        "MISSING_SUBMISSIONS": "Envío no encontrado",
+        "WRONG_CREATOR": "Un envío no pertenece a este creador",
+        "NOT_APPROVED": "Solo se pueden pagar envíos aprobados",
+        "ALREADY_PAID": "Ese envío ya estaba pagado",
+        "ZERO_AMOUNT": "Importe en cero",
+        "UNAUTHENTICATED": "Inicia sesión",
+        "NOT_ADMIN": "Solo administradores",
+        "GENERIC": "No se pudo registrar el pago"
+      },
+      "columns": {
+        "creator": "Creador",
+        "amount": "Importe",
+        "method": "Método",
+        "txnRef": "Referencia",
+        "submissions": "Envíos",
+        "paidAt": "Fecha"
+      }
+    },
+    "categories": {
+      "title": "Categorías",
+      "new": "Nueva categoría",
+      "count": "{count} categorías",
+      "empty": "Todavía no hay categorías.",
+      "columns": {
+        "order": "Orden",
+        "label": "Etiqueta",
+        "slug": "Slug",
+        "glyph": "Glifo",
+        "usage": "Campañas",
+        "actions": "Acciones"
+      },
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "createTitle": "Nueva categoría",
+      "editTitle": "Editar categoría",
+      "created": "Categoría creada",
+      "updated": "Categoría actualizada",
+      "deleted": "Categoría eliminada",
+      "deleteConfirm": "¿Eliminar «{name}»?",
+      "duplicateSlug": "Ese slug ya está en uso",
+      "inUse": "No se puede eliminar: {count} campaña(s) la usan",
+      "form": {
+        "label": "Etiqueta",
+        "slug": "Slug",
+        "slugHint": "Solo minúsculas, números y guiones",
+        "glyph": "Glifo",
+        "order": "Orden",
+        "save": "Guardar",
+        "saving": "Guardando…",
+        "cancel": "Cancelar",
+        "saveError": "No se pudo guardar"
+      }
+    },
+    "platforms": {
+      "title": "Plataformas",
+      "new": "Nueva plataforma",
+      "count": "{count} plataformas",
+      "empty": "Todavía no hay plataformas.",
+      "columns": {
+        "order": "Orden",
+        "label": "Etiqueta",
+        "slug": "Slug",
+        "glyph": "Glifo",
+        "usage": "Campañas",
+        "actions": "Acciones"
+      },
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "createTitle": "Nueva plataforma",
+      "editTitle": "Editar plataforma",
+      "created": "Plataforma creada",
+      "updated": "Plataforma actualizada",
+      "deleted": "Plataforma eliminada",
+      "deleteConfirm": "¿Eliminar «{name}»?",
+      "duplicateSlug": "Ese slug ya está en uso",
+      "inUse": "No se puede eliminar: {count} campaña(s) la usan",
+      "form": {
+        "label": "Etiqueta",
+        "slug": "Slug",
+        "slugHint": "Solo minúsculas, números y guiones",
+        "glyph": "Glifo (p. ej. TT)",
+        "order": "Orden",
+        "save": "Guardar",
+        "saving": "Guardando…",
+        "cancel": "Cancelar",
+        "saveError": "No se pudo guardar"
+      }
+    }
+  }
+}

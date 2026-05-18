@@ -1,6 +1,7 @@
 "use client";
 import * as React from "react";
-import type { Campaign } from "@/data/campaigns";
+import { useTranslations } from "next-intl";
+import type { CampaignView } from "@/lib/types";
 import CampaignCard from "./CampaignCard";
 import { ChevronLeftIcon, ChevronRightIcon } from "./Icons";
 
@@ -8,9 +9,10 @@ export default function FeaturedRow({
   items,
   onOpen
 }: {
-  items: Campaign[];
-  onOpen: (c: Campaign) => void;
+  items: CampaignView[];
+  onOpen: (c: CampaignView) => void;
 }) {
+  const t = useTranslations("discover");
   const scrollerRef = React.useRef<HTMLDivElement>(null);
 
   const scroll = (dir: "left" | "right") => {
@@ -23,12 +25,12 @@ export default function FeaturedRow({
     <section className="mt-5">
       <div className="max-w-[2000px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between mb-2">
-          <h3 className="text-[13px] font-semibold text-ink/90">Featured</h3>
+          <h3 className="text-[13px] font-semibold text-ink/90">{t("featured")}</h3>
           <div className="hidden sm:flex items-center gap-1.5">
             <button
               type="button"
               onClick={() => scroll("left")}
-              aria-label="scroll left"
+              aria-label={t("scrollLeft")}
               className="w-7 h-7 rounded-full bg-black/[0.04] hover:bg-black/[0.08] flex items-center justify-center text-black/70 transition"
             >
               <ChevronLeftIcon size={14} />
@@ -36,7 +38,7 @@ export default function FeaturedRow({
             <button
               type="button"
               onClick={() => scroll("right")}
-              aria-label="scroll right"
+              aria-label={t("scrollRight")}
               className="w-7 h-7 rounded-full bg-black/[0.04] hover:bg-black/[0.08] flex items-center justify-center text-black/70 transition"
             >
               <ChevronRightIcon size={14} />

@@ -1,0 +1,257 @@
+// KlippUp — data model. See docs/admin-plan.md for the rationale.
+// Prisma 7: connection URLs live in prisma.config.ts, not here.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------- accounts ----------
+//
+// Auth lives in Supabase's `auth.users` table — we don't replicate it here.
+// `Profile.id` is the same UUID Supabase issues, written by an auth.signUp
+// callback (or first OAuth login). `role` decides which sub-profile exists.
+
+enum UserRole {
+  CREATOR
+  BRAND
+  ADMIN
+}
+
+model Profile {
+  id          String   @id // = auth.users.id (UUID)
+  role        UserRole
+  email       String   @unique
+  displayName String
+  avatarUrl   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  creator     CreatorProfile?
+  brand       BrandProfile?
+  // back-relation to campaigns owned by a brand user (one-to-many)
+  campaigns   Campaign[]      @relation("CampaignBrandOwner")
+  submissions Submission[]    @relation("CreatorSubmissions")
+  reviewed    Submission[]    @relation("ReviewedSubmissions")
+  payouts     Payout[]
+}
+
+model CreatorProfile {
+  userId      String   @id
+  user        Profile  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // socials = { tiktok?: string; youtube?: string; instagram?: string; ... }
+  socials     Json?
+  // payoutInfo = { method: "paypal"|"bank"|"other"; details: string }
+  payoutInfo  Json?
+  // Stored in cents; updated by the manual settlement flow.
+  totalEarned Int      @default(0)
+  status      String   @default("ACTIVE") // ACTIVE | SUSPENDED
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model BrandProfile {
+  userId      String   @id
+  user        Profile  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  brandName   String
+  verified    Boolean  @default(false) // official-brand badge (admin-set)
+  website     String?
+  description String?
+  status      String   @default("ACTIVE") // ACTIVE | SUSPENDED
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ---------- taxonomy ----------
+
+model Category {
+  id        String     @id @default(cuid())
+  slug      String     @unique
+  label     String // default badge text shown on cards ("UGC", "Music", ...)
+  sortOrder Int        @default(0)
+  campaigns Campaign[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Platform {
+  id          String             @id @default(cuid())
+  slug        String             @unique // tiktok / youtube / instagram / x / twitch
+  label       String // "TikTok" ...
+  glyph       String // short mark used on cards ("TT", "YT", ...)
+  sortOrder   Int                @default(0)
+  campaigns   CampaignPlatform[]
+  submissions Submission[]
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+}
+
+// ---------- campaigns ----------
+
+model Campaign {
+  id String @id @default(cuid())
+
+  // brand — display name kept inline; brandUserId points at the Profile that
+  // owns the campaign (null for platform-seeded campaigns).
+  brand         String
+  brandVerified Boolean  @default(true)
+  brandUser     Profile? @relation("CampaignBrandOwner", fields: [brandUserId], references: [id])
+  brandUserId   String?
+
+  // copy
+  title       String
+  artTitle    String? // stylized art lettering on the cover / hero (may contain \n)
+  description String
+
+  // media
+  coverUrl String // Supabase Storage public URL
+
+  // category
+  category      Category @relation(fields: [categoryId], references: [id])
+  categoryId    String
+  categoryLabel String? // per-campaign badge override; falls back to category.label
+
+  // platforms
+  platforms CampaignPlatform[]
+
+  // numbers
+  raised       Int
+  budget       Int
+  participants Int
+  rate         String // display text, e.g. "$1/1K"
+
+  launchedAt DateTime @default(now()) // replaces the old hardcoded ageDays
+
+  // placement — a campaign may appear in several slots at once
+  placements CampaignPlacement[]
+  hot        Boolean             @default(false)
+  status     CampaignStatus      @default(PUBLISHED)
+
+  // detail panel (the modal) — was hardcoded, now editable
+  poweredBy         String?
+  requirementsSteps Int?
+  requirements      String[] @default([]) // bullet list of content requirements
+  earnings          Json? // { tiktok?: {rate,min,max}, youtube?: {...}, instagram?: {...}, x?: {...} }
+  topEarners        Json? // [{ name, views }]
+  resources         Json? // [{ name, subtitle, kind: "drive" | "link", url }]
+  totalViews        String? // "3.8M" / "63.6万"
+  viewsSeries       Int[]    @default([]) // points for the small views chart
+
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  submissions Submission[]
+
+  @@index([status])
+}
+
+model CampaignPlacement {
+  id         String        @id @default(cuid())
+  campaign   Campaign      @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  campaignId String
+  slot       PlacementSlot
+  sortOrder  Int           @default(0) // ordering within a slot
+
+  @@unique([campaignId, slot])
+  @@index([slot, sortOrder])
+}
+
+model CampaignPlatform {
+  campaign   Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  campaignId String
+  platform   Platform @relation(fields: [platformId], references: [id])
+  platformId String
+  order      Int      @default(0)
+
+  @@id([campaignId, platformId])
+}
+
+enum PlacementSlot {
+  HERO
+  FEATURED
+  GRID
+}
+
+enum CampaignStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+// ---------- submissions ----------
+
+enum SubmissionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  PAID
+}
+
+model Submission {
+  id String @id @default(cuid())
+
+  // who & what
+  creator    Profile  @relation("CreatorSubmissions", fields: [creatorId], references: [id], onDelete: Cascade)
+  creatorId  String
+  campaign   Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  campaignId String
+
+  // platform of the submitted clip; FK so we can show its label/glyph.
+  platform   Platform @relation(fields: [platformId], references: [id])
+  platformId String
+
+  // submission payload — v1 is link-only; `videoId` is parsed from the URL,
+  // `apiData` is the extension slot for future TikTok/YT/IG API checks.
+  videoUrl     String
+  videoId      String?
+  viewsClaimed Int? // creator-declared
+  apiData      Json?
+
+  // review
+  status        SubmissionStatus @default(PENDING)
+  viewsVerified Int? // filled by reviewer
+  earningsCents Int              @default(0) // computed once approved
+  rejectReason  String?
+  reviewedBy    Profile?         @relation("ReviewedSubmissions", fields: [reviewedById], references: [id])
+  reviewedById  String?
+  reviewedAt    DateTime?
+
+  notes String? // free-form notes from reviewer
+
+  // settlement (Phase D)
+  payout   Payout? @relation(fields: [payoutId], references: [id])
+  payoutId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([creatorId])
+  @@index([campaignId])
+  @@index([status])
+  @@index([payoutId])
+}
+
+// ---------- payouts ----------
+
+model Payout {
+  id          String   @id @default(cuid())
+  creator     Profile  @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  creatorId   String
+  amountCents Int // = sum of attached submission earnings at time of payout
+  method      String // "paypal" | "bank" | "other" — snapshotted from CreatorProfile at payout time
+  details     String? // free-text destination (PayPal email / bank / etc.)
+  txnRef      String? // confirmation / transaction reference
+  notes       String?
+  status      String   @default("PAID") // PAID — keeping room for PENDING/FAILED
+  paidAt      DateTime @default(now())
+
+  submissions Submission[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([creatorId])
+}

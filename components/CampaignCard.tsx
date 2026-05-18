@@ -1,7 +1,8 @@
 "use client";
 import * as React from "react";
-import type { Campaign } from "@/data/campaigns";
-import { formatMoney } from "@/data/campaigns";
+import { useTranslations } from "next-intl";
+import type { CampaignView } from "@/lib/types";
+import { formatMoney } from "@/lib/format";
 import {
   PeopleIcon,
   PlusIcon,
@@ -22,10 +23,11 @@ function CardSurface({
   onOpen,
   withExpand
 }: {
-  c: Campaign;
-  onOpen?: (c: Campaign) => void;
+  c: CampaignView;
+  onOpen?: (c: CampaignView) => void;
   withExpand: boolean;
 }) {
+  const t = useTranslations();
   return (
     <div className="card-glass rounded-card overflow-hidden flex flex-col">
       {/* cover */}
@@ -72,7 +74,7 @@ function CardSurface({
           <BrandAvatar name={c.brand} size={16} />
           <span className="font-medium truncate max-w-[110px]">{c.brand}</span>
           {c.brandVerified && <VerifiedIcon size={11} />}
-          <span className="ml-0.5 text-black/40">{c.ageDays}d</span>
+          <span className="ml-0.5 text-black/40">{t("common.daysShort", { days: c.ageDays })}</span>
           <PlusIcon size={10} className="ml-0.5 text-black/55" />
           <div className="flex items-center gap-0.5 ml-auto">
             {c.platforms.slice(0, 3).map((p) => (
@@ -104,12 +106,12 @@ function CardSurface({
                   }}
                   className="btn-join flex-1 text-[12px] font-semibold rounded-full px-3 py-1.5 transition"
                 >
-                  Join Campaign
+                  {t("common.joinCampaign")}
                 </button>
                 <button
                   type="button"
                   onClick={(e) => e.stopPropagation()}
-                  aria-label="share"
+                  aria-label={t("common.share")}
                   className="w-7 h-7 rounded-full bg-black/[0.04] hover:bg-black/[0.08] transition flex items-center justify-center text-black/70 shrink-0"
                 >
                   <ShareIcon size={12} />
@@ -152,8 +154,8 @@ export default function CampaignCard({
   c,
   onOpen
 }: {
-  c: Campaign;
-  onOpen: (c: Campaign) => void;
+  c: CampaignView;
+  onOpen: (c: CampaignView) => void;
 }) {
   return (
     <div className="relative">

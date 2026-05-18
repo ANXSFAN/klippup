@@ -160,3 +160,41 @@ body {
   box-shadow: 0 16px 36px rgba(24,24,27,0.12);
   z-index: 5;
 }
+
+/* ── shadcn/ui design tokens (used by the /admin area) ──
+   Neutral base + brand-orange primary/ring. The public site overrides body
+   colour with the explicit `html, body` rule above, so this only affects
+   components that opt in via `bg-background` / `text-foreground` / etc. */
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 6% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 6% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 6% 10%;
+    --primary: 25 100% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 40 6% 96%;
+    --secondary-foreground: 240 6% 10%;
+    --muted: 40 6% 96%;
+    --muted-foreground: 240 4% 46%;
+    --accent: 40 6% 96%;
+    --accent-foreground: 240 6% 10%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 40 6% 91%;
+    --input: 40 6% 91%;
+    --ring: 25 100% 55%;
+    --radius: 0.6rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

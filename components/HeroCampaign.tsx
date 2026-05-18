@@ -1,7 +1,8 @@
 "use client";
 import * as React from "react";
-import type { Campaign } from "@/data/campaigns";
-import { formatMoney } from "@/data/campaigns";
+import { useTranslations } from "next-intl";
+import type { CampaignView } from "@/lib/types";
+import { formatMoney } from "@/lib/format";
 import { ChevronLeftIcon, ChevronRightIcon } from "./Icons";
 import SmartImage from "./SmartImage";
 
@@ -9,9 +10,10 @@ export default function HeroCampaign({
   campaigns,
   onOpen
 }: {
-  campaigns: Campaign[];
-  onOpen: (c: Campaign) => void;
+  campaigns: CampaignView[];
+  onOpen: (c: CampaignView) => void;
 }) {
+  const t = useTranslations();
   const [idx, setIdx] = React.useState(0);
   const total = campaigns.length;
   const c = campaigns[idx];
@@ -57,7 +59,7 @@ export default function HeroCampaign({
             </h1>
             {c.poweredBy && (
               <div className="mt-1.5 text-[10px] uppercase tracking-[0.18em] text-white/55">
-                powered by{" "}
+                {t("hero.poweredBy")}{" "}
                 <span className="font-semibold text-white/85">{c.poweredBy}</span>
               </div>
             )}
@@ -78,7 +80,7 @@ export default function HeroCampaign({
             <div className="flex items-center gap-2 text-[11.5px] sm:text-[12.5px] text-white/70 drop-shadow-[0_1px_8px_rgba(0,0,0,0.4)]">
               <span>{c.categoryLabel}</span>
               <span className="text-white/40">·</span>
-              <span className="tabular-nums">{c.rate} views</span>
+              <span className="tabular-nums">{t("hero.rateViews", { rate: c.rate })}</span>
               <span className="text-white/40">·</span>
               <span className="tabular-nums">{formatMoney(c.budget)}</span>
             </div>
@@ -87,7 +89,7 @@ export default function HeroCampaign({
               onClick={() => onOpen(c)}
               className="btn-join mt-1 self-start text-[13px] font-semibold rounded-full px-5 py-2 transition"
             >
-              Join Campaign
+              {t("common.joinCampaign")}
             </button>
           </div>
 
@@ -97,7 +99,7 @@ export default function HeroCampaign({
               <button
                 type="button"
                 onClick={() => go("prev")}
-                aria-label="previous"
+                aria-label={t("hero.prev")}
                 className="w-7 h-7 rounded-full bg-white/[0.12] hover:bg-white/[0.22] backdrop-blur transition flex items-center justify-center text-white/85"
               >
                 <ChevronLeftIcon size={14} />
@@ -105,7 +107,7 @@ export default function HeroCampaign({
               <button
                 type="button"
                 onClick={() => go("next")}
-                aria-label="next"
+                aria-label={t("hero.next")}
                 className="w-7 h-7 rounded-full bg-white/[0.12] hover:bg-white/[0.22] backdrop-blur transition flex items-center justify-center text-white/85"
               >
                 <ChevronRightIcon size={14} />
@@ -123,7 +125,7 @@ export default function HeroCampaign({
                 key={i}
                 type="button"
                 onClick={() => setIdx(i)}
-                aria-label={`slide ${i + 1}`}
+                aria-label={t("hero.slide", { n: i + 1 })}
                 className={`h-[3px] rounded-full transition-all ${
                   i === idx ? "w-6 bg-ink/85" : "w-2.5 bg-ink/25"
                 }`}

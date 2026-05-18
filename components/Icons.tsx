@@ -120,6 +120,13 @@ export const HomeIcon = wrap(
   />
 );
 
+export const GlobeIcon = wrap(
+  <>
+    <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" />
+    <path d="M3 12h18M12 3c2.5 2.5 3.8 5.6 3.8 9S14.5 18.5 12 21M12 3c-2.5 2.5-3.8 5.6-3.8 9S9.5 18.5 12 21" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+  </>
+);
+
 export const PeopleIcon = wrap(
   <>
     <circle cx="9" cy="8" r="3" stroke="currentColor" strokeWidth="1.6" />

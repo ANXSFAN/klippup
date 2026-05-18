@@ -1,0 +1,677 @@
+{
+  "metadata": {
+    "title": "KlippUp — 发现",
+    "description": "发现内容活动，赚取奖励"
+  },
+  "common": {
+    "joinCampaign": "加入活动",
+    "share": "分享",
+    "showMore": "查看更多",
+    "open": "打开",
+    "close": "关闭",
+    "daysShort": "{days} 天",
+    "min": "最低",
+    "max": "最高"
+  },
+  "locale": {
+    "label": "语言",
+    "es": "Español",
+    "zh": "中文"
+  },
+  "hero": {
+    "poweredBy": "技术支持",
+    "rateViews": "{rate} 播放量",
+    "prev": "上一张",
+    "next": "下一张",
+    "slide": "第 {n} 张"
+  },
+  "search": {
+    "placeholder": "活动与创作者",
+    "filter": "筛选",
+    "category": "分类",
+    "content": "内容"
+  },
+  "discover": {
+    "featured": "精选",
+    "allCampaigns": "全部活动",
+    "scrollLeft": "向左滚动",
+    "scrollRight": "向右滚动"
+  },
+  "modal": {
+    "expand": "展开",
+    "requirements": "要求",
+    "contentRequirements": "内容要求",
+    "earnings": "收益",
+    "analytics": "数据分析",
+    "viewsTab": "播放量",
+    "submissionsTab": "投稿",
+    "totalViews": "总播放量",
+    "totalViewsFallback": "63.6 万",
+    "topEarners": "收益榜",
+    "resources": "资源",
+    "perThousandViews": "/1K 播放量",
+    "campaignGuide": "活动指南",
+    "discordLink": "Discord 链接",
+    "defaultRequirements": [
+      "达到最低提现门槛后，通过数据分析表单提交",
+      "一级地区（美国 / 英国 / 加拿大 / 澳大利亚）观众须占播放量的至少 40%",
+      "不得含脏话、竞品提及或来自未授权来源的内容",
+      "每个剪辑须包含讲解产品的片段",
+      "刷屏式转发和批量低质量上传不计入结算"
+    ]
+  },
+  "auth": {
+    "or": "或",
+    "google": "使用 Google 继续",
+    "logout": "退出",
+    "loggingOut": "退出中…",
+    "roleCreator": "我是创作者",
+    "roleCreatorDesc": "剪视频、参加活动赚钱",
+    "roleBrand": "我是品牌方",
+    "roleBrandDesc": "发布活动、找创作者",
+    "fields": {
+      "email": "邮箱",
+      "password": "密码",
+      "displayName": "昵称",
+      "brandName": "品牌名"
+    },
+    "login": {
+      "title": "登录",
+      "subtitle": "用邮箱密码或 Google 账号登录",
+      "submit": "登录",
+      "submitting": "登录中…",
+      "noAccount": "还没有账号？",
+      "signupLink": "去注册",
+      "error": "登录失败，请检查邮箱密码"
+    },
+    "signup": {
+      "title": "创建账号",
+      "subtitle": "选择身份，开始使用 KlippUp",
+      "submit": "创建账号",
+      "submitting": "创建中…",
+      "haveAccount": "已有账号？",
+      "loginLink": "去登录",
+      "created": "账号已创建",
+      "error": "创建失败，请重试"
+    }
+  },
+  "creator": {
+    "subtitle": "创作者",
+    "nav": {
+      "dashboard": "首页",
+      "campaigns": "活动",
+      "submissions": "我的投稿",
+      "earnings": "收益",
+      "profile": "个人资料"
+    },
+    "dashboard": {
+      "welcome": "欢迎，{name}",
+      "subtitle": "在这里看到可参加的活动、你的投稿和收益。",
+      "comingSoon": "下一步",
+      "comingSoonDesc": "去「活动」浏览正在进行的活动，提交你的剪辑。",
+      "browseCampaigns": "浏览活动"
+    },
+    "campaignList": {
+      "title": "活动",
+      "subtitle": "选择一个活动，提交你的剪辑赚奖励。",
+      "empty": "还没有可参加的活动。",
+      "mySubmissions": "已投 {count}"
+    },
+    "campaignDetail": {
+      "about": "关于这个活动",
+      "requirements": "内容要求",
+      "mySubmissions": "我的投稿",
+      "submitClip": "提交作品",
+      "noSubmissionsYet": "你还没有给这个活动投稿，点上面按钮提交第一条。",
+      "progress": "进度",
+      "rate": "费率",
+      "participants": "参与者",
+      "platforms": "支持平台",
+      "viewsClaimed": "声明 {views} 播放量"
+    },
+    "submissionForm": {
+      "title": "提交作品",
+      "description": "粘贴你发布的视频链接，我们会自动识别平台。",
+      "fields": {
+        "videoUrl": "视频链接",
+        "platform": "平台",
+        "viewsClaimed": "声明的播放量（可选）"
+      },
+      "platformPlaceholder": "选择平台",
+      "viewsClaimedHint": "你声明的数据，最终结算以审核为准。",
+      "autoDetected": "已识别为 {platform}",
+      "submit": "提交",
+      "submitting": "提交中…",
+      "cancel": "取消",
+      "created": "投稿已提交，等待审核",
+      "errors": {
+        "INVALID": "请检查表单",
+        "CAMPAIGN_NOT_FOUND": "活动不存在",
+        "CAMPAIGN_NOT_OPEN": "该活动当前不接受投稿",
+        "PLATFORM_NOT_ALLOWED": "该活动不支持这个平台",
+        "UNAUTHENTICATED": "请先登录",
+        "NOT_A_CREATOR": "只有创作者账号可以投稿",
+        "GENERIC": "提交失败，请重试"
+      }
+    },
+    "submissionsPage": {
+      "title": "我的投稿",
+      "subtitle": "查看所有投稿的审核状态和收益。",
+      "empty": "暂无投稿。",
+      "all": "全部",
+      "columns": {
+        "campaign": "活动",
+        "platform": "平台",
+        "url": "链接",
+        "views": "播放量",
+        "earnings": "收益",
+        "status": "状态",
+        "submitted": "提交时间"
+      }
+    },
+    "submissionStatus": {
+      "PENDING": "审核中",
+      "APPROVED": "已通过",
+      "REJECTED": "已拒绝",
+      "PAID": "已付款"
+    },
+    "earnings": {
+      "title": "收益",
+      "subtitle": "累计已付、待付以及每条带收益的投稿。",
+      "stats": {
+        "totalEarned": "累计已付",
+        "approvedUnpaid": "待付（已通过未付）",
+        "pendingCount": "待审条数"
+      },
+      "breakdown": "明细",
+      "empty": "暂无收益记录。"
+    },
+    "profilePage": {
+      "title": "个人资料",
+      "subtitle": "更新你的昵称、社交账号和收款方式。",
+      "sections": {
+        "basics": "基本信息",
+        "socials": "社交账号",
+        "socialsHint": "把你的账号链接或用户名贴进来；为空表示未填。",
+        "payout": "收款方式",
+        "payoutHint": "怎么把钱给你？我们暂时人工对账，越具体越好（PayPal 邮箱 / 银行卡号 / 加密钱包地址等）。"
+      },
+      "fields": {
+        "displayName": "昵称",
+        "email": "邮箱（不可改）"
+      },
+      "socials": {
+        "tiktok": "TikTok",
+        "youtube": "YouTube",
+        "instagram": "Instagram",
+        "x": "X / Twitter",
+        "twitch": "Twitch",
+        "placeholder": "@用户名 或主页链接"
+      },
+      "payout": {
+        "method": "方式",
+        "methods": {
+          "paypal": "PayPal",
+          "bank": "银行账户",
+          "other": "其他"
+        },
+        "details": "收款详情",
+        "detailsPlaceholder": "示例：\nPayPal: yourname@email.com\n或银行：银行名 / 账号 / 持有人姓名"
+      },
+      "save": "保存",
+      "saving": "保存中…",
+      "saved": "已保存",
+      "saveError": "保存失败"
+    }
+  },
+  "brand": {
+    "subtitle": "品牌方",
+    "nav": {
+      "dashboard": "首页",
+      "campaigns": "我的活动",
+      "submissions": "审稿",
+      "profile": "品牌资料"
+    },
+    "dashboard": {
+      "welcome": "欢迎，{name}",
+      "subtitle": "在这里创建活动、审核创作者投稿。",
+      "newCampaign": "新建活动",
+      "reviewCta": "审核投稿",
+      "reviewCtaDesc": "去审稿页处理待审作品，通过后会自动记入创作者收益。",
+      "openReview": "去审稿",
+      "stats": {
+        "campaigns": "我的活动",
+        "draftsAndPublished": "草稿 {drafts} · 已发布 {published}",
+        "pendingSubmissions": "待审稿",
+        "totalSubmissions": "累计 {count} 条",
+        "approvedSubmissions": "已通过"
+      }
+    },
+    "campaignList": {
+      "title": "我的活动",
+      "new": "新建活动",
+      "edit": "编辑",
+      "review": "审稿",
+      "count": "{count} 个活动",
+      "empty": "你还没有任何活动。点右上角「新建活动」开始。",
+      "columns": {
+        "campaign": "活动",
+        "category": "分类",
+        "status": "状态",
+        "progress": "进度",
+        "pending": "待审",
+        "total": "总投稿",
+        "created": "创建于",
+        "actions": "操作"
+      }
+    },
+    "campaignForm": {
+      "createTitle": "新建活动",
+      "editTitle": "编辑活动",
+      "subtitle": "填写活动核心信息。提交后会进入草稿状态，需等平台审核发布。",
+      "editSubtitle": "更新活动详情。",
+      "draftNotice": "新建的活动会默认为草稿状态，需要平台审核后才会出现在前台。",
+      "sections": {
+        "basics": "基本信息",
+        "classification": "分类与平台",
+        "numbers": "数据",
+        "requirements": "内容要求",
+        "earnings": "各平台收益（可选）"
+      },
+      "fields": {
+        "title": "标题",
+        "artTitle": "艺术标题（可选）",
+        "description": "描述",
+        "cover": "封面",
+        "poweredBy": "技术支持（可选）",
+        "category": "分类",
+        "categoryLabel": "自定义标签（可选）",
+        "platforms": "支持平台",
+        "budget": "预算（数字）",
+        "participants": "目标参与者数（可选）",
+        "rate": "费率（如 $1/1K）",
+        "launchedAt": "上线日期"
+      },
+      "requirementsEmpty": "暂无要求。点下面按钮添加一条。",
+      "addRequirement": "添加要求",
+      "remove": "移除",
+      "earningsHint": "不适用的平台留空即可。",
+      "earningsCols": {
+        "rate": "费率",
+        "min": "最低",
+        "max": "最高"
+      },
+      "submit": "创建活动",
+      "save": "保存",
+      "saving": "保存中…",
+      "cancel": "取消",
+      "created": "活动已创建（草稿）",
+      "updated": "已保存",
+      "errors": {
+        "INVALID": "请检查表单",
+        "MISSING_BRAND_PROFILE": "请先完善品牌资料",
+        "NOT_FOUND": "活动不存在或无权访问",
+        "ARCHIVED": "已归档的活动不能再编辑",
+        "UNAUTHENTICATED": "请先登录",
+        "NOT_A_BRAND": "只有品牌账号可以建活动",
+        "GENERIC": "保存失败，请重试"
+      }
+    },
+    "reviewPage": {
+      "title": "审稿",
+      "subtitle": "查看创作者投稿，通过填上核对后的播放量和奖励金额，拒绝填理由。",
+      "forCampaign": "该活动的投稿",
+      "backToCampaigns": "返回我的活动",
+      "editCampaign": "编辑活动",
+      "all": "全部",
+      "empty": "暂无投稿。",
+      "approve": "通过",
+      "reject": "拒绝",
+      "approveTitle": "通过投稿",
+      "rejectTitle": "拒绝投稿",
+      "confirmApprove": "确认通过",
+      "confirmReject": "确认拒绝",
+      "approved": "已通过",
+      "rejected": "已拒绝",
+      "error": "操作失败",
+      "cancel": "取消",
+      "saving": "处理中…",
+      "creatorLabel": "创作者",
+      "viewsClaimedWas": "声明播放量：{views}",
+      "earningsCentsHint": "以美分为单位（123 = $1.23）。",
+      "fields": {
+        "viewsVerified": "核对播放量",
+        "earningsCents": "奖励金额（美分）",
+        "notes": "备注（可选）",
+        "reason": "拒绝理由"
+      },
+      "columns": {
+        "campaign": "活动",
+        "brand": "品牌",
+        "creator": "创作者",
+        "platform": "平台",
+        "url": "链接",
+        "claimed": "声明",
+        "verified": "核对",
+        "earnings": "奖励",
+        "status": "状态",
+        "actions": "操作"
+      },
+      "platformOwned": "平台自营"
+    },
+    "profilePage": {
+      "title": "品牌资料",
+      "subtitle": "你的品牌名会显示在所有活动卡片上。",
+      "verified": "已认证",
+      "verifiedHint": "由平台审核后授予的官方认证标识。",
+      "sections": {
+        "basics": "基本信息"
+      },
+      "fields": {
+        "brandName": "品牌名",
+        "email": "邮箱（不可改）",
+        "website": "官网",
+        "description": "品牌介绍"
+      },
+      "save": "保存",
+      "saving": "保存中…",
+      "saved": "已保存",
+      "saveError": "保存失败"
+    }
+  },
+  "admin": {
+    "brand": "KlippUp",
+    "subtitle": "后台管理",
+    "nav": {
+      "dashboard": "看板",
+      "campaigns": "活动",
+      "submissions": "投稿",
+      "payouts": "结算",
+      "users": "用户",
+      "categories": "分类",
+      "platforms": "平台",
+      "settings": "设置"
+    },
+    "viewSite": "查看前台",
+    "comingSoon": "即将推出",
+    "comingSoonDesc": "该模块即将上线。",
+    "dashboard": {
+      "title": "看板",
+      "subtitle": "平台概览",
+      "stats": {
+        "campaigns": "活动",
+        "published": "已发布",
+        "drafts": "草稿",
+        "categories": "分类",
+        "platforms": "平台",
+        "totalBudget": "总预算"
+      },
+      "charts": {
+        "byCategory": "按分类",
+        "byPlatform": "按平台",
+        "byStatus": "按状态",
+        "byMonth": "近 6 个月新增",
+        "empty": "暂无数据"
+      }
+    },
+    "campaigns": {
+      "title": "活动",
+      "new": "新建活动",
+      "empty": "还没有活动。",
+      "count": "{count} 个活动",
+      "columns": {
+        "campaign": "活动",
+        "brand": "品牌",
+        "owner": "所有者",
+        "category": "分类",
+        "platforms": "平台",
+        "placements": "展示位",
+        "progress": "进度",
+        "participants": "参与者",
+        "status": "状态",
+        "actions": "操作"
+      },
+      "platformOwner": "平台",
+      "publish": "发布",
+      "publishHint": "把「{name}」从草稿改为已发布",
+      "published": "已发布",
+      "publishError": "发布失败",
+      "status": {
+        "DRAFT": "草稿",
+        "PUBLISHED": "已发布",
+        "ARCHIVED": "已归档"
+      },
+      "placements": {
+        "HERO": "头图",
+        "FEATURED": "精选",
+        "GRID": "网格"
+      },
+      "edit": "编辑",
+      "delete": "删除",
+      "none": "—",
+      "form": {
+        "createTitle": "新建活动",
+        "editTitle": "编辑活动",
+        "basics": "基本信息",
+        "brand": "品牌",
+        "brandVerified": "品牌已认证",
+        "title": "标题",
+        "artTitle": "艺术标题（可选，每行一句）",
+        "description": "描述",
+        "poweredBy": "技术支持（可选）",
+        "cover": "封面",
+        "noCover": "暂无封面",
+        "upload": "上传图片",
+        "uploading": "上传中…",
+        "uploadError": "图片上传失败",
+        "classification": "分类与展示位",
+        "category": "分类",
+        "categoryLabel": "自定义标签（可选）",
+        "platforms": "平台",
+        "placements": "首页展示位",
+        "placementSlots": {
+          "HERO": "头图",
+          "FEATURED": "精选",
+          "GRID": "网格"
+        },
+        "hot": "标记为热门",
+        "status": "状态",
+        "statuses": {
+          "DRAFT": "草稿",
+          "PUBLISHED": "已发布",
+          "ARCHIVED": "已归档"
+        },
+        "numbers": "数据",
+        "raised": "已筹集",
+        "budget": "预算",
+        "participants": "参与者",
+        "rate": "费率（如 $1/1K）",
+        "launchedAt": "上线日期",
+        "modalContent": "活动详情弹窗内容",
+        "requirements": "要求",
+        "addRequirement": "添加要求",
+        "earnings": "各平台收益",
+        "earningsHint": "不适用的平台留空即可。",
+        "rateLabel": "费率",
+        "min": "最低",
+        "max": "最高",
+        "topEarners": "收益榜",
+        "views": "播放量",
+        "name": "名称",
+        "addEarner": "添加",
+        "resources": "资源",
+        "resourceName": "名称",
+        "resourceSubtitle": "副标题",
+        "resourceKinds": {
+          "drive": "Google Drive",
+          "link": "链接"
+        },
+        "resourceUrl": "URL",
+        "addResource": "添加资源",
+        "totalViews": "总播放量（文本，如 3.8M）",
+        "viewsSeries": "图表数据（用逗号分隔的数字）",
+        "remove": "移除",
+        "save": "保存",
+        "saving": "保存中…",
+        "cancel": "取消",
+        "saveError": "保存失败",
+        "created": "活动已创建",
+        "updated": "活动已更新",
+        "deleted": "活动已删除",
+        "deleteConfirm": "确定删除「{name}」？"
+      }
+    },
+    "users": {
+      "title": "用户",
+      "count": "{count} 个用户",
+      "selfHint": "你不能修改自己的角色",
+      "roleChanged": "角色已更新",
+      "verifyLabel": "认证",
+      "verifiedOn": "已开启认证",
+      "verifiedOff": "已取消认证",
+      "error": "操作失败",
+      "role": {
+        "CREATOR": "创作者",
+        "BRAND": "品牌方",
+        "ADMIN": "管理员"
+      },
+      "columns": {
+        "user": "用户",
+        "role": "角色",
+        "campaigns": "活动",
+        "submissions": "投稿",
+        "earned": "累计收益",
+        "joined": "加入时间",
+        "actions": "操作"
+      }
+    },
+    "submissions": {
+      "title": "投稿审核",
+      "subtitle": "查看所有品牌的投稿，必要时由平台代为审核或修改。"
+    },
+    "payouts": {
+      "title": "手动结算",
+      "subtitle": "把已通过的投稿打包付款给创作者。一笔 Payout 对应你转账的实际动作。",
+      "stats": {
+        "pendingAmount": "待结算金额",
+        "acrossCreators": "{count} 位创作者待付",
+        "payoutsAll": "已结算次数",
+        "totalPaid": "累计已付 {amount}"
+      },
+      "pendingTitle": "待结算",
+      "pendingEmpty": "目前没有待结算的投稿。",
+      "historyTitle": "结算历史",
+      "historyEmpty": "还没有结算记录。",
+      "noMethod": "未填收款方式",
+      "subsLabel": "笔",
+      "recordPayment": "记一笔付款",
+      "payoutDetailsLabel": "创作者填写的收款信息",
+      "formTitle": "给 {name} 付款",
+      "totalLabel": "本次合计",
+      "method": "付款方式",
+      "methods": {
+        "paypal": "PayPal",
+        "bank": "银行",
+        "other": "其他"
+      },
+      "details": "收款详情（快照）",
+      "detailsPlaceholder": "默认会带入创作者资料里的内容，可修改",
+      "txnRef": "凭证号 / 转账参考号",
+      "txnRefPlaceholder": "例如 PayPal Txn ID、银行流水号",
+      "notes": "备注（可选）",
+      "confirm": "确认已付",
+      "cancel": "取消",
+      "saving": "处理中…",
+      "paid": "结算完成",
+      "errors": {
+        "INVALID": "请检查表单",
+        "MISSING_SUBMISSIONS": "投稿不存在",
+        "WRONG_CREATOR": "选中的投稿不属于该创作者",
+        "NOT_APPROVED": "只能给已通过的投稿付款",
+        "ALREADY_PAID": "已经付过款的投稿不能重复结算",
+        "ZERO_AMOUNT": "金额为 0 的投稿无法结算",
+        "UNAUTHENTICATED": "请先登录",
+        "NOT_ADMIN": "只有管理员可以结算",
+        "GENERIC": "结算失败"
+      },
+      "columns": {
+        "creator": "创作者",
+        "amount": "金额",
+        "method": "方式",
+        "txnRef": "凭证号",
+        "submissions": "笔数",
+        "paidAt": "时间"
+      }
+    },
+    "categories": {
+      "title": "分类",
+      "new": "新建分类",
+      "count": "{count} 个分类",
+      "empty": "还没有分类。",
+      "columns": {
+        "order": "排序",
+        "label": "名称",
+        "slug": "Slug",
+        "glyph": "图标字",
+        "usage": "活动数",
+        "actions": "操作"
+      },
+      "edit": "编辑",
+      "delete": "删除",
+      "createTitle": "新建分类",
+      "editTitle": "编辑分类",
+      "created": "分类已创建",
+      "updated": "分类已更新",
+      "deleted": "分类已删除",
+      "deleteConfirm": "确定删除「{name}」？",
+      "duplicateSlug": "该 slug 已被使用",
+      "inUse": "无法删除：有 {count} 个活动正在使用",
+      "form": {
+        "label": "名称",
+        "slug": "Slug",
+        "slugHint": "仅小写字母、数字、连字符",
+        "glyph": "图标字",
+        "order": "排序",
+        "save": "保存",
+        "saving": "保存中…",
+        "cancel": "取消",
+        "saveError": "保存失败"
+      }
+    },
+    "platforms": {
+      "title": "平台",
+      "new": "新建平台",
+      "count": "{count} 个平台",
+      "empty": "还没有平台。",
+      "columns": {
+        "order": "排序",
+        "label": "名称",
+        "slug": "Slug",
+        "glyph": "图标字",
+        "usage": "活动数",
+        "actions": "操作"
+      },
+      "edit": "编辑",
+      "delete": "删除",
+      "createTitle": "新建平台",
+      "editTitle": "编辑平台",
+      "created": "平台已创建",
+      "updated": "平台已更新",
+      "deleted": "平台已删除",
+      "deleteConfirm": "确定删除「{name}」？",
+      "duplicateSlug": "该 slug 已被使用",
+      "inUse": "无法删除：有 {count} 个活动正在使用",
+      "form": {
+        "label": "名称",
+        "slug": "Slug",
+        "slugHint": "仅小写字母、数字、连字符",
+        "glyph": "图标字（如 TT）",
+        "order": "排序",
+        "save": "保存",
+        "saving": "保存中…",
+        "cancel": "取消",
+        "saveError": "保存失败"
+      }
+    }
+  }
+}

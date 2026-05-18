@@ -1,7 +1,8 @@
 "use client";
 import * as React from "react";
-import type { Campaign } from "@/data/campaigns";
-import { formatMoney } from "@/data/campaigns";
+import { useTranslations } from "next-intl";
+import type { CampaignView, CampaignResource } from "@/lib/types";
+import { formatMoney } from "@/lib/format";
 import {
   CloseIcon,
   ExpandIcon,
@@ -23,31 +24,19 @@ import {
 import SmartImage from "./SmartImage";
 import BrandAvatar from "./BrandAvatar";
 
-const defaultRequirements = [
-  "Submit through the analytics form once your minimum payout threshold is reached",
-  "Tier-1 audience (US / UK / CA / AU) must make up at least 40% of views",
-  "No profanity, competitor mentions, or content from outside approved sources",
-  "Each clip must include the segment where the product is explained",
-  "Spam-style reposts and bulk low-quality uploads will not count toward payout"
-];
-
 const defaultTopEarners = [
   { views: 170_787, name: "Cipher" },
   { views: 30_050, name: "HA Maker" },
   { views: 8_811, name: "Vendra" }
 ];
 
-const defaultEarnings = [
-  { name: "YouTube", icon: <YouTubeIcon size={15} />, rate: "$1.50", min: "$1.50 Min", max: "$500 Max" },
-  { name: "Instagram", icon: <InstagramIcon size={15} />, rate: "$3", min: "$3 Min", max: "$500 Max" },
-  { name: "X", icon: <XIcon size={15} />, rate: "$1.50", min: "$1.50 Min", max: "$500 Max" },
-  { name: "TikTok", icon: <TiktokIcon size={15} />, rate: "$3", min: "$3 Min", max: "$500 Max" }
-];
-
-const defaultResources = [
-  { name: "Google Drive", subtitle: "Campaign Guide", kind: "drive" as const },
-  { name: "Discord Link", subtitle: "Discord Link", kind: "link" as const }
-];
+// Display name + icon per platform slug, used to render Campaign.earnings rows.
+const PLATFORM_META: Record<string, { name: string; icon: React.ReactNode }> = {
+  youtube: { name: "YouTube", icon: <YouTubeIcon size={15} /> },
+  instagram: { name: "Instagram", icon: <InstagramIcon size={15} /> },
+  x: { name: "X", icon: <XIcon size={15} /> },
+  tiktok: { name: "TikTok", icon: <TiktokIcon size={15} /> }
+};
 
 export default function CampaignModal({
   open,
@@ -55,9 +44,10 @@ export default function CampaignModal({
   onClose
 }: {
   open: boolean;
-  campaign: Campaign | null;
+  campaign: CampaignView | null;
   onClose: () => void;
 }) {
+  const t = useTranslations();
   React.useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -76,6 +66,41 @@ export default function CampaignModal({
   const c = campaign;
   const pct = Math.min(100, (c.raised / c.budget) * 100);
 
+  // Localized fallbacks for sections whose Campaign fields are still empty.
+  // (These fields are editable in the admin — see docs/admin-plan.md.)
+  const minLabel = t("common.min");
+  const maxLabel = t("common.max");
+  const defaultRequirements = t.raw("modal.defaultRequirements") as string[];
+  const defaultEarnings = [
+    { name: "YouTube", icon: <YouTubeIcon size={15} />, rate: "$1.50", min: `$1.50 ${minLabel}`, max: `$500 ${maxLabel}` },
+    { name: "Instagram", icon: <InstagramIcon size={15} />, rate: "$3", min: `$3 ${minLabel}`, max: `$500 ${maxLabel}` },
+    { name: "X", icon: <XIcon size={15} />, rate: "$1.50", min: `$1.50 ${minLabel}`, max: `$500 ${maxLabel}` },
+    { name: "TikTok", icon: <TiktokIcon size={15} />, rate: "$3", min: `$3 ${minLabel}`, max: `$500 ${maxLabel}` }
+  ];
+  const defaultResources: CampaignResource[] = [
+    { name: "Google Drive", subtitle: t("modal.campaignGuide"), kind: "drive" },
+    { name: t("modal.discordLink"), subtitle: t("modal.discordLink"), kind: "link" }
+  ];
+
+  // Real data when present, localized fallback otherwise.
+  const requirements = c.requirements.length ? c.requirements : defaultRequirements;
+  const dbEarnings = c.earnings
+    ? Object.entries(c.earnings).flatMap(([slug, row]) =>
+        row
+          ? [{
+              name: PLATFORM_META[slug]?.name ?? slug,
+              icon: PLATFORM_META[slug]?.icon ?? null,
+              rate: row.rate,
+              min: row.min,
+              max: row.max
+            }]
+          : []
+      )
+    : [];
+  const earningsCards = dbEarnings.length ? dbEarnings : defaultEarnings;
+  const topEarners = c.topEarners.length ? c.topEarners : defaultTopEarners;
+  const resources: CampaignResource[] = c.resources.length ? c.resources : defaultResources;
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-start sm:items-center justify-center backdrop-dim"
@@ -89,7 +114,7 @@ export default function CampaignModal({
         <button
           type="button"
           onClick={onClose}
-          aria-label="close"
+          aria-label={t("common.close")}
           className="sm:hidden absolute top-3 left-3 z-10 w-9 h-9 rounded-full bg-black/60 backdrop-blur flex items-center justify-center text-white"
         >
           <CloseIcon size={16} />
@@ -123,7 +148,7 @@ export default function CampaignModal({
           )}
           <button
             type="button"
-            aria-label="expand"
+            aria-label={t("modal.expand")}
             className="absolute top-3 right-3 w-9 h-9 rounded-full bg-black/60 hover:bg-black/75 flex items-center justify-center text-white backdrop-blur"
           >
             <ExpandIcon size={15} />
@@ -177,11 +202,11 @@ export default function CampaignModal({
               type="button"
               className="btn-join text-[13.5px] font-semibold rounded-full px-5 py-2 transition"
             >
-              Join Campaign
+              {t("common.joinCampaign")}
             </button>
             <button
               type="button"
-              aria-label="share"
+              aria-label={t("common.share")}
               className="w-9 h-9 rounded-full bg-black/[0.05] hover:bg-black/[0.09] transition flex items-center justify-center text-black/70"
             >
               <ShareIcon size={15} />
@@ -192,10 +217,10 @@ export default function CampaignModal({
           <div className="mt-7 border-t border-line" />
 
           {/* requirements */}
-          <Section title="Requirements">
-            <div className="text-[11.5px] text-black/40 mb-3">Content Requirements</div>
+          <Section title={t("modal.requirements")}>
+            <div className="text-[11.5px] text-black/40 mb-3">{t("modal.contentRequirements")}</div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-7 gap-y-3">
-              {defaultRequirements.slice(0, 5).map((r, i) => (
+              {requirements.slice(0, 5).map((r, i) => (
                 <p key={i} className="text-[12.5px] leading-relaxed text-ink">
                   {r}
                 </p>
@@ -205,7 +230,7 @@ export default function CampaignModal({
               type="button"
               className="mt-4 w-full flex items-center justify-center gap-1.5 text-[12px] text-black/55 hover:text-ink transition"
             >
-              <span>Show more</span>
+              <span>{t("common.showMore")}</span>
               <ChevronDownSmallIcon size={12} />
             </button>
           </Section>
@@ -213,50 +238,50 @@ export default function CampaignModal({
           {/* Earnings + Analytics — side-by-side on lg, stacked on mobile */}
           <div className="mt-7 grid grid-cols-1 lg:grid-cols-2 gap-x-5 gap-y-7">
             <div>
-              <h4 className="text-[14px] font-semibold text-ink mb-3">Earnings</h4>
+              <h4 className="text-[14px] font-semibold text-ink mb-3">{t("modal.earnings")}</h4>
               <div className="grid grid-cols-2 gap-2.5">
-                {defaultEarnings.map((p) => (
+                {earningsCards.map((p) => (
                   <PlatformCard key={p.name} {...p} />
                 ))}
               </div>
             </div>
             <div>
-              <h4 className="text-[14px] font-semibold text-ink mb-3">Analytics</h4>
+              <h4 className="text-[14px] font-semibold text-ink mb-3">{t("modal.analytics")}</h4>
               <div className="pill-glass rounded-2xl p-4 h-full flex flex-col">
                 <div className="flex items-center gap-1.5">
                   <button className="px-3 py-1 rounded-full bg-brand text-[12px] font-medium text-white shadow-[0_2px_6px_rgba(255,122,26,0.32)]">
-                    Views
+                    {t("modal.viewsTab")}
                   </button>
                   <button className="px-3 py-1 rounded-full text-[12px] text-black/55 hover:text-ink transition">
-                    Submissions
+                    {t("modal.submissionsTab")}
                   </button>
                 </div>
                 <div className="mt-3">
                   <div className="text-[26px] font-semibold tabular-nums text-ink leading-none">
-                    {c.totalViews ?? "63.6万"}
+                    {c.totalViews ?? t("modal.totalViewsFallback")}
                   </div>
-                  <div className="text-[11px] text-black/55 mt-1.5">Total views</div>
+                  <div className="text-[11px] text-black/55 mt-1.5">{t("modal.totalViews")}</div>
                 </div>
                 <div className="mt-3 flex-1 min-h-[80px]">
-                  <ViewsChart />
+                  <ViewsChart series={c.viewsSeries} />
                 </div>
               </div>
             </div>
           </div>
 
           {/* top earners */}
-          <Section title="Top Earners">
+          <Section title={t("modal.topEarners")}>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {defaultTopEarners.map((e, i) => (
+              {topEarners.map((e, i) => (
                 <EarnerCard key={i} views={e.views} name={e.name} rank={i + 1} />
               ))}
             </div>
           </Section>
 
           {/* resources */}
-          <Section title="Resources">
+          <Section title={t("modal.resources")}>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {defaultResources.map((r, i) => (
+              {resources.map((r, i) => (
                 <div
                   key={i}
                   className="pill-glass rounded-2xl p-3.5 flex items-center gap-3"
@@ -274,7 +299,7 @@ export default function CampaignModal({
                   </div>
                   <button
                     type="button"
-                    aria-label="open"
+                    aria-label={t("common.open")}
                     className="w-8 h-8 rounded-full hover:bg-black/[0.05] flex items-center justify-center text-black/55 hover:text-ink transition shrink-0"
                   >
                     <ExternalLinkIcon size={14} />
@@ -325,6 +350,7 @@ function PlatformCard({
   max: string;
   icon: React.ReactNode;
 }) {
+  const t = useTranslations("modal");
   return (
     <div className="pill-glass rounded-xl p-3 flex flex-col gap-2.5">
       <div className="flex items-center justify-between">
@@ -335,7 +361,7 @@ function PlatformCard({
       </div>
       <div className="text-[15px] font-bold tabular-nums leading-none">
         <span className="text-ink">{rate}</span>
-        <span className="text-black/50 text-[11px] font-medium ml-0.5">/1K views</span>
+        <span className="text-black/50 text-[11px] font-medium ml-0.5">{t("perThousandViews")}</span>
       </div>
       <div className="flex items-center gap-1.5 flex-wrap">
         <Pill>{min}</Pill>
@@ -406,11 +432,12 @@ function StarCluster({ color }: { color: string }) {
   );
 }
 
-function ViewsChart() {
+function ViewsChart({ series }: { series: number[] }) {
   const w = 320;
   const h = 90;
-  const points = [10, 14, 12, 22, 30, 28, 38, 52, 48, 64, 70, 80];
-  const max = 100;
+  const hasData = series.length > 1;
+  const points = hasData ? series : [10, 14, 12, 22, 30, 28, 38, 52, 48, 64, 70, 80];
+  const max = (hasData ? Math.max(...points) : 100) || 1;
   const stepX = w / (points.length - 1);
   const path = points
     .map((p, i) => {

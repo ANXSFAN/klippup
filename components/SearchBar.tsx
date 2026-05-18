@@ -1,5 +1,6 @@
 "use client";
 import * as React from "react";
+import { useTranslations } from "next-intl";
 import {
   SearchIcon,
   ChevronDownIcon,
@@ -10,16 +11,18 @@ import {
   XIcon,
   TwitchIcon
 } from "./Icons";
+import LocaleSwitcher from "./LocaleSwitcher";
 
 const platformChips = [
-  { key: "tt", node: <TiktokIcon size={14} /> },
-  { key: "yt", node: <YouTubeIcon size={14} /> },
-  { key: "ig", node: <InstagramIcon size={14} /> },
+  { key: "tiktok", node: <TiktokIcon size={14} /> },
+  { key: "youtube", node: <YouTubeIcon size={14} /> },
+  { key: "instagram", node: <InstagramIcon size={14} /> },
   { key: "x", node: <XIcon size={14} /> },
-  { key: "tw", node: <TwitchIcon size={14} /> }
+  { key: "twitch", node: <TwitchIcon size={14} /> }
 ];
 
 export default function SearchBar({ resultCount = "30K" }: { resultCount?: string }) {
+  const t = useTranslations("search");
   return (
     <section className="px-4 sm:px-6 lg:px-8 mt-5">
       <div className="max-w-[2000px] mx-auto flex flex-col md:flex-row md:items-center gap-2.5">
@@ -29,7 +32,7 @@ export default function SearchBar({ resultCount = "30K" }: { resultCount?: strin
             <SearchIcon size={14} className="text-black/45" />
             <input
               type="text"
-              placeholder="Campaigns and creators"
+              placeholder={t("placeholder")}
               className="flex-1 min-w-0 bg-transparent outline-none text-[12.5px] text-ink placeholder:text-black/40"
             />
             <span className="text-[10px] font-medium text-black/40 tabular-nums">
@@ -39,7 +42,7 @@ export default function SearchBar({ resultCount = "30K" }: { resultCount?: strin
 
           <button
             type="button"
-            aria-label="filter"
+            aria-label={t("filter")}
             className="w-9 h-9 rounded-full card-glass flex items-center justify-center text-black/65 hover:text-ink transition"
           >
             <FilterIcon size={14} />
@@ -59,10 +62,11 @@ export default function SearchBar({ resultCount = "30K" }: { resultCount?: strin
           </div>
         </div>
 
-        {/* dropdowns pinned right */}
+        {/* dropdowns + language pinned right */}
         <div className="flex items-center gap-2 md:ml-auto">
-          <Dropdown label="Category" />
-          <Dropdown label="Content" />
+          <Dropdown label={t("category")} />
+          <Dropdown label={t("content")} />
+          <LocaleSwitcher />
         </div>
       </div>
     </section>
