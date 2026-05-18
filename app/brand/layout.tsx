@@ -1,18 +1,10 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { LayoutDashboard, Megaphone, Send, User } from "lucide-react";
 import { Toaster } from "@/components/ui/sonner";
 import { getCurrentProfile } from "@/lib/auth";
 import LocaleSwitcher from "@/components/LocaleSwitcher";
 import LogoutButton from "@/components/portal/LogoutButton";
-import PortalSidebar, { type PortalNavItem } from "@/components/portal/PortalSidebar";
-
-const NAV: PortalNavItem[] = [
-  { href: "/brand", key: "dashboard", icon: LayoutDashboard, exact: true },
-  { href: "/brand/campaigns", key: "campaigns", icon: Megaphone },
-  { href: "/brand/submissions", key: "submissions", icon: Send },
-  { href: "/brand/profile", key: "profile", icon: User }
-];
+import PortalSidebar from "@/components/portal/PortalSidebar";
 
 export default async function BrandLayout({ children }: { children: React.ReactNode }) {
   const profile = await getCurrentProfile();
@@ -21,12 +13,7 @@ export default async function BrandLayout({ children }: { children: React.ReactN
 
   return (
     <div className="min-h-screen flex bg-secondary/40">
-      <PortalSidebar
-        brandHref="/brand"
-        subtitleKey="subtitle"
-        items={NAV}
-        ns="brand"
-      />
+      <PortalSidebar brandHref="/brand" subtitleKey="subtitle" ns="brand" />
       <div className="flex-1 flex flex-col min-w-0">
         <header className="h-16 border-b border-border bg-card px-6 flex items-center justify-end gap-4">
           <Link

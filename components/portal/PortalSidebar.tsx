@@ -3,27 +3,53 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import type { LucideIcon } from "lucide-react";
+import {
+  LayoutDashboard,
+  Megaphone,
+  Send,
+  User,
+  Wallet,
+  type LucideIcon
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export interface PortalNavItem {
+interface NavItem {
   href: string;
   key: string;
   icon: LucideIcon;
   exact?: boolean;
 }
 
+// Nav configs live in the client component so the icon components don't have
+// to cross the server → client boundary (lucide icons are forwardRef components
+// and can't be serialized as props).
+const NAV_BY_NS: Record<string, NavItem[]> = {
+  creator: [
+    { href: "/creator", key: "dashboard", icon: LayoutDashboard, exact: true },
+    { href: "/creator/campaigns", key: "campaigns", icon: Megaphone },
+    { href: "/creator/submissions", key: "submissions", icon: Send },
+    { href: "/creator/earnings", key: "earnings", icon: Wallet },
+    { href: "/creator/profile", key: "profile", icon: User }
+  ],
+  brand: [
+    { href: "/brand", key: "dashboard", icon: LayoutDashboard, exact: true },
+    { href: "/brand/campaigns", key: "campaigns", icon: Megaphone },
+    { href: "/brand/submissions", key: "submissions", icon: Send },
+    { href: "/brand/profile", key: "profile", icon: User }
+  ]
+};
+
 interface Props {
   brandHref: string;
   subtitleKey: string;
-  items: PortalNavItem[];
-  /** Translation namespace for `subtitleKey` and each `item.key`. */
-  ns: string;
+  /** Translation namespace; also picks which nav set to render. */
+  ns: "creator" | "brand";
 }
 
-export default function PortalSidebar({ brandHref, subtitleKey, items, ns }: Props) {
+export default function PortalSidebar({ brandHref, subtitleKey, ns }: Props) {
   const pathname = usePathname();
   const t = useTranslations(ns);
+  const items = NAV_BY_NS[ns];
 
   return (
     <aside className="w-60 shrink-0 border-r border-border bg-card flex flex-col">
