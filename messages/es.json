@@ -60,6 +60,16 @@
       "Las republicaciones tipo spam y las subidas masivas de baja calidad no contarán para el pago"
     ]
   },
+  "account": {
+    "label": "Cuenta",
+    "signIn": "Iniciar sesión",
+    "signUp": "Crear cuenta",
+    "creatorPortal": "Panel de creador",
+    "brandPortal": "Panel de marca",
+    "adminPortal": "Administración",
+    "logout": "Cerrar sesión",
+    "loggingOut": "Cerrando sesión…"
+  },
   "auth": {
     "or": "O",
     "google": "Continuar con Google",

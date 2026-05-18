@@ -111,6 +111,13 @@ export const CloseIcon = wrap(
   <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
 );
 
+export const UserIcon = wrap(
+  <>
+    <circle cx="12" cy="8" r="3.5" stroke="currentColor" strokeWidth="1.6" />
+    <path d="M4 20c0-3.6 3.6-6 8-6s8 2.4 8 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+  </>
+);
+
 export const HomeIcon = wrap(
   <path
     d="M4 11l8-7 8 7v8a1 1 0 01-1 1h-4v-6h-6v6H5a1 1 0 01-1-1v-8z"

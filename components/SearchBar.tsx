@@ -21,7 +21,13 @@ const platformChips = [
   { key: "twitch", node: <TwitchIcon size={14} /> }
 ];
 
-export default function SearchBar({ resultCount = "30K" }: { resultCount?: string }) {
+export default function SearchBar({
+  resultCount = "30K",
+  accountSlot
+}: {
+  resultCount?: string;
+  accountSlot?: React.ReactNode;
+}) {
   const t = useTranslations("search");
   return (
     <section className="px-4 sm:px-6 lg:px-8 mt-5">
@@ -67,6 +73,7 @@ export default function SearchBar({ resultCount = "30K" }: { resultCount?: strin
           <Dropdown label={t("category")} />
           <Dropdown label={t("content")} />
           <LocaleSwitcher />
+          {accountSlot}
         </div>
       </div>
     </section>

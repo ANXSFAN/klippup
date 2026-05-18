@@ -56,8 +56,10 @@ interface Props {
   scopedToCampaign?: boolean;
   /** When true, surfaces the "Brand owner" column (used on /admin/submissions). */
   showBrandOwner?: boolean;
-  /** Builds the href for a row's campaign link. Defaults to the brand portal path. */
-  campaignHref?: (campaignId: string) => string;
+  /** URL pattern for a row's campaign link. Use `{id}` as the placeholder.
+   *  Defaults to the brand portal path. Kept as a string (not a function) so it
+   *  can cross the server → client component boundary safely. */
+  campaignHrefPattern?: string;
   approveAction: (input: ApproveSubmissionValues) => Promise<ReviewActionResult>;
   rejectAction: (input: RejectSubmissionValues) => Promise<ReviewActionResult>;
 }
@@ -66,10 +68,11 @@ export default function ReviewQueue({
   rows,
   scopedToCampaign,
   showBrandOwner,
-  campaignHref = (id) => `/brand/campaigns/${id}/submissions`,
+  campaignHrefPattern = "/brand/campaigns/{id}/submissions",
   approveAction,
   rejectAction
 }: Props) {
+  const buildHref = (id: string) => campaignHrefPattern.replace("{id}", id);
   const t = useTranslations("brand.reviewPage");
   const tStatus = useTranslations("creator.submissionStatus");
   const fmt = useFormatter();
@@ -135,7 +138,7 @@ export default function ReviewQueue({
                   {!scopedToCampaign && (
                     <TableCell>
                       <Link
-                        href={campaignHref(r.campaignId)}
+                        href={buildHref(r.campaignId)}
                         className="text-sm font-medium hover:underline truncate max-w-[180px] inline-block"
                       >
                         {r.campaignTitle}

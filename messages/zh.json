@@ -60,6 +60,16 @@
       "刷屏式转发和批量低质量上传不计入结算"
     ]
   },
+  "account": {
+    "label": "账户",
+    "signIn": "登录",
+    "signUp": "创建账号",
+    "creatorPortal": "创作者中心",
+    "brandPortal": "品牌方后台",
+    "adminPortal": "平台管理",
+    "logout": "退出",
+    "loggingOut": "退出中…"
+  },
   "auth": {
     "or": "或",
     "google": "使用 Google 继续",

@@ -16,7 +16,7 @@ export default async function AdminSubmissionsPage() {
       <ReviewQueue
         rows={rows}
         showBrandOwner
-        campaignHref={(id) => `/admin/campaigns/${id}/edit`}
+        campaignHrefPattern="/admin/campaigns/{id}/edit"
         approveAction={adminApproveSubmission}
         rejectAction={adminRejectSubmission}
       />
