@@ -61,6 +61,7 @@ export default async function CreatorCampaignDetailPage({
             campaignId={detail.id}
             platforms={detail.platforms}
             mySubmissions={detail.mySubmissions}
+            rate={detail.rate}
           />
         </div>
 

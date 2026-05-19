@@ -114,6 +114,18 @@
       "error": "No se pudo crear la cuenta. Inténtalo de nuevo."
     }
   },
+  "creatorPublic": {
+    "back": "Volver a Discover",
+    "joined": "Se unió el {date}",
+    "openVideo": "Abrir vídeo",
+    "recent": "Clips recientes",
+    "empty": "Aún no hay clips aprobados.",
+    "views": "vistas",
+    "stats": {
+      "earned": "Ganado",
+      "approved": "Clips aprobados"
+    }
+  },
   "creator": {
     "subtitle": "Creadores",
     "nav": {
@@ -177,6 +189,8 @@
       },
       "platformPlaceholder": "Elige una plataforma",
       "viewsClaimedHint": "Es una cifra orientativa; el pago se calcula tras revisión.",
+      "estimatedPayout": "Pago estimado: {amount} (a {rate})",
+      "duplicateWarning": "Ya enviaste este enlace a esta campaña.",
       "autoDetected": "Detectado: {platform}",
       "submit": "Enviar",
       "submitting": "Enviando…",
@@ -189,6 +203,7 @@
         "PLATFORM_NOT_ALLOWED": "Esta campaña no acepta esa plataforma",
         "UNAUTHENTICATED": "Inicia sesión primero",
         "NOT_A_CREATOR": "Solo los creadores pueden enviar clips",
+        "DUPLICATE": "Ya enviaste este enlace a esta campaña.",
         "GENERIC": "No se pudo enviar. Inténtalo de nuevo."
       }
     },
@@ -277,6 +292,17 @@
       "reviewCta": "Revisar envíos",
       "reviewCtaDesc": "Aprueba o rechaza los envíos pendientes; las ganancias se calculan al aprobarlos.",
       "openReview": "Ir a revisión",
+      "onboarding": {
+        "title": "Completa el perfil de tu marca",
+        "subtitle": "Estos datos se muestran en cada campaña; sin ellos las tarjetas quedan vacías.",
+        "progress": "{done}/{total}",
+        "cta": "Completar perfil",
+        "steps": {
+          "brandName": "Nombre de la marca",
+          "website": "Sitio web",
+          "description": "Descripción"
+        }
+      },
       "stats": {
         "campaigns": "Mis campañas",
         "draftsAndPublished": "Borradores {drafts} · Publicadas {published}",
@@ -290,6 +316,9 @@
       "new": "Nueva campaña",
       "edit": "Editar",
       "review": "Revisar",
+      "duplicate": "Duplicar como borrador",
+      "duplicated": "Borrador creado",
+      "duplicateError": "No se pudo duplicar",
       "count": "{count} campañas",
       "empty": "Aún no tienes campañas. Pulsa «Nueva campaña» arriba a la derecha para empezar.",
       "columns": {
@@ -358,6 +387,14 @@
     "reviewPage": {
       "title": "Revisión",
       "subtitle": "Aprueba los envíos rellenando las visualizaciones verificadas y la cantidad a pagar, o recházalos indicando el motivo.",
+      "kpi": {
+        "total": "Total",
+        "pending": "Pendientes",
+        "approved": "Aprobados",
+        "paid": "Pagados",
+        "remaining": "Restante",
+        "ofBudget": "de {amount}"
+      },
       "forCampaign": "Envíos para esta campaña",
       "backToCampaigns": "Volver a mis campañas",
       "editCampaign": "Editar campaña",

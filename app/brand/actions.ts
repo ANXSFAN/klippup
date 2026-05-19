@@ -165,6 +165,70 @@ export async function updateBrandCampaign(
   return { ok: true, id };
 }
 
+/**
+ * Clone an existing campaign into a fresh DRAFT owned by the same brand.
+ * Copies title (+ " (copy)") / description / cover / category / platforms /
+ * rate / budget / requirements / earnings — everything reusable as a template.
+ * Drops things that don't make sense to inherit: placements, raised, hot,
+ * artTitle/poweredBy/topEarners/resources/viewsSeries.
+ */
+export async function duplicateBrandCampaign(
+  id: string
+): Promise<ActionResult<{ id: string }>> {
+  let profile;
+  try {
+    profile = await requireBrand();
+  } catch (e) {
+    return { ok: false, error: (e as Error).message };
+  }
+
+  const src = await prisma.campaign.findFirst({
+    where: { id, brandUserId: profile.id },
+    include: {
+      platforms: { orderBy: { order: "asc" } }
+    }
+  });
+  if (!src) return { ok: false, error: "NOT_FOUND" };
+
+  const brandProfile = await prisma.brandProfile.findUnique({
+    where: { userId: profile.id }
+  });
+  if (!brandProfile) return { ok: false, error: "MISSING_BRAND_PROFILE" };
+
+  const created = await prisma.campaign.create({
+    data: {
+      title: `${src.title} (copy)`,
+      artTitle: null,
+      description: src.description,
+      coverUrl: src.coverUrl,
+      categoryId: src.categoryId,
+      categoryLabel: src.categoryLabel,
+      budget: src.budget,
+      participants: src.participants,
+      rate: src.rate,
+      launchedAt: new Date(),
+      poweredBy: null,
+      requirements: src.requirements,
+      earnings:
+        src.earnings == null ? Prisma.DbNull : (src.earnings as Prisma.InputJsonValue),
+      brand: brandProfile.brandName,
+      brandVerified: brandProfile.verified,
+      brandUserId: profile.id,
+      status: "DRAFT",
+      raised: 0,
+      hot: false,
+      platforms: {
+        create: src.platforms.map((p) => ({ platformId: p.platformId, order: p.order }))
+      }
+    },
+    select: { id: true }
+  });
+
+  revalidatePath("/brand");
+  revalidatePath("/brand/campaigns");
+  return { ok: true, id: created.id };
+}
+
 export async function deleteBrandCampaign(id: string): Promise<ActionResult> {
   let profile;
   try {

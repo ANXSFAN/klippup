@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,8 +19,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import ScreenshotUploader from "@/components/creator/ScreenshotUploader";
+import { parseRate } from "@/lib/format";
 import { parseVideoUrl } from "@/lib/platforms/parse";
-import type { CampaignPlatformOption } from "@/lib/types";
+import type { CampaignPlatformOption, CreatorSubmissionRow } from "@/lib/types";
 import { submissionFormSchema, type SubmissionFormValues } from "@/lib/validators";
 
 interface Props {
@@ -28,13 +29,19 @@ interface Props {
   onOpenChange: (open: boolean) => void;
   campaignId: string;
   platforms: CampaignPlatformOption[];
+  /** Campaign's rate display string (e.g. "$1/1K"). Drives the inline payout estimate. */
+  rate?: string;
+  /** Creator's existing submissions for this campaign — used to warn about duplicate URLs client-side. */
+  mySubmissions?: CreatorSubmissionRow[];
 }
 
 export default function SubmissionForm({
   open,
   onOpenChange,
   campaignId,
-  platforms
+  platforms,
+  rate,
+  mySubmissions = []
 }: Props) {
   const router = useRouter();
   const t = useTranslations("creator.submissionForm");
@@ -61,6 +68,26 @@ export default function SubmissionForm({
   const screenshotUrl = watch("screenshotUrl");
 
   const videoUrl = watch("videoUrl");
+  const viewsClaimed = watch("viewsClaimed");
+
+  const dollarsPer1K = parseRate(rate);
+  const claimedNum = Number.parseInt(viewsClaimed ?? "", 10);
+  const estimate =
+    dollarsPer1K != null && Number.isFinite(claimedNum) && claimedNum > 0
+      ? (dollarsPer1K * claimedNum) / 1000
+      : null;
+
+  // Best-effort duplicate detection: normalise + compare against the
+  // creator's existing submissions for this campaign.
+  const duplicate = useMemo(() => {
+    if (!videoUrl?.trim()) return null;
+    const target = videoUrl.trim().toLowerCase();
+    return (
+      mySubmissions.find(
+        (s) => s.videoUrl.trim().toLowerCase() === target
+      ) ?? null
+    );
+  }, [videoUrl, mySubmissions]);
 
   useEffect(() => {
     if (!videoUrl) {
@@ -100,7 +127,8 @@ export default function SubmissionForm({
     "CAMPAIGN_NOT_OPEN",
     "PLATFORM_NOT_ALLOWED",
     "UNAUTHENTICATED",
-    "NOT_A_CREATOR"
+    "NOT_A_CREATOR",
+    "DUPLICATE"
   ]);
 
   const onSubmit = (values: SubmissionFormValues) =>
@@ -133,10 +161,13 @@ export default function SubmissionForm({
               autoFocus
               {...register("videoUrl")}
             />
-            {autoDetected && (
+            {autoDetected && !duplicate && (
               <p className="text-xs text-emerald-700">
                 {t("autoDetected", { platform: autoDetected })}
               </p>
+            )}
+            {duplicate && (
+              <p className="text-xs text-amber-700">{t("duplicateWarning")}</p>
             )}
             {errors.videoUrl && (
               <p className="text-xs text-destructive">{errors.videoUrl.message}</p>
@@ -173,6 +204,14 @@ export default function SubmissionForm({
               {...register("viewsClaimed")}
             />
             <p className="text-[11px] text-muted-foreground">{t("viewsClaimedHint")}</p>
+            {estimate != null && (
+              <p className="text-[11px] text-emerald-700">
+                {t("estimatedPayout", {
+                  amount: `$${estimate.toFixed(2)}`,
+                  rate: rate ?? ""
+                })}
+              </p>
+            )}
             {errors.viewsClaimed && (
               <p className="text-xs text-destructive">{errors.viewsClaimed.message}</p>
             )}

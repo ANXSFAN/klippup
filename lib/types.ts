@@ -24,6 +24,8 @@ export interface CampaignEarnings {
 export interface TopEarner {
   views: number;
   name: string;
+  /** Present only when sourced from real submission data — links to /creators/[id]. */
+  id?: string;
 }
 
 /** One row of the modal's "Resources" list. */
@@ -290,6 +292,41 @@ export interface CreatorEarningsSummary {
   pendingCount: number; // PENDING submissions awaiting review
 }
 
+/** Public-facing creator profile data exposed at /creators/[id]. */
+export interface CreatorPublicProfile {
+  id: string;
+  displayName: string;
+  avatarUrl: string | null;
+  joinedAt: Date;
+  socials: {
+    tiktok: string;
+    youtube: string;
+    instagram: string;
+    x: string;
+    twitch: string;
+  };
+  /** Cumulative PAID earnings cents. */
+  totalEarnedCents: number;
+  /** Count of APPROVED + PAID submissions. */
+  approvedCount: number;
+  /** Recent APPROVED/PAID submissions on PUBLISHED campaigns (newest first). */
+  recentSubmissions: CreatorPublicSubmission[];
+}
+
+/** A single submission shown on the creator's public profile. */
+export interface CreatorPublicSubmission {
+  id: string;
+  campaignId: string;
+  campaignTitle: string;
+  campaignCover: string;
+  platformLabel: string;
+  platformGlyph: string;
+  videoUrl: string;
+  viewsVerified: number | null;
+  status: SubmissionStatus;
+  createdAt: Date;
+}
+
 /** Snapshot of a creator's editable profile (with sub-profile JSON). */
 export interface CreatorProfileData {
   id: string;
@@ -384,6 +421,22 @@ export interface BrandSubmissionRow {
   screenshotUrl: string | null;
   /** Platform-API snapshot (null when fetch failed or platform unsupported). */
   apiData: SubmissionApiData | null;
+}
+
+/** KPI numbers for a single campaign in the brand portal (submissions page). */
+export interface BrandCampaignStats {
+  total: number;
+  pending: number;
+  approved: number;
+  paid: number;
+  /** Earnings cents already locked-in but not yet paid out. */
+  approvedCents: number;
+  /** Earnings cents already paid to creators. */
+  paidCents: number;
+  /** Campaign budget in cents (campaign.budget * 100). */
+  budgetCents: number;
+  /** Budget minus (approved + paid), clamped at 0. */
+  remainingCents: number;
 }
 
 /** Brand-side profile editable fields. `verified` is admin-set, exposed read-only. */

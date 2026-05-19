@@ -138,6 +138,7 @@ export async function getCampaignDetail(id: string): Promise<CampaignView | null
       take: 3,
       select: {
         viewsVerified: true,
+        creatorId: true,
         creator: { select: { displayName: true } }
       }
     })
@@ -147,7 +148,8 @@ export async function getCampaignDetail(id: string): Promise<CampaignView | null
   if (earners.length > 0) {
     view.topEarners = earners.map((s) => ({
       views: s.viewsVerified ?? 0,
-      name: s.creator.displayName
+      name: s.creator.displayName,
+      id: s.creatorId
     }));
   }
   return view;

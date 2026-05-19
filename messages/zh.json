@@ -114,6 +114,18 @@
       "error": "创建失败，请重试"
     }
   },
+  "creatorPublic": {
+    "back": "返回发现页",
+    "joined": "{date} 加入",
+    "openVideo": "打开视频",
+    "recent": "最近作品",
+    "empty": "暂无已通过的作品。",
+    "views": "次播放",
+    "stats": {
+      "earned": "累计收益",
+      "approved": "已通过作品数"
+    }
+  },
   "creator": {
     "subtitle": "创作者",
     "nav": {
@@ -177,6 +189,8 @@
       },
       "platformPlaceholder": "选择平台",
       "viewsClaimedHint": "你声明的数据，最终结算以审核为准。",
+      "estimatedPayout": "预估收益：{amount}（按 {rate}）",
+      "duplicateWarning": "这条链接你已经投过这个活动了。",
       "autoDetected": "已识别为 {platform}",
       "submit": "提交",
       "submitting": "提交中…",
@@ -189,6 +203,7 @@
         "PLATFORM_NOT_ALLOWED": "该活动不支持这个平台",
         "UNAUTHENTICATED": "请先登录",
         "NOT_A_CREATOR": "只有创作者账号可以投稿",
+        "DUPLICATE": "这条链接你已经投过这个活动了。",
         "GENERIC": "提交失败，请重试"
       }
     },
@@ -277,6 +292,17 @@
       "reviewCta": "审核投稿",
       "reviewCtaDesc": "去审稿页处理待审作品，通过后会自动记入创作者收益。",
       "openReview": "去审稿",
+      "onboarding": {
+        "title": "完善品牌资料",
+        "subtitle": "这些信息会显示在每个活动卡片上，缺了卡片会比较空。",
+        "progress": "{done}/{total}",
+        "cta": "去完善",
+        "steps": {
+          "brandName": "品牌名称",
+          "website": "官网",
+          "description": "品牌简介"
+        }
+      },
       "stats": {
         "campaigns": "我的活动",
         "draftsAndPublished": "草稿 {drafts} · 已发布 {published}",
@@ -290,6 +316,9 @@
       "new": "新建活动",
       "edit": "编辑",
       "review": "审稿",
+      "duplicate": "复制为草稿",
+      "duplicated": "已复制为新草稿",
+      "duplicateError": "复制失败",
       "count": "{count} 个活动",
       "empty": "你还没有任何活动。点右上角「新建活动」开始。",
       "columns": {
@@ -358,6 +387,14 @@
     "reviewPage": {
       "title": "审稿",
       "subtitle": "查看创作者投稿，通过填上核对后的播放量和奖励金额，拒绝填理由。",
+      "kpi": {
+        "total": "总投稿",
+        "pending": "待审",
+        "approved": "已通过",
+        "paid": "已结算",
+        "remaining": "剩余预算",
+        "ofBudget": "共 {amount}"
+      },
       "forCampaign": "该活动的投稿",
       "backToCampaigns": "返回我的活动",
       "editCampaign": "编辑活动",

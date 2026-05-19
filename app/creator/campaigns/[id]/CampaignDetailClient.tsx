@@ -12,12 +12,14 @@ interface Props {
   campaignId: string;
   platforms: CampaignPlatformOption[];
   mySubmissions: CreatorSubmissionRow[];
+  rate: string;
 }
 
 export default function CampaignDetailClient({
   campaignId,
   platforms,
-  mySubmissions
+  mySubmissions,
+  rate
 }: Props) {
   const t = useTranslations("creator.campaignDetail");
   const [open, setOpen] = useState(false);
@@ -68,6 +70,8 @@ export default function CampaignDetailClient({
         onOpenChange={setOpen}
         campaignId={campaignId}
         platforms={platforms}
+        rate={rate}
+        mySubmissions={mySubmissions}
       />
     </section>
   );

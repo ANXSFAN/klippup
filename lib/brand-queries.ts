@@ -2,6 +2,7 @@ import { prisma } from "./db";
 import type {
   BrandCampaignEditData,
   BrandCampaignRow,
+  BrandCampaignStats,
   BrandDashboardStats,
   BrandProfileData,
   BrandSubmissionRow,
@@ -159,6 +160,53 @@ export async function listBrandSubmissions(
     screenshotUrl: s.screenshotUrl,
     apiData: (s.apiData as SubmissionApiData | null) ?? null
   }));
+}
+
+/**
+ * Per-campaign KPIs for the brand portal's review page. Verifies ownership
+ * via `brandUserId` so brands can't peek at each other's stats.
+ */
+export async function getBrandCampaignStats(
+  brandUserId: string,
+  campaignId: string
+): Promise<BrandCampaignStats | null> {
+  const campaign = await prisma.campaign.findFirst({
+    where: { id: campaignId, brandUserId },
+    select: { id: true, budget: true }
+  });
+  if (!campaign) return null;
+
+  const [pending, approved, paid, agg] = await Promise.all([
+    prisma.submission.count({ where: { campaignId, status: "PENDING" } }),
+    prisma.submission.count({ where: { campaignId, status: "APPROVED" } }),
+    prisma.submission.count({ where: { campaignId, status: "PAID" } }),
+    prisma.submission.groupBy({
+      by: ["status"],
+      where: { campaignId, status: { in: ["APPROVED", "PAID"] } },
+      _sum: { earningsCents: true }
+    })
+  ]);
+
+  let approvedCents = 0;
+  let paidCents = 0;
+  for (const g of agg) {
+    if (g.status === "APPROVED") approvedCents = g._sum.earningsCents ?? 0;
+    else if (g.status === "PAID") paidCents = g._sum.earningsCents ?? 0;
+  }
+
+  const budgetCents = campaign.budget * 100;
+  const remainingCents = Math.max(0, budgetCents - (approvedCents + paidCents));
+
+  return {
+    total: pending + approved + paid,
+    pending,
+    approved,
+    paid,
+    approvedCents,
+    paidCents,
+    budgetCents,
+    remainingCents
+  };
 }
 
 export async function getBrandProfile(

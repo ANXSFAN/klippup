@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Pencil, Plus, Send } from "lucide-react";
 import { getFormatter, getTranslations } from "next-intl/server";
+import DuplicateCampaignButton from "@/components/brand/DuplicateCampaignButton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -119,6 +120,7 @@ export default async function BrandCampaignsPage() {
                           <Pencil className="size-4" />
                         </Link>
                       </Button>
+                      <DuplicateCampaignButton id={r.id} />
                     </div>
                   </TableCell>
                 </TableRow>

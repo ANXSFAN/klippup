@@ -2,7 +2,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import type { CampaignResource, CampaignView } from "@/lib/types";
+import type { CampaignResource, CampaignView, TopEarner } from "@/lib/types";
 import { formatMoney } from "@/lib/format";
 import {
   MusicIcon,
@@ -23,7 +23,7 @@ import SmartImage from "./SmartImage";
 import BrandAvatar from "./BrandAvatar";
 import ShareButton from "./ShareButton";
 
-const defaultTopEarners = [
+const defaultTopEarners: TopEarner[] = [
   { views: 170_787, name: "Cipher" },
   { views: 30_050, name: "HA Maker" },
   { views: 8_811, name: "Vendra" }
@@ -214,7 +214,7 @@ export default function CampaignDetail({ c }: { c: CampaignView }) {
         <Section title={t("modal.topEarners")}>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {topEarners.map((e, i) => (
-              <EarnerCard key={i} views={e.views} name={e.name} rank={i + 1} />
+              <EarnerCard key={i} views={e.views} name={e.name} id={e.id} rank={i + 1} />
             ))}
           </div>
         </Section>
@@ -319,15 +319,28 @@ function Pill({ children }: { children: React.ReactNode }) {
 function EarnerCard({
   views,
   name,
+  id,
   rank
 }: {
   views: number;
   name: string;
+  id?: string;
   rank: number;
 }) {
   const fmt = (n: number) => n.toLocaleString("en-US");
   const starColor =
     rank === 1 ? "#f59e0b" : rank === 2 ? "#94a3b8" : rank === 3 ? "#b45309" : "#9ca3af";
+
+  const nameEl = id ? (
+    <Link
+      href={`/creators/${id}`}
+      className="text-[12.5px] text-ink truncate hover:underline"
+    >
+      {name}
+    </Link>
+  ) : (
+    <span className="text-[12.5px] text-ink truncate">{name}</span>
+  );
 
   return (
     <div className="pill-glass rounded-2xl p-3.5 flex items-center justify-between gap-2">
@@ -338,7 +351,7 @@ function EarnerCard({
         </div>
         <div className="flex items-center gap-1.5">
           <BrandAvatar name={name} size={20} />
-          <span className="text-[12.5px] text-ink truncate">{name}</span>
+          {nameEl}
         </div>
       </div>
       <StarCluster color={starColor} />

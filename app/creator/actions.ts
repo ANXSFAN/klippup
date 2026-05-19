@@ -63,6 +63,19 @@ export async function createSubmission(
   const { platformSlug, videoId } = parseVideoUrl(v.videoUrl);
   const viewsClaimed = v.viewsClaimed === "" ? null : Number.parseInt(v.viewsClaimed, 10);
 
+  // Same campaign + same creator + same URL is almost certainly a mistake —
+  // either a double-submit or an attempt to re-submit a rejected clip. We
+  // also match case-insensitively to catch trailing-slash / casing variants.
+  const existing = await prisma.submission.findFirst({
+    where: {
+      creatorId: profile.id,
+      campaignId: v.campaignId,
+      videoUrl: { equals: v.videoUrl.trim(), mode: "insensitive" }
+    },
+    select: { id: true }
+  });
+  if (existing) return { ok: false, error: "DUPLICATE" };
+
   // Best-effort: fetch public metrics so the brand's review queue already has
   // a title/thumbnail (and a verified view count for YouTube) on first load.
   // Bounded by the fetcher's internal 3s timeout; a null result is fine.

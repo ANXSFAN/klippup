@@ -227,7 +227,13 @@ export default function ReviewQueue({
                     </TableCell>
                     <TableCell>
                       <div className="flex flex-col">
-                        <span className="text-sm font-medium">{r.creatorName}</span>
+                        <Link
+                          href={`/creators/${r.creatorId}`}
+                          onClick={(e) => e.stopPropagation()}
+                          className="text-sm font-medium hover:underline"
+                        >
+                          {r.creatorName}
+                        </Link>
                         <span className="text-[11px] text-muted-foreground">
                           {r.creatorEmail}
                         </span>
