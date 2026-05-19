@@ -12,10 +12,13 @@ import type {
   ChartPoint,
   DashboardCharts,
   DashboardStats,
+  DiscoverFacets,
   DiscoverPage,
   FormOptions,
   PlacementSlot,
   PlatformSlug,
+  SearchCampaignsResult,
+  SearchFilters,
   TopEarner
 } from "./types";
 
@@ -87,6 +90,106 @@ export async function getDiscoverPage(): Promise<DiscoverPage> {
     else page.grid.push(view);
   }
   return page;
+}
+
+/**
+ * Filter chips / dropdowns on the public Discover page. Pre-loaded once per
+ * request so client SearchBar doesn't have to fetch.
+ */
+export async function getDiscoverFacets(): Promise<DiscoverFacets> {
+  const [categories, platforms, totalPublished] = await Promise.all([
+    prisma.category.findMany({
+      orderBy: [{ sortOrder: "asc" }, { label: "asc" }],
+      select: { slug: true, label: true }
+    }),
+    prisma.platform.findMany({
+      orderBy: [{ sortOrder: "asc" }, { label: "asc" }],
+      select: { slug: true, label: true, glyph: true }
+    }),
+    prisma.campaign.count({ where: { status: "PUBLISHED" } })
+  ]);
+  return { categories, platforms, totalPublished };
+}
+
+/**
+ * Loads one PUBLISHED campaign for the public /campaigns/[id] page. Returns
+ * null for missing or non-published campaigns — the page will call notFound().
+ *
+ * Overrides topEarners with real submission data (APPROVED/PAID by
+ * viewsVerified desc, top 3) when available; falls back to the admin-edited
+ * Campaign.topEarners JSON, then to a localized mock in the UI.
+ */
+export async function getCampaignDetail(id: string): Promise<CampaignView | null> {
+  const [c, earners] = await Promise.all([
+    prisma.campaign.findFirst({
+      where: { id, status: "PUBLISHED" },
+      include: {
+        category: true,
+        platforms: { include: { platform: true }, orderBy: { order: "asc" } }
+      }
+    }),
+    prisma.submission.findMany({
+      where: {
+        campaignId: id,
+        status: { in: ["APPROVED", "PAID"] },
+        viewsVerified: { gt: 0 }
+      },
+      orderBy: { viewsVerified: "desc" },
+      take: 3,
+      select: {
+        viewsVerified: true,
+        creator: { select: { displayName: true } }
+      }
+    })
+  ]);
+  if (!c) return null;
+  const view = toView(c);
+  if (earners.length > 0) {
+    view.topEarners = earners.map((s) => ({
+      views: s.viewsVerified ?? 0,
+      name: s.creator.displayName
+    }));
+  }
+  return view;
+}
+
+/**
+ * Full-text-ish search over PUBLISHED campaigns. Matches q against title /
+ * description / brand (case-insensitive contains), filters by category slug
+ * and/or platform slug. Returns view-models ready for cards.
+ */
+export async function searchCampaigns(
+  filters: SearchFilters
+): Promise<SearchCampaignsResult> {
+  const where: Prisma.CampaignWhereInput = { status: "PUBLISHED" };
+  const q = filters.q?.trim();
+  if (q) {
+    where.OR = [
+      { title: { contains: q, mode: "insensitive" } },
+      { description: { contains: q, mode: "insensitive" } },
+      { brand: { contains: q, mode: "insensitive" } }
+    ];
+  }
+  if (filters.categorySlug) {
+    where.category = { slug: filters.categorySlug };
+  }
+  if (filters.platformSlug) {
+    where.platforms = { some: { platform: { slug: filters.platformSlug } } };
+  }
+
+  const [rows, total] = await Promise.all([
+    prisma.campaign.findMany({
+      where,
+      orderBy: [{ launchedAt: "desc" }, { createdAt: "desc" }],
+      include: {
+        category: true,
+        platforms: { include: { platform: true }, orderBy: { order: "asc" } }
+      }
+    }),
+    prisma.campaign.count({ where })
+  ]);
+
+  return { items: rows.map(toView), total };
 }
 
 /** Every campaign, for the admin list table (no status filter). */

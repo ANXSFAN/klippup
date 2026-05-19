@@ -8,11 +8,19 @@ import { getSupabaseServer } from "@/lib/supabase/server";
  * we exchange for a session. The `role` query param is set in
  * `startGoogleOAuth` so a first-time login lands on the right kind of Profile.
  */
+/** Only accept same-origin relative paths to prevent open-redirect abuse. */
+function safeNext(next: string | null): string {
+  if (!next) return "/post-login";
+  if (!next.startsWith("/") || next.startsWith("//")) return "/post-login";
+  return next;
+}
+
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
   const roleParam = searchParams.get("role");
   const role: "CREATOR" | "BRAND" = roleParam === "BRAND" ? "BRAND" : "CREATOR";
+  const next = safeNext(searchParams.get("next"));
 
   if (!code) {
     return NextResponse.redirect(`${origin}/login?error=missing_code`);
@@ -46,5 +54,5 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  return NextResponse.redirect(`${origin}/post-login`);
+  return NextResponse.redirect(`${origin}${next}`);
 }

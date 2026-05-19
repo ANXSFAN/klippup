@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,6 +23,10 @@ type Values = z.infer<typeof schema>;
 
 export default function SignupForm() {
   const router = useRouter();
+  const params = useSearchParams();
+  const nextParam = params.get("next");
+  const isSafeNext = !!nextParam && nextParam.startsWith("/") && !nextParam.startsWith("//");
+  const next = isSafeNext ? nextParam! : "/post-login";
   const t = useTranslations("auth");
   const [pending, startTransition] = useTransition();
   const [oauthLoading, setOauthLoading] = useState(false);
@@ -47,13 +51,16 @@ export default function SignupForm() {
         return;
       }
       toast.success(t("signup.created"));
-      router.push("/post-login");
+      router.push(next);
       router.refresh();
     });
 
   const onGoogle = async () => {
     setOauthLoading(true);
-    const res = await startGoogleOAuth({ role });
+    const res = await startGoogleOAuth({
+      role,
+      next: isSafeNext ? nextParam : undefined
+    });
     if (!res.ok) {
       setOauthLoading(false);
       toast.error(t("signup.error"));

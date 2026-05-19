@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, CheckCircle2, Circle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getCurrentProfile } from "@/lib/auth";
-import { getCreatorEarnings } from "@/lib/creator-queries";
+import { getCreatorEarnings, getCreatorProfile } from "@/lib/creator-queries";
 
 const formatCents = (cents: number) =>
   `$${(cents / 100).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -12,16 +12,36 @@ const formatCents = (cents: number) =>
 export default async function CreatorDashboardPage() {
   const t = await getTranslations("creator.dashboard");
   const tE = await getTranslations("creator.earnings");
+  const tO = await getTranslations("creator.dashboard.onboarding");
   const profile = await getCurrentProfile();
   if (!profile) return null;
 
-  const { summary } = await getCreatorEarnings(profile.id);
+  const [{ summary }, creator] = await Promise.all([
+    getCreatorEarnings(profile.id),
+    getCreatorProfile(profile.id)
+  ]);
+
+  const hasName = profile.displayName.trim().length > 0;
+  const hasSocial = creator
+    ? Object.values(creator.socials).some((v) => v.trim().length > 0)
+    : false;
+  const hasPayout = creator
+    ? creator.payout.method !== "" && creator.payout.details.trim().length > 0
+    : false;
+  const onboardingDone = hasName && hasSocial && hasPayout;
 
   const stats = [
     { label: tE("stats.totalEarned"), value: formatCents(summary.totalEarnedCents) },
     { label: tE("stats.approvedUnpaid"), value: formatCents(summary.approvedUnpaidCents) },
     { label: tE("stats.pendingCount"), value: summary.pendingCount }
   ];
+
+  const steps = [
+    { key: "displayName", done: hasName, label: tO("steps.displayName") },
+    { key: "socials", done: hasSocial, label: tO("steps.socials") },
+    { key: "payout", done: hasPayout, label: tO("steps.payout") }
+  ];
+  const doneCount = steps.filter((s) => s.done).length;
 
   return (
     <div className="space-y-6">
@@ -31,6 +51,45 @@ export default async function CreatorDashboardPage() {
         </h1>
         <p className="text-sm text-muted-foreground mt-1">{t("subtitle")}</p>
       </div>
+
+      {!onboardingDone && (
+        <Card className="border-primary/40 bg-primary/[0.04]">
+          <CardContent className="pt-6 flex flex-col sm:flex-row sm:items-center gap-4">
+            <div className="flex-1">
+              <div className="flex items-center gap-2">
+                <h2 className="text-base font-semibold">{tO("title")}</h2>
+                <span className="text-xs text-muted-foreground tabular-nums">
+                  {tO("progress", { done: doneCount, total: steps.length })}
+                </span>
+              </div>
+              <p className="text-sm text-muted-foreground mt-1">{tO("subtitle")}</p>
+              <ul className="mt-3 space-y-1.5">
+                {steps.map((s) => (
+                  <li
+                    key={s.key}
+                    className={`flex items-center gap-2 text-sm ${
+                      s.done ? "text-muted-foreground line-through" : "text-foreground"
+                    }`}
+                  >
+                    {s.done ? (
+                      <CheckCircle2 className="size-4 text-primary" />
+                    ) : (
+                      <Circle className="size-4 text-muted-foreground" />
+                    )}
+                    <span>{s.label}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <Button asChild className="self-start sm:self-center">
+              <Link href="/creator/profile">
+                {tO("cta")}
+                <ArrowRight className="size-4 ml-1" />
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid gap-4 sm:grid-cols-3">
         {stats.map((s) => (

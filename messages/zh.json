@@ -6,12 +6,16 @@
   "common": {
     "joinCampaign": "加入活动",
     "share": "分享",
+    "linkCopied": "链接已复制",
+    "shareError": "无法分享",
     "showMore": "查看更多",
     "open": "打开",
+    "openPage": "打开页面",
     "close": "关闭",
     "daysShort": "{days} 天",
     "min": "最低",
-    "max": "最高"
+    "max": "最高",
+    "backToDiscover": "返回发现页"
   },
   "locale": {
     "label": "语言",
@@ -29,7 +33,12 @@
     "placeholder": "活动与创作者",
     "filter": "筛选",
     "category": "分类",
-    "content": "内容"
+    "anyCategory": "全部分类",
+    "content": "内容",
+    "clear": "清除筛选",
+    "results": "{count} 个结果",
+    "resultsFor": "搜索「{q}」",
+    "emptyResults": "没有匹配的活动。试着删掉一个筛选条件。"
   },
   "discover": {
     "featured": "精选",
@@ -119,7 +128,18 @@
       "subtitle": "在这里看到可参加的活动、你的投稿和收益。",
       "comingSoon": "下一步",
       "comingSoonDesc": "去「活动」浏览正在进行的活动，提交你的剪辑。",
-      "browseCampaigns": "浏览活动"
+      "browseCampaigns": "浏览活动",
+      "onboarding": {
+        "title": "补全个人资料",
+        "subtitle": "不填这些信息，我们无法给你付款，也无法核对你的视频。",
+        "progress": "{done}/{total}",
+        "cta": "去完善资料",
+        "steps": {
+          "displayName": "显示名称",
+          "socials": "至少一个社交账号",
+          "payout": "收款方式与详情"
+        }
+      }
     },
     "campaignList": {
       "title": "活动",
@@ -348,6 +368,10 @@
       "saving": "处理中…",
       "creatorLabel": "创作者",
       "viewsClaimedWas": "声明播放量：{views}",
+      "apiAuto": "自动",
+      "apiAutoHint": "{source} 自动核对",
+      "apiVerifiedHint": "{source} 自动核对：{views} 次播放",
+      "apiNoViewsHint": "{source} 不公开播放量 — 请人工核对",
       "earningsCentsHint": "以美分为单位（123 = $1.23）。",
       "fields": {
         "viewsVerified": "核对播放量",

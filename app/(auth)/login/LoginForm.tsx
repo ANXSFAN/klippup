@@ -22,7 +22,9 @@ type Values = z.infer<typeof schema>;
 export default function LoginForm() {
   const router = useRouter();
   const params = useSearchParams();
-  const next = params.get("next") || "/post-login";
+  const nextParam = params.get("next");
+  const isSafeNext = !!nextParam && nextParam.startsWith("/") && !nextParam.startsWith("//");
+  const next = isSafeNext ? nextParam! : "/post-login";
   const t = useTranslations("auth");
   const [pending, startTransition] = useTransition();
   const [oauthLoading, setOauthLoading] = useState(false);
@@ -46,7 +48,10 @@ export default function LoginForm() {
 
   const onGoogle = async () => {
     setOauthLoading(true);
-    const res = await startGoogleOAuth({ role: "CREATOR" });
+    const res = await startGoogleOAuth({
+      role: "CREATOR",
+      next: isSafeNext ? nextParam : undefined
+    });
     if (!res.ok) {
       setOauthLoading(false);
       toast.error(t("login.error"));

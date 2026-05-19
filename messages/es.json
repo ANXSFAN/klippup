@@ -6,12 +6,16 @@
   "common": {
     "joinCampaign": "Unirse a la campaña",
     "share": "Compartir",
+    "linkCopied": "Enlace copiado",
+    "shareError": "No se pudo compartir",
     "showMore": "Ver más",
     "open": "Abrir",
+    "openPage": "Abrir en una página",
     "close": "Cerrar",
     "daysShort": "{days} d",
     "min": "Mín",
-    "max": "Máx"
+    "max": "Máx",
+    "backToDiscover": "Volver a Discover"
   },
   "locale": {
     "label": "Idioma",
@@ -29,7 +33,12 @@
     "placeholder": "Campañas y creadores",
     "filter": "Filtrar",
     "category": "Categoría",
-    "content": "Contenido"
+    "anyCategory": "Todas las categorías",
+    "content": "Contenido",
+    "clear": "Limpiar filtros",
+    "results": "{count} resultados",
+    "resultsFor": "Resultados para «{q}»",
+    "emptyResults": "Sin resultados. Prueba a quitar algún filtro."
   },
   "discover": {
     "featured": "Destacados",
@@ -119,7 +128,18 @@
       "subtitle": "Explora campañas disponibles, gestiona tus envíos y revisa tus ganancias.",
       "comingSoon": "Siguiente paso",
       "comingSoonDesc": "Entra en «Campañas» para descubrir campañas activas y enviar tus clips.",
-      "browseCampaigns": "Ver campañas"
+      "browseCampaigns": "Ver campañas",
+      "onboarding": {
+        "title": "Completa tu perfil",
+        "subtitle": "Sin estos datos no podemos pagarte ni verificar tus clips.",
+        "progress": "{done}/{total}",
+        "cta": "Completar perfil",
+        "steps": {
+          "displayName": "Nombre visible",
+          "socials": "Al menos una red social",
+          "payout": "Método y datos de cobro"
+        }
+      }
     },
     "campaignList": {
       "title": "Campañas",
@@ -348,6 +368,10 @@
       "saving": "Procesando…",
       "creatorLabel": "Creador",
       "viewsClaimedWas": "Declaradas: {views}",
+      "apiAuto": "API",
+      "apiAutoHint": "Auto-verificado vía {source}",
+      "apiVerifiedHint": "Auto-verificado por {source}: {views} visualizaciones",
+      "apiNoViewsHint": "{source} no expone el contador de visualizaciones — verifícalo manualmente",
       "earningsCentsHint": "Importe en céntimos de dólar (123 = $1,23).",
       "fields": {
         "viewsVerified": "Visualizaciones verificadas",

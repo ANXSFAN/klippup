@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { Prisma } from "@/app/generated/prisma/client";
 import { getCurrentProfile } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { fetchVideoMetrics } from "@/lib/platforms/metrics";
 import { parseVideoUrl } from "@/lib/platforms/parse";
 import {
   profileFormSchema,
@@ -59,8 +60,15 @@ export async function createSubmission(
     return { ok: false, error: "PLATFORM_NOT_ALLOWED" };
   }
 
-  const { videoId } = parseVideoUrl(v.videoUrl);
+  const { platformSlug, videoId } = parseVideoUrl(v.videoUrl);
   const viewsClaimed = v.viewsClaimed === "" ? null : Number.parseInt(v.viewsClaimed, 10);
+
+  // Best-effort: fetch public metrics so the brand's review queue already has
+  // a title/thumbnail (and a verified view count for YouTube) on first load.
+  // Bounded by the fetcher's internal 3s timeout; a null result is fine.
+  const metrics = platformSlug
+    ? await fetchVideoMetrics(platformSlug, videoId ?? "", v.videoUrl)
+    : null;
 
   const created = await prisma.submission.create({
     data: {
@@ -69,7 +77,8 @@ export async function createSubmission(
       platformId: v.platformId,
       videoUrl: v.videoUrl,
       videoId,
-      viewsClaimed
+      viewsClaimed,
+      apiData: metrics ? (metrics as unknown as Prisma.InputJsonValue) : Prisma.DbNull
     },
     select: { id: true }
   });

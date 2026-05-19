@@ -7,6 +7,7 @@ import type {
   BrandSubmissionRow,
   CampaignEarnings,
   CampaignStatus,
+  SubmissionApiData,
   SubmissionStatus
 } from "./types";
 
@@ -154,7 +155,8 @@ export async function listBrandSubmissions(
     earningsCents: s.earningsCents,
     rejectReason: s.rejectReason,
     reviewedAt: s.reviewedAt,
-    createdAt: s.createdAt
+    createdAt: s.createdAt,
+    apiData: (s.apiData as SubmissionApiData | null) ?? null
   }));
 }
 

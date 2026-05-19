@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Toaster } from "@/components/ui/sonner";
 import { getCurrentProfile } from "@/lib/auth";
 import LocaleSwitcher from "@/components/LocaleSwitcher";
 import LogoutButton from "@/components/portal/LogoutButton";
@@ -29,7 +28,6 @@ export default async function BrandLayout({ children }: { children: React.ReactN
           <LogoutButton />
         </header>
         <main className="flex-1 p-6 lg:p-8">{children}</main>
-        <Toaster richColors position="top-right" />
       </div>
     </div>
   );

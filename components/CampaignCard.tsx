@@ -1,5 +1,6 @@
 "use client";
 import * as React from "react";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import type { CampaignView } from "@/lib/types";
 import { formatMoney } from "@/lib/format";
@@ -7,11 +8,11 @@ import {
   PeopleIcon,
   PlusIcon,
   VerifiedIcon,
-  ShareIcon,
   platformGlyph
 } from "./Icons";
 import SmartImage from "./SmartImage";
 import BrandAvatar from "./BrandAvatar";
+import ShareButton from "./ShareButton";
 
 /**
  * The card surface. Rendered twice per slot:
@@ -20,11 +21,9 @@ import BrandAvatar from "./BrandAvatar";
  */
 function CardSurface({
   c,
-  onOpen,
   withExpand
 }: {
   c: CampaignView;
-  onOpen?: (c: CampaignView) => void;
   withExpand: boolean;
 }) {
   const t = useTranslations();
@@ -98,24 +97,20 @@ function CardSurface({
                 {c.description}
               </p>
               <div className="mt-2.5 flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onOpen?.(c);
-                  }}
-                  className="btn-join flex-1 text-[12px] font-semibold rounded-full px-3 py-1.5 transition"
+                <Link
+                  href={`/creator/campaigns/${c.id}`}
+                  onClick={(e) => e.stopPropagation()}
+                  className="btn-join flex-1 text-center text-[12px] font-semibold rounded-full px-3 py-1.5 transition"
                 >
                   {t("common.joinCampaign")}
-                </button>
-                <button
-                  type="button"
-                  onClick={(e) => e.stopPropagation()}
-                  aria-label={t("common.share")}
+                </Link>
+                <ShareButton
+                  campaignId={c.id}
+                  title={c.title}
+                  description={c.description}
+                  size={12}
                   className="w-7 h-7 rounded-full bg-black/[0.04] hover:bg-black/[0.08] transition flex items-center justify-center text-black/70 shrink-0"
-                >
-                  <ShareIcon size={12} />
-                </button>
+                />
               </div>
             </div>
           </div>
@@ -163,21 +158,20 @@ export default function CampaignCard({
       <div aria-hidden className="invisible pointer-events-none">
         <CardSurface c={c} withExpand={false} />
       </div>
-      {/* REAL: absolutely positioned over the ghost, expands on hover without affecting siblings */}
-      <div
-        role="button"
-        tabIndex={0}
-        onClick={() => onOpen(c)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            onOpen(c);
-          }
+      {/* REAL: absolutely positioned over the ghost, expands on hover without affecting siblings.
+          <Link> wrapper so right-click / Cmd-click opens /campaigns/[id] in a new tab;
+          plain click is intercepted to trigger the in-page modal preview. */}
+      <Link
+        href={`/campaigns/${c.id}`}
+        onClick={(e) => {
+          if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
+          e.preventDefault();
+          onOpen(c);
         }}
-        className="absolute top-0 inset-x-0 group cursor-pointer origin-center transition-transform duration-[220ms] ease-out hover:-translate-y-[46px] hover:scale-[1.04] hover:z-30 focus-within:z-30 focus:outline-none [&:hover>div]:shadow-[0_18px_42px_rgba(15,15,15,0.16)]"
+        className="absolute top-0 inset-x-0 group cursor-pointer origin-center transition-transform duration-[220ms] ease-out hover:-translate-y-[46px] hover:scale-[1.04] hover:z-30 focus-within:z-30 focus:outline-none block [&:hover>div]:shadow-[0_18px_42px_rgba(15,15,15,0.16)]"
       >
-        <CardSurface c={c} onOpen={onOpen} withExpand={true} />
-      </div>
+        <CardSurface c={c} withExpand={true} />
+      </Link>
     </div>
   );
 }

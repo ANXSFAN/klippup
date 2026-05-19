@@ -1,5 +1,6 @@
 "use client";
 import * as React from "react";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import type { CampaignView } from "@/lib/types";
 import { formatMoney } from "@/lib/format";
@@ -7,11 +8,9 @@ import { ChevronLeftIcon, ChevronRightIcon } from "./Icons";
 import SmartImage from "./SmartImage";
 
 export default function HeroCampaign({
-  campaigns,
-  onOpen
+  campaigns
 }: {
   campaigns: CampaignView[];
-  onOpen: (c: CampaignView) => void;
 }) {
   const t = useTranslations();
   const [idx, setIdx] = React.useState(0);
@@ -84,13 +83,12 @@ export default function HeroCampaign({
               <span className="text-white/40">·</span>
               <span className="tabular-nums">{formatMoney(c.budget)}</span>
             </div>
-            <button
-              type="button"
-              onClick={() => onOpen(c)}
-              className="btn-join mt-1 self-start text-[13px] font-semibold rounded-full px-5 py-2 transition"
+            <Link
+              href={`/creator/campaigns/${c.id}`}
+              className="btn-join inline-flex items-center mt-1 self-start text-[13px] font-semibold rounded-full px-5 py-2 transition"
             >
               {t("common.joinCampaign")}
-            </button>
+            </Link>
           </div>
 
           {/* carousel arrows — only when there's more than one slide */}

@@ -73,6 +73,42 @@ export interface DiscoverPage {
   grid: CampaignView[];
 }
 
+/** Category chip for the Discover SearchBar's category dropdown. */
+export interface DiscoverCategoryFacet {
+  slug: string;
+  label: string;
+}
+
+/** Platform chip for the Discover SearchBar's platform row. */
+export interface DiscoverPlatformFacet {
+  slug: string;
+  label: string;
+  glyph: string;
+}
+
+/**
+ * Pre-loaded filter facets + total count, shipped from page.tsx to the
+ * client SearchBar so it doesn't have to fetch.
+ */
+export interface DiscoverFacets {
+  categories: DiscoverCategoryFacet[];
+  platforms: DiscoverPlatformFacet[];
+  totalPublished: number;
+}
+
+/** Filter shape `searchCampaigns()` accepts and `SearchBar` reads from URL. */
+export interface SearchFilters {
+  q?: string;
+  categorySlug?: string;
+  platformSlug?: string;
+}
+
+/** Return shape from `searchCampaigns()`. */
+export interface SearchCampaignsResult {
+  items: CampaignView[];
+  total: number;
+}
+
 export type PlacementSlot = "HERO" | "FEATURED" | "GRID";
 export type CampaignStatus = "DRAFT" | "PUBLISHED" | "ARCHIVED";
 
@@ -170,6 +206,21 @@ export interface DashboardCharts {
 }
 
 export type SubmissionStatus = "PENDING" | "APPROVED" | "REJECTED" | "PAID";
+
+/**
+ * Shape persisted in `Submission.apiData` (Prisma Json). Fetched at create
+ * time and on demand from the platform's public API. `views: null` for
+ * providers that don't expose play counts publicly (e.g. TikTok oEmbed).
+ */
+export interface SubmissionApiData {
+  views: number | null;
+  likes: number | null;
+  title: string | null;
+  thumbnailUrl: string | null;
+  authorName: string | null;
+  fetchedAt: string;
+  source: "youtube_api" | "tiktok_oembed" | "mock";
+}
 
 /** One platform option in the creator submission form's dropdown. */
 export interface CampaignPlatformOption {
@@ -328,6 +379,8 @@ export interface BrandSubmissionRow {
   rejectReason: string | null;
   reviewedAt: Date | null;
   createdAt: Date;
+  /** Platform-API snapshot (null when fetch failed or platform unsupported). */
+  apiData: SubmissionApiData | null;
 }
 
 /** Brand-side profile editable fields. `verified` is admin-set, exposed read-only. */

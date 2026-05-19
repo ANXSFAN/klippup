@@ -19,7 +19,8 @@ const signInSchema = z.object({
 });
 
 const oauthSchema = z.object({
-  role: z.enum(["CREATOR", "BRAND"])
+  role: z.enum(["CREATOR", "BRAND"]),
+  next: z.string().optional()
 });
 
 function siteOrigin(): string {
@@ -63,11 +64,14 @@ export async function startGoogleOAuth(
   if (!parsed.success) return { ok: false, error: "INVALID" };
 
   const supabase = await getSupabaseServer();
+  const redirectTo = new URL(`${siteOrigin()}/auth/callback`);
+  redirectTo.searchParams.set("role", parsed.data.role);
+  if (parsed.data.next) {
+    redirectTo.searchParams.set("next", parsed.data.next);
+  }
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
-    options: {
-      redirectTo: `${siteOrigin()}/auth/callback?role=${parsed.data.role}`
-    }
+    options: { redirectTo: redirectTo.toString() }
   });
   if (error || !data.url) return { ok: false, error: error?.message ?? "OAUTH_FAILED" };
   return { ok: true, url: data.url };

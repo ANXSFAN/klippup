@@ -2,7 +2,6 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import LocaleSwitcher from "@/components/LocaleSwitcher";
-import { Toaster } from "@/components/ui/sonner";
 
 export default async function AdminLayout({
   children
@@ -26,7 +25,6 @@ export default async function AdminLayout({
         </header>
         <main className="flex-1 p-6 lg:p-8 min-w-0">{children}</main>
       </div>
-      <Toaster />
     </div>
   );
 }

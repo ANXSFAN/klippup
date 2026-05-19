@@ -181,7 +181,23 @@ export default function ReviewQueue({
                     {r.viewsClaimed != null ? r.viewsClaimed.toLocaleString() : "—"}
                   </TableCell>
                   <TableCell className="text-right text-sm tabular-nums">
-                    {r.viewsVerified != null ? r.viewsVerified.toLocaleString() : "—"}
+                    {r.viewsVerified != null ? (
+                      r.viewsVerified.toLocaleString()
+                    ) : r.apiData?.views != null ? (
+                      <span className="inline-flex items-center gap-1 justify-end">
+                        <span className="text-muted-foreground">
+                          {r.apiData.views.toLocaleString()}
+                        </span>
+                        <span
+                          title={t("apiAutoHint", { source: r.apiData.source })}
+                          className="text-[9px] px-1 rounded-full bg-emerald-100 text-emerald-700 font-medium"
+                        >
+                          {t("apiAuto")}
+                        </span>
+                      </span>
+                    ) : (
+                      "—"
+                    )}
                   </TableCell>
                   <TableCell className="text-right text-sm tabular-nums">
                     {r.earningsCents > 0 ? formatCents(r.earningsCents) : "—"}
@@ -285,7 +301,9 @@ function ApproveForm({
     resolver: zodResolver(approveSubmissionSchema),
     defaultValues: {
       submissionId: row.id,
-      viewsVerified: String(row.viewsVerified ?? row.viewsClaimed ?? ""),
+      viewsVerified: String(
+        row.viewsVerified ?? row.apiData?.views ?? row.viewsClaimed ?? ""
+      ),
       earningsCents: row.earningsCents > 0 ? String(row.earningsCents) : "",
       notes: ""
     }
@@ -318,9 +336,22 @@ function ApproveForm({
         {errors.viewsVerified && (
           <p className="text-xs text-destructive">{errors.viewsVerified.message}</p>
         )}
-        <p className="text-[11px] text-muted-foreground">
-          {t("viewsClaimedWas", { views: row.viewsClaimed?.toLocaleString() ?? "—" })}
-        </p>
+        <div className="text-[11px] text-muted-foreground space-y-0.5">
+          <p>{t("viewsClaimedWas", { views: row.viewsClaimed?.toLocaleString() ?? "—" })}</p>
+          {row.apiData?.views != null && (
+            <p className="text-emerald-700">
+              {t("apiVerifiedHint", {
+                views: row.apiData.views.toLocaleString(),
+                source: row.apiData.source
+              })}
+            </p>
+          )}
+          {row.apiData && row.apiData.views == null && (
+            <p className="text-amber-700">
+              {t("apiNoViewsHint", { source: row.apiData.source })}
+            </p>
+          )}
+        </div>
       </div>
       <div className="space-y-1.5">
         <Label htmlFor="earningsCents">{t("fields.earningsCents")}</Label>

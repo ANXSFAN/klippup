@@ -4,11 +4,11 @@ import { updateSession } from "@/lib/supabase/middleware";
 /**
  * Routes that require any authenticated user. Role-specific checks
  * (`CREATOR` for /creator, `BRAND` for /brand) happen in the page's
- * server layout, since middleware can't hit the DB cheaply.
+ * server layout, since the proxy can't hit the DB cheaply.
  */
 const PROTECTED_PREFIXES = ["/creator", "/brand"];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { response, user } = await updateSession(request);
   const path = request.nextUrl.pathname;
 

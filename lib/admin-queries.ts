@@ -4,6 +4,7 @@ import type {
   AdminSubmissionRow,
   AdminUserRow,
   PendingPayoutCreator,
+  SubmissionApiData,
   SubmissionStatus
 } from "./types";
 
@@ -91,7 +92,8 @@ export async function listAdminSubmissions(): Promise<AdminSubmissionRow[]> {
     earningsCents: s.earningsCents,
     rejectReason: s.rejectReason,
     reviewedAt: s.reviewedAt,
-    createdAt: s.createdAt
+    createdAt: s.createdAt,
+    apiData: (s.apiData as SubmissionApiData | null) ?? null
   }));
 }
 
