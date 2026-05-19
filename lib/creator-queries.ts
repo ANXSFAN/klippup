@@ -62,6 +62,7 @@ function mapSubmissionRow(s: {
   viewsVerified: number | null;
   earningsCents: number;
   rejectReason: string | null;
+  screenshotUrl: string | null;
   createdAt: Date;
 }): CreatorSubmissionRow {
   return {
@@ -79,6 +80,7 @@ function mapSubmissionRow(s: {
     viewsVerified: s.viewsVerified,
     earningsCents: s.earningsCents,
     rejectReason: s.rejectReason,
+    screenshotUrl: s.screenshotUrl,
     createdAt: s.createdAt
   };
 }

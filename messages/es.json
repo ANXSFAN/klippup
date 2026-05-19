@@ -165,7 +165,15 @@
       "fields": {
         "videoUrl": "Enlace del vídeo",
         "platform": "Plataforma",
-        "viewsClaimed": "Visualizaciones declaradas (opcional)"
+        "viewsClaimed": "Visualizaciones declaradas (opcional)",
+        "screenshot": "Captura de pantalla (opcional)"
+      },
+      "screenshot": {
+        "upload": "Subir captura",
+        "uploading": "Subiendo…",
+        "remove": "Quitar",
+        "uploadError": "No se pudo subir",
+        "hint": "Una captura con la fecha y el contador acelera la revisión."
       },
       "platformPlaceholder": "Elige una plataforma",
       "viewsClaimedHint": "Es una cifra orientativa; el pago se calcula tras revisión.",
@@ -385,12 +393,18 @@
         "creator": "Creador",
         "platform": "Plataforma",
         "url": "Enlace",
+        "video": "Vídeo",
         "claimed": "Declarado",
         "verified": "Verificado",
         "earnings": "Importe",
         "status": "Estado",
         "actions": "Acciones"
       },
+      "openVideo": "Abrir",
+      "shortcutHint": "J/K mover · A aprobar · R rechazar",
+      "hasScreenshot": "El creador adjuntó una captura",
+      "videoPreview": "Vista previa del vídeo",
+      "screenshotPreview": "Captura del creador",
       "platformOwned": "Plataforma"
     },
     "profilePage": {

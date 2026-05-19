@@ -18,6 +18,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import ScreenshotUploader from "@/components/creator/ScreenshotUploader";
 import { parseVideoUrl } from "@/lib/platforms/parse";
 import type { CampaignPlatformOption } from "@/lib/types";
 import { submissionFormSchema, type SubmissionFormValues } from "@/lib/validators";
@@ -53,9 +54,11 @@ export default function SubmissionForm({
       campaignId,
       platformId: platforms[0]?.id ?? "",
       videoUrl: "",
-      viewsClaimed: ""
+      viewsClaimed: "",
+      screenshotUrl: ""
     }
   });
+  const screenshotUrl = watch("screenshotUrl");
 
   const videoUrl = watch("videoUrl");
 
@@ -80,7 +83,13 @@ export default function SubmissionForm({
 
   useEffect(() => {
     if (!open) {
-      reset({ campaignId, platformId: platforms[0]?.id ?? "", videoUrl: "", viewsClaimed: "" });
+      reset({
+        campaignId,
+        platformId: platforms[0]?.id ?? "",
+        videoUrl: "",
+        viewsClaimed: "",
+        screenshotUrl: ""
+      });
       setAutoDetected(null);
     }
   }, [open, campaignId, platforms, reset]);
@@ -167,6 +176,17 @@ export default function SubmissionForm({
             {errors.viewsClaimed && (
               <p className="text-xs text-destructive">{errors.viewsClaimed.message}</p>
             )}
+          </div>
+
+          <div className="space-y-1.5">
+            <Label>{t("fields.screenshot")}</Label>
+            <ScreenshotUploader
+              value={screenshotUrl ?? ""}
+              onChange={(url) =>
+                setValue("screenshotUrl", url, { shouldValidate: false })
+              }
+              onError={(msg) => toast.error(msg)}
+            />
           </div>
 
           <DialogFooter>

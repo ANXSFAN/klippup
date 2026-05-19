@@ -78,6 +78,7 @@ export async function createSubmission(
       videoUrl: v.videoUrl,
       videoId,
       viewsClaimed,
+      screenshotUrl: v.screenshotUrl.trim() || null,
       apiData: metrics ? (metrics as unknown as Prisma.InputJsonValue) : Prisma.DbNull
     },
     select: { id: true }

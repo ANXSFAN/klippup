@@ -16,3 +16,8 @@ export function getServiceSupabase() {
 }
 
 export const STORAGE_BUCKET = process.env.SUPABASE_STORAGE_BUCKET || "campaign-covers";
+
+/** Bucket for creator-uploaded proof screenshots. Falls back to the shared
+ *  cover bucket if a dedicated one isn't configured. */
+export const SCREENSHOT_BUCKET =
+  process.env.SUBMISSION_SCREENSHOTS_BUCKET || STORAGE_BUCKET;

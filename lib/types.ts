@@ -280,6 +280,7 @@ export interface CreatorSubmissionRow {
   earningsCents: number;
   rejectReason: string | null;
   createdAt: Date;
+  screenshotUrl: string | null;
 }
 
 /** Numbers shown across the top of /creator/earnings. */
@@ -379,6 +380,8 @@ export interface BrandSubmissionRow {
   rejectReason: string | null;
   reviewedAt: Date | null;
   createdAt: Date;
+  /** Optional creator-uploaded proof image of the view count. */
+  screenshotUrl: string | null;
   /** Platform-API snapshot (null when fetch failed or platform unsupported). */
   apiData: SubmissionApiData | null;
 }

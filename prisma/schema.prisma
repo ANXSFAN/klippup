@@ -203,12 +203,15 @@ model Submission {
   platform   Platform @relation(fields: [platformId], references: [id])
   platformId String
 
-  // submission payload — v1 is link-only; `videoId` is parsed from the URL,
-  // `apiData` is the extension slot for future TikTok/YT/IG API checks.
-  videoUrl     String
-  videoId      String?
-  viewsClaimed Int? // creator-declared
-  apiData      Json?
+  // submission payload — `videoId` is parsed from the URL, `apiData` is the
+  // platform-API snapshot (YT statistics / TikTok oEmbed) taken at create time.
+  // `screenshotUrl` is an optional creator-uploaded proof image with timestamp —
+  // a faster signal for the reviewer than recomputing metrics.
+  videoUrl      String
+  videoId       String?
+  viewsClaimed  Int? // creator-declared
+  screenshotUrl String?
+  apiData       Json?
 
   // review
   status        SubmissionStatus @default(PENDING)

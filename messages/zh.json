@@ -165,7 +165,15 @@
       "fields": {
         "videoUrl": "视频链接",
         "platform": "平台",
-        "viewsClaimed": "声明的播放量（可选）"
+        "viewsClaimed": "声明的播放量（可选）",
+        "screenshot": "截图证据（可选）"
+      },
+      "screenshot": {
+        "upload": "上传截图",
+        "uploading": "上传中…",
+        "remove": "删除",
+        "uploadError": "上传失败",
+        "hint": "带时间戳和播放量的截图能加快审稿。"
       },
       "platformPlaceholder": "选择平台",
       "viewsClaimedHint": "你声明的数据，最终结算以审核为准。",
@@ -385,12 +393,18 @@
         "creator": "创作者",
         "platform": "平台",
         "url": "链接",
+        "video": "视频",
         "claimed": "声明",
         "verified": "核对",
         "earnings": "奖励",
         "status": "状态",
         "actions": "操作"
       },
+      "openVideo": "打开",
+      "shortcutHint": "J/K 切换 · A 通过 · R 拒绝",
+      "hasScreenshot": "创作者附了截图证据",
+      "videoPreview": "视频画面",
+      "screenshotPreview": "创作者截图",
       "platformOwned": "平台自营"
     },
     "profilePage": {

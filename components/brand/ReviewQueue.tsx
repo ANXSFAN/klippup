@@ -1,13 +1,13 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useFormatter, useTranslations } from "next-intl";
-import { Check, ExternalLink, X } from "lucide-react";
+import { Camera, Check, ExternalLink, ImageOff, X } from "lucide-react";
 import SubmissionStatusBadge from "@/components/creator/SubmissionStatusBadge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -80,6 +80,7 @@ export default function ReviewQueue({
   const [filter, setFilter] = useState<Filter>("PENDING");
   const [approving, setApproving] = useState<ReviewQueueRow | null>(null);
   const [rejecting, setRejecting] = useState<ReviewQueueRow | null>(null);
+  const [focusedId, setFocusedId] = useState<string | null>(null);
 
   const filtered = useMemo(
     () => (filter === "ALL" ? rows : rows.filter((r) => r.status === filter)),
@@ -92,9 +93,67 @@ export default function ReviewQueue({
     return c;
   }, [rows]);
 
+  // Reset focus when the visible set shifts (filter switch, row removal).
+  useEffect(() => {
+    if (focusedId && !filtered.some((r) => r.id === focusedId)) {
+      setFocusedId(null);
+    }
+  }, [filtered, focusedId]);
+
+  // J/K to walk rows, A/R to act on the focused one, Esc to drop focus.
+  // Ignored while typing in a form field or while a dialog is open.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (target) {
+        const tag = target.tagName;
+        if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || target.isContentEditable) {
+          return;
+        }
+      }
+      if (approving || rejecting) return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (filtered.length === 0) return;
+
+      if (e.key === "j" || e.key === "ArrowDown") {
+        e.preventDefault();
+        const idx = focusedId ? filtered.findIndex((r) => r.id === focusedId) : -1;
+        const next = filtered[Math.min(filtered.length - 1, idx + 1)];
+        if (next) setFocusedId(next.id);
+        return;
+      }
+      if (e.key === "k" || e.key === "ArrowUp") {
+        e.preventDefault();
+        const idx = focusedId ? filtered.findIndex((r) => r.id === focusedId) : 0;
+        const prev = filtered[Math.max(0, idx - 1)];
+        if (prev) setFocusedId(prev.id);
+        return;
+      }
+      if (e.key === "Escape") {
+        setFocusedId(null);
+        return;
+      }
+      if ((e.key === "a" || e.key === "A") && focusedId) {
+        const row = filtered.find((r) => r.id === focusedId);
+        if (row && row.status !== "PAID") {
+          e.preventDefault();
+          setApproving(row);
+        }
+      } else if ((e.key === "r" || e.key === "R") && focusedId) {
+        const row = filtered.find((r) => r.id === focusedId);
+        if (row && row.status !== "PAID" && row.status !== "REJECTED") {
+          e.preventDefault();
+          setRejecting(row);
+        }
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [filtered, focusedId, approving, rejecting]);
+
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         {FILTERS.map((f) => (
           <button
             key={f}
@@ -111,9 +170,12 @@ export default function ReviewQueue({
             <span className="ml-1.5 tabular-nums opacity-70">({counts[f]})</span>
           </button>
         ))}
+        <span className="ml-auto hidden md:inline text-[11px] text-muted-foreground">
+          {t("shortcutHint")}
+        </span>
       </div>
 
-      <Card className="overflow-hidden">
+      <Card className="overflow-visible">
         {filtered.length === 0 ? (
           <div className="p-8 text-center text-sm text-muted-foreground">{t("empty")}</div>
         ) : (
@@ -122,9 +184,9 @@ export default function ReviewQueue({
               <TableRow>
                 {!scopedToCampaign && <TableHead>{t("columns.campaign")}</TableHead>}
                 {showBrandOwner && <TableHead>{t("columns.brand")}</TableHead>}
+                <TableHead className="w-[88px]">{t("columns.video")}</TableHead>
                 <TableHead>{t("columns.creator")}</TableHead>
                 <TableHead>{t("columns.platform")}</TableHead>
-                <TableHead>{t("columns.url")}</TableHead>
                 <TableHead className="text-right">{t("columns.claimed")}</TableHead>
                 <TableHead className="text-right">{t("columns.verified")}</TableHead>
                 <TableHead className="text-right">{t("columns.earnings")}</TableHead>
@@ -133,113 +195,122 @@ export default function ReviewQueue({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filtered.map((r) => (
-                <TableRow key={r.id}>
-                  {!scopedToCampaign && (
-                    <TableCell>
-                      <Link
-                        href={buildHref(r.campaignId)}
-                        className="text-sm font-medium hover:underline truncate max-w-[180px] inline-block"
-                      >
-                        {r.campaignTitle}
-                      </Link>
-                    </TableCell>
-                  )}
-                  {showBrandOwner && (
-                    <TableCell className="text-xs text-muted-foreground">
-                      {r.brandOwner ?? t("platformOwned")}
-                    </TableCell>
-                  )}
-                  <TableCell>
-                    <div className="flex flex-col">
-                      <span className="text-sm font-medium">{r.creatorName}</span>
-                      <span className="text-[11px] text-muted-foreground">
-                        {r.creatorEmail}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <span className="inline-flex items-center gap-1.5 text-xs">
-                      <span className="size-5 inline-flex items-center justify-center rounded bg-secondary text-[10px] font-semibold">
-                        {r.platformGlyph}
-                      </span>
-                      {r.platformLabel}
-                    </span>
-                  </TableCell>
-                  <TableCell>
-                    <a
-                      href={r.videoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1"
-                    >
-                      <span className="truncate max-w-[160px]">{r.videoUrl}</span>
-                      <ExternalLink className="size-3 shrink-0" />
-                    </a>
-                  </TableCell>
-                  <TableCell className="text-right text-sm tabular-nums">
-                    {r.viewsClaimed != null ? r.viewsClaimed.toLocaleString() : "—"}
-                  </TableCell>
-                  <TableCell className="text-right text-sm tabular-nums">
-                    {r.viewsVerified != null ? (
-                      r.viewsVerified.toLocaleString()
-                    ) : r.apiData?.views != null ? (
-                      <span className="inline-flex items-center gap-1 justify-end">
-                        <span className="text-muted-foreground">
-                          {r.apiData.views.toLocaleString()}
-                        </span>
-                        <span
-                          title={t("apiAutoHint", { source: r.apiData.source })}
-                          className="text-[9px] px-1 rounded-full bg-emerald-100 text-emerald-700 font-medium"
-                        >
-                          {t("apiAuto")}
-                        </span>
-                      </span>
-                    ) : (
-                      "—"
+              {filtered.map((r) => {
+                const isFocused = r.id === focusedId;
+                return (
+                  <TableRow
+                    key={r.id}
+                    onClick={() => setFocusedId(r.id)}
+                    className={cn(
+                      "cursor-pointer transition-colors",
+                      isFocused && "bg-primary/[0.06] hover:bg-primary/[0.08]"
                     )}
-                  </TableCell>
-                  <TableCell className="text-right text-sm tabular-nums">
-                    {r.earningsCents > 0 ? formatCents(r.earningsCents) : "—"}
-                  </TableCell>
-                  <TableCell>
-                    <SubmissionStatusBadge status={r.status} />
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center justify-end gap-1">
-                      {r.status !== "PAID" && (
-                        <>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => setApproving(r)}
-                            className="h-7 text-[11px]"
+                  >
+                    {!scopedToCampaign && (
+                      <TableCell>
+                        <Link
+                          href={buildHref(r.campaignId)}
+                          onClick={(e) => e.stopPropagation()}
+                          className="text-sm font-medium hover:underline truncate max-w-[180px] inline-block"
+                        >
+                          {r.campaignTitle}
+                        </Link>
+                      </TableCell>
+                    )}
+                    {showBrandOwner && (
+                      <TableCell className="text-xs text-muted-foreground">
+                        {r.brandOwner ?? t("platformOwned")}
+                      </TableCell>
+                    )}
+                    <TableCell className="relative">
+                      <ThumbnailCell row={r} />
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex flex-col">
+                        <span className="text-sm font-medium">{r.creatorName}</span>
+                        <span className="text-[11px] text-muted-foreground">
+                          {r.creatorEmail}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <span className="inline-flex items-center gap-1.5 text-xs">
+                        <span className="size-5 inline-flex items-center justify-center rounded bg-secondary text-[10px] font-semibold">
+                          {r.platformGlyph}
+                        </span>
+                        {r.platformLabel}
+                      </span>
+                    </TableCell>
+                    <TableCell className="text-right text-sm tabular-nums">
+                      {r.viewsClaimed != null ? r.viewsClaimed.toLocaleString() : "—"}
+                    </TableCell>
+                    <TableCell className="text-right text-sm tabular-nums">
+                      {r.viewsVerified != null ? (
+                        r.viewsVerified.toLocaleString()
+                      ) : r.apiData?.views != null ? (
+                        <span className="inline-flex items-center gap-1 justify-end">
+                          <span className="text-muted-foreground">
+                            {r.apiData.views.toLocaleString()}
+                          </span>
+                          <span
+                            title={t("apiAutoHint", { source: r.apiData.source })}
+                            className="text-[9px] px-1 rounded-full bg-emerald-100 text-emerald-700 font-medium"
                           >
-                            <Check className="size-3 mr-0.5" />
-                            {t("approve")}
-                          </Button>
-                          {r.status !== "REJECTED" && (
+                            {t("apiAuto")}
+                          </span>
+                        </span>
+                      ) : (
+                        "—"
+                      )}
+                    </TableCell>
+                    <TableCell className="text-right text-sm tabular-nums">
+                      {r.earningsCents > 0 ? formatCents(r.earningsCents) : "—"}
+                    </TableCell>
+                    <TableCell>
+                      <SubmissionStatusBadge status={r.status} />
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center justify-end gap-1">
+                        {r.status !== "PAID" && (
+                          <>
                             <Button
                               size="sm"
-                              variant="ghost"
-                              onClick={() => setRejecting(r)}
-                              className="h-7 text-[11px] text-destructive hover:text-destructive"
+                              variant="outline"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setApproving(r);
+                              }}
+                              className="h-7 text-[11px]"
                             >
-                              <X className="size-3 mr-0.5" />
-                              {t("reject")}
+                              <Check className="size-3 mr-0.5" />
+                              {t("approve")}
                             </Button>
-                          )}
-                        </>
-                      )}
-                      {r.reviewedAt && r.status !== "PENDING" && (
-                        <span className="text-[10px] text-muted-foreground">
-                          {fmt.dateTime(r.reviewedAt, { dateStyle: "short" })}
-                        </span>
-                      )}
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
+                            {r.status !== "REJECTED" && (
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setRejecting(r);
+                                }}
+                                className="h-7 text-[11px] text-destructive hover:text-destructive"
+                              >
+                                <X className="size-3 mr-0.5" />
+                                {t("reject")}
+                              </Button>
+                            )}
+                          </>
+                        )}
+                        {r.reviewedAt && r.status !== "PENDING" && (
+                          <span className="text-[10px] text-muted-foreground">
+                            {fmt.dateTime(r.reviewedAt, { dateStyle: "short" })}
+                          </span>
+                        )}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         )}
@@ -276,6 +347,125 @@ export default function ReviewQueue({
           )}
         </DialogContent>
       </Dialog>
+    </div>
+  );
+}
+
+/**
+ * The thumbnail cell: small 16:9 preview from apiData.thumbnailUrl + a "camera"
+ * badge when the creator uploaded a proof screenshot. Hover surfaces a larger
+ * popover with both images side by side, so reviewers can verify the screenshot
+ * matches the video without opening anything.
+ */
+function ThumbnailCell({ row }: { row: ReviewQueueRow }) {
+  const t = useTranslations("brand.reviewPage");
+  const thumb = row.apiData?.thumbnailUrl ?? null;
+  const shot = row.screenshotUrl ?? null;
+  const popoverCount = (thumb ? 1 : 0) + (shot ? 1 : 0);
+
+  return (
+    <div className="group/thumb relative inline-flex flex-col gap-1 isolate">
+      <a
+        href={row.videoUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={(e) => e.stopPropagation()}
+        title={row.videoUrl}
+        className="block"
+      >
+        <div className="relative w-[72px] h-[40px] rounded overflow-hidden bg-secondary border border-border">
+          {thumb ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={thumb}
+              alt={row.apiData?.title ?? row.videoUrl}
+              loading="lazy"
+              className="absolute inset-0 w-full h-full object-cover"
+              onError={(e) => {
+                e.currentTarget.style.display = "none";
+              }}
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
+              <ImageOff className="size-3.5" />
+            </div>
+          )}
+          {shot && (
+            <span
+              title={t("hasScreenshot")}
+              className="absolute top-0.5 right-0.5 inline-flex size-4 items-center justify-center rounded-sm bg-primary text-primary-foreground"
+            >
+              <Camera className="size-2.5" />
+            </span>
+          )}
+        </div>
+        <div className="mt-0.5 flex items-center gap-0.5 text-[10px] text-muted-foreground group-hover/thumb:text-foreground">
+          <span>{t("openVideo")}</span>
+          <ExternalLink className="size-2.5" />
+        </div>
+      </a>
+
+      {popoverCount > 0 && (
+        <div
+          aria-hidden
+          className={cn(
+            "pointer-events-none absolute left-[88px] top-1/2 -translate-y-1/2 z-50 rounded-md overflow-hidden border border-border bg-card shadow-xl opacity-0 scale-95 transition-all duration-150 group-hover/thumb:opacity-100 group-hover/thumb:scale-100 p-1.5",
+            popoverCount === 2 ? "w-[400px]" : "w-[240px]"
+          )}
+        >
+          <div
+            className={cn(
+              "grid gap-1.5",
+              popoverCount === 2 ? "grid-cols-2" : "grid-cols-1"
+            )}
+          >
+            {thumb && (
+              <PopoverImage
+                src={thumb}
+                label={row.apiData?.title ?? t("videoPreview")}
+                sublabel={row.apiData?.authorName ?? undefined}
+              />
+            )}
+            {shot && (
+              <PopoverImage
+                src={shot}
+                label={t("screenshotPreview")}
+                accent
+              />
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function PopoverImage({
+  src,
+  label,
+  sublabel,
+  accent
+}: {
+  src: string;
+  label: string;
+  sublabel?: string;
+  accent?: boolean;
+}) {
+  return (
+    <div className="relative aspect-video rounded overflow-hidden bg-muted">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={src} alt="" className="absolute inset-0 w-full h-full object-cover" />
+      <div
+        className={cn(
+          "absolute inset-x-0 bottom-0 px-1.5 py-1 bg-gradient-to-t to-transparent",
+          accent ? "from-primary/90" : "from-black/80"
+        )}
+      >
+        <div className="text-[10px] font-medium text-white truncate">{label}</div>
+        {sublabel && (
+          <div className="text-[9px] text-white/70 truncate">{sublabel}</div>
+        )}
+      </div>
     </div>
   );
 }

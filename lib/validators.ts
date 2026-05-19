@@ -130,7 +130,8 @@ export const submissionFormSchema = z.object({
   campaignId: z.string().min(1),
   platformId: z.string().min(1, "Selecciona una plataforma"),
   videoUrl: z.string().url("URL inválida"),
-  viewsClaimed: z.string().regex(/^\d*$/, "Introduce un número entero").default("")
+  viewsClaimed: z.string().regex(/^\d*$/, "Introduce un número entero").default(""),
+  screenshotUrl: z.string().default("")
 });
 export type SubmissionFormValues = z.infer<typeof submissionFormSchema>;
 

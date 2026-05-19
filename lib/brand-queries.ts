@@ -156,6 +156,7 @@ export async function listBrandSubmissions(
     rejectReason: s.rejectReason,
     reviewedAt: s.reviewedAt,
     createdAt: s.createdAt,
+    screenshotUrl: s.screenshotUrl,
     apiData: (s.apiData as SubmissionApiData | null) ?? null
   }));
 }
