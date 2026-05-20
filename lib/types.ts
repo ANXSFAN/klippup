@@ -439,6 +439,27 @@ export interface BrandCampaignStats {
   remainingCents: number;
 }
 
+/** Top creator entry in the campaign-insights view. */
+export interface InsightsTopCreator {
+  id: string;
+  name: string;
+  submissions: number;
+  viewsVerified: number;
+  earningsCents: number;
+}
+
+/** Aggregated data for /brand/campaigns/[id]/insights. */
+export interface BrandCampaignInsights {
+  campaignTitle: string;
+  funnel: { pending: number; approved: number; paid: number; rejected: number };
+  /** 14-day verified-views trend, oldest first. */
+  trend: ChartPoint[];
+  /** Submission count by platform, biggest first. */
+  byPlatform: ChartPoint[];
+  /** Top 10 creators by earnings on this campaign. */
+  topCreators: InsightsTopCreator[];
+}
+
 /** Brand-side profile editable fields. `verified` is admin-set, exposed read-only. */
 export interface BrandProfileData {
   id: string;
@@ -492,6 +513,25 @@ export interface PendingPayoutCreator {
     earningsCents: number;
     approvedAt: Date | null;
   }[];
+}
+
+// ---------- notifications ----------
+
+export type NotificationType =
+  | "SUBMISSION_APPROVED"
+  | "SUBMISSION_REJECTED"
+  | "PAYOUT_SENT"
+  | "CAMPAIGN_PUBLISHED";
+
+/** What the query layer hands to the UI — already localized. */
+export interface NotificationRow {
+  id: string;
+  type: NotificationType;
+  title: string;
+  body: string | null;
+  link: string | null;
+  readAt: Date | null;
+  createdAt: Date;
 }
 
 /** One row in the past-payouts table. */

@@ -31,13 +31,14 @@ model Profile {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  creator     CreatorProfile?
-  brand       BrandProfile?
+  creator       CreatorProfile?
+  brand         BrandProfile?
   // back-relation to campaigns owned by a brand user (one-to-many)
-  campaigns   Campaign[]      @relation("CampaignBrandOwner")
-  submissions Submission[]    @relation("CreatorSubmissions")
-  reviewed    Submission[]    @relation("ReviewedSubmissions")
-  payouts     Payout[]
+  campaigns     Campaign[]      @relation("CampaignBrandOwner")
+  submissions   Submission[]    @relation("CreatorSubmissions")
+  reviewed      Submission[]    @relation("ReviewedSubmissions")
+  payouts       Payout[]
+  notifications Notification[]
 }
 
 model CreatorProfile {
@@ -257,4 +258,32 @@ model Payout {
   updatedAt DateTime @updatedAt
 
   @@index([creatorId])
+}
+
+// ---------- notifications ----------
+//
+// Type + payload (not pre-rendered text) so we can re-localize on read. The
+// query layer pulls translations from next-intl using the request's locale.
+
+enum NotificationType {
+  SUBMISSION_APPROVED
+  SUBMISSION_REJECTED
+  PAYOUT_SENT
+  CAMPAIGN_PUBLISHED
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  user      Profile          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  type      NotificationType
+  // Free-form context used by the renderer (campaignTitle / submissionId /
+  // amountCents / rejectReason). Keep keys small — they're read on every list.
+  payload   Json
+  link      String? // optional click-through (e.g. /creator/submissions)
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+
+  @@index([userId, readAt])
+  @@index([userId, createdAt])
 }

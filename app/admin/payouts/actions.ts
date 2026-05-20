@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { getCurrentProfile } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { createNotification } from "@/lib/notifications";
 import { createPayoutSchema, type CreatePayoutValues } from "@/lib/validators";
 
 export type AdminActionResult<T = void> =
@@ -76,6 +77,13 @@ export async function createPayout(
       update: { totalEarned: { increment: amountCents } }
     });
     return payout;
+  });
+
+  await createNotification({
+    userId: v.creatorId,
+    type: "PAYOUT_SENT",
+    payload: { amountCents, count: v.submissionIds.length },
+    link: "/creator/earnings"
   });
 
   revalidatePath("/admin/payouts");

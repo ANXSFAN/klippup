@@ -462,6 +462,30 @@
       "saving": "Guardando…",
       "saved": "Guardado",
       "saveError": "No se pudo guardar"
+    },
+    "campaignTabs": {
+      "submissions": "Envíos",
+      "insights": "Datos"
+    },
+    "insights": {
+      "subtitle": "Resumen de rendimiento de la campaña",
+      "approvalRate": "Tasa de aprobación {rate}% (de los envíos revisados)",
+      "trendTitle": "Últimos 14 días · Reproducciones verificadas",
+      "byPlatformTitle": "Distribución por plataforma",
+      "topCreatorsTitle": "Top creadores",
+      "empty": "Sin datos todavía",
+      "funnel": {
+        "pending": "Pendiente",
+        "approved": "Aprobado",
+        "paid": "Pagado",
+        "rejected": "Rechazado"
+      },
+      "columns": {
+        "creator": "Creador",
+        "submissions": "Envíos",
+        "views": "Reproducciones",
+        "earnings": "Ingresos"
+      }
     }
   },
   "admin": {
@@ -756,6 +780,257 @@
         "saving": "Guardando…",
         "cancel": "Cancelar",
         "saveError": "No se pudo guardar"
+      }
+    }
+  },
+  "marketing": {
+    "nav": {
+      "howItWorks": "Cómo funciona",
+      "forCreators": "Creadores",
+      "forBrands": "Marcas",
+      "about": "Nosotros"
+    },
+    "footer": {
+      "tagline": "La plataforma de la economía creadora en español. Convierte tu contenido en ingresos reales.",
+      "product": "Producto",
+      "company": "Empresa",
+      "getStarted": "Empezar",
+      "howItWorks": "Cómo funciona",
+      "forCreators": "Para creadores",
+      "forBrands": "Para marcas",
+      "about": "Sobre KlippUp",
+      "discover": "Descubrir campañas",
+      "joinAsCreator": "Soy creador",
+      "joinAsBrand": "Soy una marca",
+      "madeIn": "Hecho en Madrid · con ❤️"
+    },
+    "about": {
+      "hero": {
+        "eyebrow": "Sobre KlippUp",
+        "title": "Damos liquidez a la economía creadora en español.",
+        "lead": "Conectamos a creadores activos en TikTok, YouTube e Instagram con marcas que buscan alcance real, sin intermediarios. Pagos por reproducción, transparencia total."
+      },
+      "stats": {
+        "creators": { "label": "Creadores registrados", "value": "2.400+" },
+        "brands": { "label": "Marcas activas", "value": "60+" },
+        "campaigns": { "label": "Campañas lanzadas", "value": "180+" },
+        "views": { "label": "Reproducciones liquidadas", "value": "120M+" }
+      },
+      "values": {
+        "title": "Lo que defendemos",
+        "transparency": {
+          "title": "Datos transparentes",
+          "body": "Cada envío, cada pago y cada revisión queda registrado. Las marcas ven su ROI; los creadores, cómo se calcula su ingreso."
+        },
+        "fair": {
+          "title": "Reglas justas",
+          "body": "Tarifa por reproducción publicada de antemano. Sin mínimos, sin plazos sorpresa. Aprobado = pagado."
+        },
+        "local": {
+          "title": "Foco local",
+          "body": "Equipo en Madrid. Soporte en español, contratos según ley local y cobros a tu cuenta bancaria europea o PayPal."
+        }
+      },
+      "cta": {
+        "title": "Únete a KlippUp",
+        "body": "Tanto si quieres un buen ingreso extra como si necesitas amplificar tu marca con voces reales, aquí hay sitio.",
+        "creator": "Soy creador",
+        "brand": "Soy una marca"
+      }
+    },
+    "howItWorks": {
+      "hero": {
+        "eyebrow": "Cómo funciona",
+        "title": "De grabar a cobrar, en tres pasos.",
+        "lead": "Tanto si eres creador como si eres marca, vas a entender el flujo en 30 segundos."
+      },
+      "creator": {
+        "badge": "Creador",
+        "title": "Cobra antes de lo que crees.",
+        "steps": {
+          "browse": {
+            "title": "Elige una campaña",
+            "body": "Explora las campañas activas en Descubrir. Cada ficha indica plataforma, tarifa por reproducción y requisitos de contenido."
+          },
+          "submit": {
+            "title": "Envía tu vídeo",
+            "body": "Publícalo en tu propio TikTok / YouTube / Instagram y pega el enlace en KlippUp. Nosotros verificamos las reproducciones automáticamente."
+          },
+          "earn": {
+            "title": "Cobra",
+            "body": "Cuando la marca aprueba, calculamos lo que te toca y lo pagamos a tu PayPal o cuenta bancaria. Liquidamos cada semana."
+          }
+        },
+        "cta": "Crear cuenta de creador"
+      },
+      "brand": {
+        "badge": "Marca",
+        "title": "Tu campaña, en manos de creadores reales.",
+        "steps": {
+          "launch": {
+            "title": "Publica la campaña",
+            "body": "Sube los assets, define la tarifa (p. ej. 1 € por cada 1.000 reproducciones) y el presupuesto. Revisamos y publicamos en 24 h."
+          },
+          "review": {
+            "title": "Revisa envíos",
+            "body": "Los envíos llegan a tu cola. Ves el vídeo, las reproducciones verificadas, y apruebas o rechazas con un clic."
+          },
+          "pay": {
+            "title": "Liquida",
+            "body": "KlippUp se encarga de pagar a cada creador. Tú solo recibes una factura agregada por periodo."
+          }
+        },
+        "cta": "Crear cuenta de marca"
+      },
+      "faq": {
+        "title": "Preguntas habituales",
+        "payout": {
+          "q": "¿Cuándo recibo el pago?",
+          "a": "Los envíos aprobados se liquidan la misma semana. PayPal suele tardar minutos; transferencia bancaria, 1-3 días hábiles."
+        },
+        "approval": {
+          "q": "¿Y si rechazan mi envío?",
+          "a": "La marca indicará el motivo. Si lo corriges, puedes volver a enviar."
+        },
+        "support": {
+          "q": "¿Cómo contacto?",
+          "a": "Escríbenos a hola@klippup.es. Respondemos en horario laboral en España en menos de 12 horas."
+        }
+      },
+      "backToDiscover": "Ver campañas activas"
+    },
+    "forCreators": {
+      "hero": {
+        "eyebrow": "Para creadores",
+        "title": "Lo que ya estás haciendo, debería pagarse.",
+        "lead": "Sin construir audiencia desde cero, sin buscar marcas, sin facturar a cada cliente. Tú haces el vídeo, KlippUp se encarga del resto.",
+        "cta": "Registrarme gratis",
+        "browse": "Ver campañas"
+      },
+      "earnings": {
+        "label": "Tarifa típica",
+        "per": "/ 1.000 reproducciones",
+        "note": "La tarifa exacta se indica en cada campaña.",
+        "clip1": { "views": "10K", "pay": "≈ $10" },
+        "clip2": { "views": "100K", "pay": "≈ $100" },
+        "clip3": { "views": "1M", "pay": "≈ $1.000" }
+      },
+      "benefits": {
+        "title": "Por qué KlippUp",
+        "payout": {
+          "title": "Cobro por reproducción, claro de entrada",
+          "body": "La tarifa está publicada. Sin mínimos ni retenciones. Aprobado = pagado esa misma semana."
+        },
+        "platforms": {
+          "title": "Tu canal sigue siendo tuyo",
+          "body": "Publicas desde tus propias cuentas. No tomamos control de tu canal ni pedimos exclusividad."
+        },
+        "rights": {
+          "title": "Derechos definidos",
+          "body": "Cada campaña indica para qué puede usar la marca tu vídeo. Por defecto, sólo redifusión en sus canales."
+        },
+        "support": {
+          "title": "Soporte local",
+          "body": "Atención en español, horario peninsular. Cobro a tu PayPal o cuenta bancaria europea."
+        }
+      },
+      "platforms": {
+        "title": "Plataformas compatibles",
+        "lead": "Trabaja desde donde ya eres bueno."
+      },
+      "cta": {
+        "title": "Tu próximo vídeo puede empezar a pagarte.",
+        "body": "Te registras en 30 segundos y eliges tu primera campaña en cinco minutos.",
+        "button": "Empezar gratis"
+      }
+    },
+    "forBrands": {
+      "hero": {
+        "eyebrow": "Para marcas",
+        "title": "Presupuesto predecible, alcance real.",
+        "lead": "Lanza tu campaña a cientos de creadores hispanohablantes pagando sólo por reproducciones reales. Sin agencias, en 24 horas.",
+        "cta": "Crear una campaña",
+        "learn": "Cómo funciona"
+      },
+      "stats": {
+        "roi": { "value": "3,4×", "label": "ROAS medio reportado" },
+        "creators": { "value": "2.400+", "label": "Creadores accesibles" },
+        "speed": { "value": "24 h", "label": "Tiempo medio de lanzamiento" }
+      },
+      "features": {
+        "title": "Por qué las marcas eligen KlippUp",
+        "reach": {
+          "title": "Alcance distribuido",
+          "body": "En lugar de depender de un único influencer, llegas a 200 creadores medianos a la vez. Cada vídeo, una audiencia distinta."
+        },
+        "ugc": {
+          "title": "Contenido UGC nativo",
+          "body": "Recibes versiones reales hechas por creadores, no spots publicitarios. Reutilizables en tus propios canales (según términos de la campaña)."
+        },
+        "budget": {
+          "title": "Presupuesto cerrado",
+          "body": "Pagas por reproducción. Cuando se agota el presupuesto, la campaña se pausa sola. Sin desviaciones."
+        },
+        "review": {
+          "title": "Revisión rápida",
+          "body": "Cola de envíos con miniatura del vídeo y métricas verificadas. Atajos de teclado para aprobar o rechazar en segundos."
+        }
+      },
+      "flow": {
+        "title": "Sólo tres pasos para empezar",
+        "lead": "Desde el lanzamiento al primer pago, normalmente 48 horas.",
+        "steps": {
+          "launch": {
+            "title": "Lanza",
+            "body": "Sube los assets, define la tarifa por reproducción y el tope de presupuesto. Publicamos tras revisión en 24 h."
+          },
+          "verify": {
+            "title": "Revisa",
+            "body": "Los envíos van entrando a tu cola. Apruebas o rechazas con un clic; nosotros verificamos las reproducciones."
+          },
+          "scale": {
+            "title": "Liquida",
+            "body": "Cerramos cuentas cada semana, pagamos a los creadores y te enviamos una sola factura agregada."
+          }
+        }
+      },
+      "cta": {
+        "title": "Lanza tu próxima campaña en KlippUp.",
+        "body": "Crear cuenta es gratis. Tu primera campaña, sin comisión de plataforma.",
+        "button": "Crear cuenta de marca",
+        "learnMore": "Conócenos"
+      }
+    }
+  },
+  "notifications": {
+    "bell": {
+      "aria": "Notificaciones",
+      "title": "Notificaciones",
+      "empty": "Sin notificaciones",
+      "markAllRead": "Marcar todo como leído",
+      "viewAll": "Ver todas →"
+    },
+    "listPage": {
+      "title": "Notificaciones",
+      "back": "Volver",
+      "empty": "Aún no hay notificaciones. Las novedades aparecerán aquí.",
+      "unread": "Sin leer ({count})",
+      "read": "Anteriores"
+    },
+    "types": {
+      "SUBMISSION_APPROVED": {
+        "title": "Tu envío en «{campaign}» fue aprobado",
+        "body": "Se te abonarán ${amount}."
+      },
+      "SUBMISSION_REJECTED": {
+        "title": "Tu envío en «{campaign}» fue rechazado"
+      },
+      "PAYOUT_SENT": {
+        "title": "Pago enviado: ${amount}",
+        "body": "Se liquidaron {count} envíos."
+      },
+      "CAMPAIGN_PUBLISHED": {
+        "title": "Tu campaña «{campaign}» ya está publicada"
       }
     }
   }

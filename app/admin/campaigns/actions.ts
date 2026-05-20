@@ -2,6 +2,7 @@
 import { revalidatePath } from "next/cache";
 import { Prisma } from "@/app/generated/prisma/client";
 import { prisma } from "@/lib/db";
+import { createNotification } from "@/lib/notifications";
 import { campaignFormSchema, type CampaignFormValues } from "@/lib/validators";
 import type { PlacementSlot } from "@/lib/types";
 
@@ -152,8 +153,17 @@ export async function publishCampaign(id: string): Promise<ActionResult> {
   try {
     const updated = await prisma.campaign.update({
       where: { id },
-      data: { status: "PUBLISHED" }
+      data: { status: "PUBLISHED" },
+      select: { id: true, title: true, brandUserId: true }
     });
+    if (updated.brandUserId) {
+      await createNotification({
+        userId: updated.brandUserId,
+        type: "CAMPAIGN_PUBLISHED",
+        payload: { campaignTitle: updated.title },
+        link: `/brand/campaigns`
+      });
+    }
     revalidate();
     return { ok: true, id: updated.id };
   } catch (err) {

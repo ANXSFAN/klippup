@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getCurrentProfile } from "@/lib/auth";
 import LocaleSwitcher from "@/components/LocaleSwitcher";
 import LogoutButton from "@/components/portal/LogoutButton";
+import NotificationBellWrapper from "@/components/portal/NotificationBellWrapper";
 import PortalSidebar from "@/components/portal/PortalSidebar";
 
 export default async function CreatorLayout({ children }: { children: React.ReactNode }) {
@@ -24,6 +25,7 @@ export default async function CreatorLayout({ children }: { children: React.Reac
           <span className="text-sm text-muted-foreground hidden sm:inline">
             {profile.displayName}
           </span>
+          <NotificationBellWrapper />
           <LocaleSwitcher />
           <LogoutButton />
         </header>

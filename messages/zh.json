@@ -462,6 +462,30 @@
       "saving": "保存中…",
       "saved": "已保存",
       "saveError": "保存失败"
+    },
+    "campaignTabs": {
+      "submissions": "投稿",
+      "insights": "数据洞察"
+    },
+    "insights": {
+      "subtitle": "活动数据快照",
+      "approvalRate": "通过率 {rate}%（已审稿件中）",
+      "trendTitle": "最近 14 天 · 已核验播放量",
+      "byPlatformTitle": "平台分布",
+      "topCreatorsTitle": "Top 创作者",
+      "empty": "暂无数据",
+      "funnel": {
+        "pending": "待审",
+        "approved": "已通过",
+        "paid": "已发放",
+        "rejected": "已驳回"
+      },
+      "columns": {
+        "creator": "创作者",
+        "submissions": "投稿数",
+        "views": "已核验播放量",
+        "earnings": "收益"
+      }
     }
   },
   "admin": {
@@ -756,6 +780,257 @@
         "saving": "保存中…",
         "cancel": "取消",
         "saveError": "保存失败"
+      }
+    }
+  },
+  "marketing": {
+    "nav": {
+      "howItWorks": "玩法",
+      "forCreators": "创作者",
+      "forBrands": "品牌方",
+      "about": "关于"
+    },
+    "footer": {
+      "tagline": "西班牙的创作者经济平台 — 把好内容变成实实在在的收入。",
+      "product": "产品",
+      "company": "公司",
+      "getStarted": "开始",
+      "howItWorks": "玩法说明",
+      "forCreators": "创作者",
+      "forBrands": "品牌方",
+      "about": "关于我们",
+      "discover": "发现活动",
+      "joinAsCreator": "成为创作者",
+      "joinAsBrand": "成为品牌方",
+      "madeIn": "马德里 · Hecho con ❤️"
+    },
+    "about": {
+      "hero": {
+        "eyebrow": "关于 KlippUp",
+        "title": "让西班牙的创作者经济真正流动起来。",
+        "lead": "KlippUp 把活跃在 TikTok、YouTube、Instagram 上的西语创作者，与寻找真实曝光的品牌直接对接。没有中介，没有黑箱，按播放量结算。"
+      },
+      "stats": {
+        "creators": { "label": "已注册创作者", "value": "2,400+" },
+        "brands": { "label": "活跃品牌", "value": "60+" },
+        "campaigns": { "label": "已上线活动", "value": "180+" },
+        "views": { "label": "结算播放量", "value": "120M+" }
+      },
+      "values": {
+        "title": "我们坚持的事",
+        "transparency": {
+          "title": "数据透明",
+          "body": "每一条投稿、每一笔结算、每一次审核都有据可查。品牌看得到 ROI，创作者看得到回报。"
+        },
+        "fair": {
+          "title": "公平结算",
+          "body": "按播放量定价，事先公开费率。不做最低门槛、不押账期，审核通过即结算。"
+        },
+        "local": {
+          "title": "深耕本地",
+          "body": "团队在马德里，服务西语市场。客服讲西班牙语，品牌讲拉美语境，创作者用本地银行收款。"
+        }
+      },
+      "cta": {
+        "title": "加入 KlippUp",
+        "body": "无论你是想赚一份不错的副业，还是为品牌找到真实的传播者 — 这里都有位置。",
+        "creator": "我是创作者",
+        "brand": "我是品牌方"
+      }
+    },
+    "howItWorks": {
+      "hero": {
+        "eyebrow": "玩法",
+        "title": "从拍片到收款，只有三步。",
+        "lead": "无论你站在哪一边 — 创作者还是品牌 — 都能在 30 秒内理清流程。"
+      },
+      "creator": {
+        "badge": "创作者",
+        "title": "拿到付款，比想象的快。",
+        "steps": {
+          "browse": {
+            "title": "挑活动",
+            "body": "浏览发现页里所有正在进行的活动，挑一个你能拍、并喜欢的品牌。每个活动都写明了平台、费率和内容要求。"
+          },
+          "submit": {
+            "title": "投作品",
+            "body": "用你已有的 TikTok / YouTube / Instagram 账号拍发，把链接贴回 KlippUp。我们自动抓取播放量，无需手动填。"
+          },
+          "earn": {
+            "title": "收款",
+            "body": "品牌核验后即按播放量结算，款项打到你的 PayPal / 银行账户。每周一次批量出账。"
+          }
+        },
+        "cta": "立即注册创作者"
+      },
+      "brand": {
+        "badge": "品牌方",
+        "title": "把活动交给真实的创作者。",
+        "steps": {
+          "launch": {
+            "title": "发布活动",
+            "body": "上传素材、设定预算和单价（如 $1 / 1k 播放量），平台 24 小时内审核上架。"
+          },
+          "review": {
+            "title": "审稿",
+            "body": "创作者投稿后会进入你的审核队列。看视频、核播放量、一键通过或驳回。"
+          },
+          "pay": {
+            "title": "结算",
+            "body": "我们集中结算给创作者，你只需要按周对账，发票统一开给 KlippUp 一家。"
+          }
+        },
+        "cta": "立即注册品牌方"
+      },
+      "faq": {
+        "title": "常见问题",
+        "payout": {
+          "q": "钱多久能到账？",
+          "a": "审核通过的投稿当周内出账，PayPal 一般当天、银行电汇 1-3 个工作日。"
+        },
+        "approval": {
+          "q": "投稿被驳回怎么办？",
+          "a": "品牌方会写明驳回原因。如果你按要求重新发，可以再投一次。"
+        },
+        "support": {
+          "q": "遇到问题找谁？",
+          "a": "邮箱 hola@klippup.es，西班牙时间工作日 12 小时内回复。"
+        }
+      },
+      "backToDiscover": "去发现页看活动"
+    },
+    "forCreators": {
+      "hero": {
+        "eyebrow": "给创作者",
+        "title": "你正在做的事，本来就该被付费。",
+        "lead": "不用建私域、不用找广告主、不用打发票。把你已经在拍的短视频投到合适的活动里，KlippUp 帮你拿到钱。",
+        "cta": "免费注册",
+        "browse": "先逛逛活动"
+      },
+      "earnings": {
+        "label": "典型费率",
+        "per": "/ 1,000 播放量",
+        "note": "实际费率因活动而异，每个活动详情页都会写明。",
+        "clip1": { "views": "10K", "pay": "≈ $10" },
+        "clip2": { "views": "100K", "pay": "≈ $100" },
+        "clip3": { "views": "1M", "pay": "≈ $1,000" }
+      },
+      "benefits": {
+        "title": "为什么选 KlippUp",
+        "payout": {
+          "title": "按播放量结算，事先讲清楚",
+          "body": "费率写在活动页，按播放量给钱。没有最低门槛、没有押账期。"
+        },
+        "platforms": {
+          "title": "你的账号，你的内容",
+          "body": "用你已经在用的账号发布。我们不接管你的频道，不要求独家。"
+        },
+        "rights": {
+          "title": "版权清晰",
+          "body": "活动里写明品牌的使用范围。默认仅授权品牌在自己渠道转发，绝不外包。"
+        },
+        "support": {
+          "title": "本地支持",
+          "body": "西班牙时间客服，西语沟通，本地银行/PayPal 收款。"
+        }
+      },
+      "platforms": {
+        "title": "支持的平台",
+        "lead": "横跨主流社交，按你最擅长的平台来。"
+      },
+      "cta": {
+        "title": "让你的下一条视频开始赚钱。",
+        "body": "30 秒注册，5 分钟挑活动，今晚就能发。",
+        "button": "免费成为创作者"
+      }
+    },
+    "forBrands": {
+      "hero": {
+        "eyebrow": "给品牌方",
+        "title": "可预测的预算，真实的覆盖。",
+        "lead": "用按效果付费的方式，把你的活动交给上百位西语创作者。看得见的播放量、看得见的支出、24 小时上线。",
+        "cta": "开启一个活动",
+        "learn": "看玩法"
+      },
+      "stats": {
+        "roi": { "value": "3.4×", "label": "平均 ROAS（自报数据）" },
+        "creators": { "value": "2,400+", "label": "可触达创作者" },
+        "speed": { "value": "24h", "label": "活动平均上线时间" }
+      },
+      "features": {
+        "title": "为什么品牌选我们",
+        "reach": {
+          "title": "触达分散的西语观众",
+          "body": "不依赖单一头部，让 200 位中腰部创作者同时帮你推。每一条都有独立观众。"
+        },
+        "ugc": {
+          "title": "原生 UGC",
+          "body": "拿到的不是广告片，是真实创作者的二创内容。可二次用于自有渠道（在活动条款内）。"
+        },
+        "budget": {
+          "title": "预算可控",
+          "body": "按播放量定价，预算用完即止。不超支、不押账期，不开多张发票。"
+        },
+        "review": {
+          "title": "一键审稿",
+          "body": "投稿进入审核队列，视频缩略图 + 核验数据一目了然。键盘快捷键秒过 / 秒驳。"
+        }
+      },
+      "flow": {
+        "title": "上手只要三步",
+        "lead": "从发布到第一条投稿到账，平均 48 小时内。",
+        "steps": {
+          "launch": {
+            "title": "发布",
+            "body": "上传素材、设定费率和预算，平台审核后 24 小时内上线。"
+          },
+          "verify": {
+            "title": "审核",
+            "body": "创作者陆续投稿，你只需在 KlippUp 后台看视频 + 一键通过/驳回。"
+          },
+          "scale": {
+            "title": "结算",
+            "body": "周末统一对账，KlippUp 把款项分发给创作者，你只对一张发票。"
+          }
+        }
+      },
+      "cta": {
+        "title": "把下一次活动跑在 KlippUp 上。",
+        "body": "免费开户，第一次活动我们免抽成。",
+        "button": "开启品牌账户",
+        "learnMore": "或了解我们"
+      }
+    }
+  },
+  "notifications": {
+    "bell": {
+      "aria": "通知",
+      "title": "通知",
+      "empty": "暂无通知",
+      "markAllRead": "全部已读",
+      "viewAll": "查看全部 →"
+    },
+    "listPage": {
+      "title": "通知",
+      "back": "返回",
+      "empty": "暂时没有通知。新动态会出现在这里。",
+      "unread": "未读 ({count})",
+      "read": "之前的通知"
+    },
+    "types": {
+      "SUBMISSION_APPROVED": {
+        "title": "你的「{campaign}」投稿已通过",
+        "body": "本次结算 ${amount}。"
+      },
+      "SUBMISSION_REJECTED": {
+        "title": "你的「{campaign}」投稿被驳回"
+      },
+      "PAYOUT_SENT": {
+        "title": "已发放款项 ${amount}",
+        "body": "结算了 {count} 条投稿。"
+      },
+      "CAMPAIGN_PUBLISHED": {
+        "title": "你的活动「{campaign}」已上线"
       }
     }
   }

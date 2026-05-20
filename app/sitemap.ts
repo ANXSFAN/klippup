@@ -10,13 +10,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     select: { id: true, updatedAt: true }
   });
 
+  const now = new Date();
+  const marketingPaths = ["/about", "/how-it-works", "/for-creators", "/for-brands"];
+
   return [
     {
       url: `${siteUrl}/`,
-      lastModified: new Date(),
+      lastModified: now,
       changeFrequency: "daily",
       priority: 1
     },
+    ...marketingPaths.map((p) => ({
+      url: `${siteUrl}${p}`,
+      lastModified: now,
+      changeFrequency: "monthly" as const,
+      priority: 0.7
+    })),
     ...campaigns.map((c) => ({
       url: `${siteUrl}/campaigns/${c.id}`,
       lastModified: c.updatedAt,

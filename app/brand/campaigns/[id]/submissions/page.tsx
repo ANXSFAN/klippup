@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, Pencil } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { approveSubmission, rejectSubmission } from "@/app/brand/actions";
+import CampaignTabs from "@/components/brand/CampaignTabs";
 import ReviewQueue from "@/components/brand/ReviewQueue";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -78,6 +79,8 @@ export default async function BrandCampaignReviewPage({
           </Button>
         </div>
       </div>
+
+      <CampaignTabs id={id} active="submissions" />
 
       {stats && (
         <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-5">

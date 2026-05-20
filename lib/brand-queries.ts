@@ -1,6 +1,7 @@
 import { prisma } from "./db";
 import type {
   BrandCampaignEditData,
+  BrandCampaignInsights,
   BrandCampaignRow,
   BrandCampaignStats,
   BrandDashboardStats,
@@ -206,6 +207,118 @@ export async function getBrandCampaignStats(
     paidCents,
     budgetCents,
     remainingCents
+  };
+}
+
+/**
+ * Aggregated insights for a single campaign: funnel, 14-day verified-views
+ * trend, platform mix, and top creators. Ownership-checked.
+ */
+export async function getCampaignInsights(
+  brandUserId: string,
+  campaignId: string
+): Promise<BrandCampaignInsights | null> {
+  const campaign = await prisma.campaign.findFirst({
+    where: { id: campaignId, brandUserId },
+    select: { id: true, title: true }
+  });
+  if (!campaign) return null;
+
+  const [funnelGroups, recent, platformGroups, topCreatorGroups] = await Promise.all([
+    prisma.submission.groupBy({
+      by: ["status"],
+      where: { campaignId },
+      _count: { _all: true }
+    }),
+    prisma.submission.findMany({
+      where: {
+        campaignId,
+        status: { in: ["APPROVED", "PAID"] },
+        viewsVerified: { not: null }
+      },
+      select: { reviewedAt: true, createdAt: true, viewsVerified: true }
+    }),
+    prisma.submission.groupBy({
+      by: ["platformId"],
+      where: { campaignId },
+      _count: { _all: true }
+    }),
+    prisma.submission.groupBy({
+      by: ["creatorId"],
+      where: { campaignId, status: { in: ["APPROVED", "PAID"] } },
+      _sum: { earningsCents: true, viewsVerified: true },
+      _count: { _all: true }
+    })
+  ]);
+
+  const [platforms, creators] = await Promise.all([
+    prisma.platform.findMany({
+      where: { id: { in: platformGroups.map((g) => g.platformId) } },
+      select: { id: true, slug: true, label: true }
+    }),
+    prisma.profile.findMany({
+      where: { id: { in: topCreatorGroups.map((g) => g.creatorId) } },
+      select: { id: true, displayName: true }
+    })
+  ]);
+  const platformDict = new Map(platforms.map((p) => [p.id, p]));
+  const creatorDict = new Map(creators.map((c) => [c.id, c]));
+
+  const funnel = { pending: 0, approved: 0, paid: 0, rejected: 0 };
+  for (const g of funnelGroups) {
+    if (g.status === "PENDING") funnel.pending = g._count._all;
+    else if (g.status === "APPROVED") funnel.approved = g._count._all;
+    else if (g.status === "PAID") funnel.paid = g._count._all;
+    else if (g.status === "REJECTED") funnel.rejected = g._count._all;
+  }
+
+  // 14-day buckets keyed by YYYY-MM-DD, oldest first
+  const days = 14;
+  const buckets: { key: string; value: number }[] = [];
+  const today = new Date();
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    buckets.push({ key: d.toISOString().slice(0, 10), value: 0 });
+  }
+  const bucketByKey = new Map(buckets.map((b) => [b.key, b]));
+  for (const s of recent) {
+    if (s.viewsVerified == null) continue;
+    const ref = s.reviewedAt ?? s.createdAt;
+    const key = ref.toISOString().slice(0, 10);
+    const b = bucketByKey.get(key);
+    if (b) b.value += s.viewsVerified;
+  }
+  const trend = buckets.map((b) => ({ key: b.key, label: b.key.slice(5), value: b.value }));
+
+  const byPlatform = platformGroups
+    .map((g) => {
+      const p = platformDict.get(g.platformId);
+      return {
+        key: p?.slug ?? g.platformId,
+        label: p?.label ?? "—",
+        value: g._count._all
+      };
+    })
+    .sort((a, b) => b.value - a.value);
+
+  const topCreators = topCreatorGroups
+    .map((g) => ({
+      id: g.creatorId,
+      name: creatorDict.get(g.creatorId)?.displayName ?? "—",
+      submissions: g._count._all,
+      viewsVerified: g._sum.viewsVerified ?? 0,
+      earningsCents: g._sum.earningsCents ?? 0
+    }))
+    .sort((a, b) => b.earningsCents - a.earningsCents)
+    .slice(0, 10);
+
+  return {
+    campaignTitle: campaign.title,
+    funnel,
+    trend,
+    byPlatform,
+    topCreators
   };
 }
 

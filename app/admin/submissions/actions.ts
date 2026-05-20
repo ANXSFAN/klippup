@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { getCurrentProfile } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { createNotification } from "@/lib/notifications";
 import {
   approveSubmissionSchema,
   rejectSubmissionSchema,
@@ -44,17 +45,26 @@ export async function adminApproveSubmission(
   if (!existing) return { ok: false, error: "NOT_FOUND" };
   if (existing.status === "PAID") return { ok: false, error: "ALREADY_PAID" };
 
-  await prisma.submission.update({
+  const earningsCents = Number.parseInt(v.earningsCents, 10);
+  const updated = await prisma.submission.update({
     where: { id: v.submissionId },
     data: {
       status: "APPROVED",
       viewsVerified: Number.parseInt(v.viewsVerified, 10),
-      earningsCents: Number.parseInt(v.earningsCents, 10),
+      earningsCents,
       rejectReason: null,
       notes: v.notes.trim() || null,
       reviewedById: profile.id,
       reviewedAt: new Date()
-    }
+    },
+    select: { creatorId: true, campaign: { select: { title: true } } }
+  });
+
+  await createNotification({
+    userId: updated.creatorId,
+    type: "SUBMISSION_APPROVED",
+    payload: { campaignTitle: updated.campaign.title, amountCents: earningsCents },
+    link: "/creator/submissions"
   });
 
   revalidatePath("/admin");
@@ -86,16 +96,25 @@ export async function adminRejectSubmission(
   if (!existing) return { ok: false, error: "NOT_FOUND" };
   if (existing.status === "PAID") return { ok: false, error: "ALREADY_PAID" };
 
-  await prisma.submission.update({
+  const reason = v.reason.trim();
+  const updated = await prisma.submission.update({
     where: { id: v.submissionId },
     data: {
       status: "REJECTED",
-      rejectReason: v.reason.trim(),
+      rejectReason: reason,
       earningsCents: 0,
       viewsVerified: null,
       reviewedById: profile.id,
       reviewedAt: new Date()
-    }
+    },
+    select: { creatorId: true, campaign: { select: { title: true } } }
+  });
+
+  await createNotification({
+    userId: updated.creatorId,
+    type: "SUBMISSION_REJECTED",
+    payload: { campaignTitle: updated.campaign.title, reason },
+    link: "/creator/submissions"
   });
 
   revalidatePath("/admin");
