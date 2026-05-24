@@ -5,6 +5,7 @@ import { Prisma } from "@/app/generated/prisma/client";
 import { getCurrentProfile } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { createNotification } from "@/lib/notifications";
+import { isBrandFinancialComplete } from "@/lib/tax";
 import {
   approveSubmissionSchema,
   brandCampaignFormSchema,
@@ -96,6 +97,11 @@ export async function createBrandCampaign(
 
   const brandProfile = await prisma.brandProfile.findUnique({ where: { userId: profile.id } });
   if (!brandProfile) return { ok: false, error: "MISSING_BRAND_PROFILE" };
+  // Billing gate — brands cannot create campaigns until the platform has the
+  // info it needs to invoice them (legal name, NIF/CIF/VAT, address, email).
+  if (!isBrandFinancialComplete(brandProfile)) {
+    return { ok: false, error: "MISSING_BILLING" };
+  }
 
   const v = parsed.data;
   const data = buildScalarData(v);
@@ -371,6 +377,27 @@ export async function updateBrandProfile(
   if (!parsed.success) return { ok: false, error: "INVALID" };
   const v = parsed.data;
 
+  const billing = v.billing;
+  const addressValues = {
+    street: billing.address.street.trim(),
+    city: billing.address.city.trim(),
+    postalCode: billing.address.postalCode.trim(),
+    region: billing.address.region.trim()
+  };
+  const hasAnyAddress = Object.values(addressValues).some(Boolean);
+  const addressValue: Prisma.InputJsonValue | typeof Prisma.DbNull = hasAnyAddress
+    ? (addressValues as Prisma.InputJsonValue)
+    : Prisma.DbNull;
+
+  const billingData = {
+    legalName: billing.legalName.trim() || null,
+    taxIdType: billing.taxIdType === "" ? null : billing.taxIdType,
+    taxId: billing.taxId.trim() || null,
+    country: billing.country.trim().toUpperCase() || "ES",
+    address: addressValue,
+    billingEmail: billing.billingEmail.trim().toLowerCase() || null
+  };
+
   await prisma.$transaction([
     prisma.profile.update({
       where: { id: profile.id },
@@ -382,12 +409,14 @@ export async function updateBrandProfile(
         userId: profile.id,
         brandName: v.brandName.trim(),
         website: v.website.trim() || null,
-        description: v.description.trim() || null
+        description: v.description.trim() || null,
+        ...billingData
       },
       update: {
         brandName: v.brandName.trim(),
         website: v.website.trim() || null,
-        description: v.description.trim() || null
+        description: v.description.trim() || null,
+        ...billingData
       }
     })
   ]);

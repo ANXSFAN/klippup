@@ -111,7 +111,15 @@ export async function listPendingPayoutCreators(): Promise<PendingPayoutCreator[
           id: true,
           displayName: true,
           email: true,
-          creator: { select: { payoutInfo: true } }
+          creator: {
+            select: {
+              iban: true,
+              legalName: true,
+              isAutonomo: true,
+              country: true,
+              autonomoSince: true
+            }
+          }
         }
       }
     }
@@ -132,16 +140,16 @@ export async function listPendingPayoutCreators(): Promise<PendingPayoutCreator[
         approvedAt: s.reviewedAt
       });
     } else {
-      const info = (s.creator.creator?.payoutInfo ?? {}) as Record<string, unknown>;
-      const method = typeof info.method === "string" ? info.method : "";
-      const validMethod: "paypal" | "bank" | "other" | "" =
-        method === "paypal" || method === "bank" || method === "other" ? method : "";
+      const fiscal = s.creator.creator;
       byCreator.set(s.creatorId, {
         creatorId: s.creatorId,
         creatorName: s.creator.displayName,
         creatorEmail: s.creator.email,
-        payoutMethod: validMethod,
-        payoutDetails: typeof info.details === "string" ? info.details : "",
+        legalName: fiscal?.legalName ?? "",
+        iban: fiscal?.iban ?? "",
+        isAutonomo: fiscal?.isAutonomo ?? false,
+        country: fiscal?.country ?? "ES",
+        autonomoSince: fiscal?.autonomoSince ?? null,
         totalCents: s.earningsCents,
         submissions: [
           {

@@ -25,10 +25,21 @@ export default async function CreatorDashboardPage() {
   const hasSocial = creator
     ? Object.values(creator.socials).some((v) => v.trim().length > 0)
     : false;
-  const hasPayout = creator
-    ? creator.payout.method !== "" && creator.payout.details.trim().length > 0
+  // Matches the server-side guard (isCreatorFinancialComplete) but reads the
+  // string-shaped form data carried on CreatorProfileData.fiscal.
+  const hasFiscal = creator
+    ? Boolean(
+        creator.fiscal.legalName.trim() &&
+          creator.fiscal.taxIdType &&
+          creator.fiscal.taxId.trim() &&
+          creator.fiscal.birthDate &&
+          (creator.fiscal.address.street.trim() ||
+            creator.fiscal.address.postalCode.trim() ||
+            creator.fiscal.address.city.trim()) &&
+          creator.fiscal.iban.trim()
+      )
     : false;
-  const onboardingDone = hasName && hasSocial && hasPayout;
+  const onboardingDone = hasName && hasSocial && hasFiscal;
 
   const stats = [
     { label: tE("stats.totalEarned"), value: formatCents(summary.totalEarnedCents) },
@@ -39,7 +50,7 @@ export default async function CreatorDashboardPage() {
   const steps = [
     { key: "displayName", done: hasName, label: tO("steps.displayName") },
     { key: "socials", done: hasSocial, label: tO("steps.socials") },
-    { key: "payout", done: hasPayout, label: tO("steps.payout") }
+    { key: "fiscal", done: hasFiscal, label: tO("steps.fiscal") }
   ];
   const doneCount = steps.filter((s) => s.done).length;
 

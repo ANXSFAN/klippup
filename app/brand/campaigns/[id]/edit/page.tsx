@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import BrandCampaignForm from "@/components/brand/BrandCampaignForm";
+import BrandInvoicesCard from "@/components/brand/BrandInvoicesCard";
 import { getCurrentProfile } from "@/lib/auth";
 import { getBrandCampaignForEdit } from "@/lib/brand-queries";
 import { getFormOptions } from "@/lib/queries";
@@ -27,6 +28,7 @@ export default async function EditBrandCampaignPage({
         <h1 className="text-2xl font-semibold">{t("editTitle")}</h1>
         <p className="text-sm text-muted-foreground mt-1">{t("editSubtitle")}</p>
       </div>
+      <BrandInvoicesCard campaignId={id} brandUserId={profile.id} />
       <BrandCampaignForm initial={initial} categories={categories} platforms={platforms} />
     </div>
   );

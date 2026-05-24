@@ -128,7 +128,9 @@ export default function SubmissionForm({
     "PLATFORM_NOT_ALLOWED",
     "UNAUTHENTICATED",
     "NOT_A_CREATOR",
-    "DUPLICATE"
+    "DUPLICATE",
+    "MISSING_FISCAL",
+    "AUTONOMO_REQUIRED"
   ]);
 
   const onSubmit = (values: SubmissionFormValues) =>

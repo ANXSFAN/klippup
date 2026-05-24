@@ -13,7 +13,7 @@ import {
 import { listPayouts, listPendingPayoutCreators } from "@/lib/admin-queries";
 
 const formatCents = (cents: number) =>
-  `$${(cents / 100).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  (cents / 100).toLocaleString("es-ES", { style: "currency", currency: "EUR" });
 
 export default async function AdminPayoutsPage() {
   const t = await getTranslations("admin.payouts");

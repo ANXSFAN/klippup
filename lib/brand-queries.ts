@@ -331,12 +331,40 @@ export async function getBrandProfile(
   });
   if (!profile) return null;
 
+  const taxIdType = profile.brand?.taxIdType;
+  const validTaxIdType: BrandProfileData["billing"]["taxIdType"] =
+    taxIdType === "NIF" || taxIdType === "CIF" || taxIdType === "VAT" || taxIdType === "OTHER"
+      ? taxIdType
+      : "";
+
   return {
     id: profile.id,
     email: profile.email,
     brandName: profile.brand?.brandName ?? profile.displayName,
     website: profile.brand?.website ?? "",
     description: profile.brand?.description ?? "",
-    verified: profile.brand?.verified ?? false
+    verified: profile.brand?.verified ?? false,
+    billing: {
+      legalName: profile.brand?.legalName ?? "",
+      taxIdType: validTaxIdType,
+      taxId: profile.brand?.taxId ?? "",
+      country: profile.brand?.country ?? "ES",
+      address: parseAddress(profile.brand?.address),
+      billingEmail: profile.brand?.billingEmail ?? ""
+    }
+  };
+}
+
+function parseAddress(raw: unknown): BrandProfileData["billing"]["address"] {
+  if (!raw || typeof raw !== "object") {
+    return { street: "", city: "", postalCode: "", region: "" };
+  }
+  const o = raw as Record<string, unknown>;
+  const stringOr = (v: unknown, f: string) => (typeof v === "string" ? v : f);
+  return {
+    street: stringOr(o.street, ""),
+    city: stringOr(o.city, ""),
+    postalCode: stringOr(o.postalCode, ""),
+    region: stringOr(o.region, "")
   };
 }

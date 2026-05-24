@@ -340,9 +340,22 @@ export interface CreatorProfileData {
     x: string;
     twitch: string;
   };
-  payout: {
-    method: "paypal" | "bank" | "other" | "";
-    details: string;
+  /** Spain-first fiscal block. Empty strings mean "not yet filled". */
+  fiscal: {
+    legalName: string;
+    taxIdType: "" | "DNI" | "NIE" | "OTHER";
+    taxId: string;
+    country: string; // ISO-2; defaults to "ES"
+    birthDate: string; // YYYY-MM-DD or ""
+    address: {
+      street: string;
+      city: string;
+      postalCode: string;
+      region: string;
+    };
+    isAutonomo: boolean;
+    autonomoSince: string; // YYYY-MM-DD or ""
+    iban: string;
   };
 }
 
@@ -468,6 +481,20 @@ export interface BrandProfileData {
   website: string;
   description: string;
   verified: boolean;
+  /** Billing/fiscal block — required before publishing campaigns. */
+  billing: {
+    legalName: string;
+    taxIdType: "" | "NIF" | "CIF" | "VAT" | "OTHER";
+    taxId: string;
+    country: string; // ISO-2; defaults to "ES"
+    address: {
+      street: string;
+      city: string;
+      postalCode: string;
+      region: string;
+    };
+    billingEmail: string;
+  };
 }
 
 // ---------- admin (Phase D) ----------
@@ -496,13 +523,19 @@ export interface AdminSubmissionRow extends BrandSubmissionRow {
 }
 
 /** A creator with unpaid APPROVED submissions — appears as a row in the
- *  "create payout" section of /admin/payouts. */
+ *  "create payout" section of /admin/payouts. Sourced from CreatorProfile
+ *  fiscal fields (Phase F.1) so admin can copy the IBAN and apply the right
+ *  IRPF retention manually. */
 export interface PendingPayoutCreator {
   creatorId: string;
   creatorName: string;
   creatorEmail: string;
-  payoutMethod: "paypal" | "bank" | "other" | "";
-  payoutDetails: string;
+  /** Legal full name — what goes on the bank transfer. Empty = creator hasn't filled fiscal data. */
+  legalName: string;
+  iban: string;
+  isAutonomo: boolean;
+  country: string;
+  autonomoSince: Date | null;
   totalCents: number;
   submissions: {
     id: string;
@@ -513,6 +546,29 @@ export interface PendingPayoutCreator {
     earningsCents: number;
     approvedAt: Date | null;
   }[];
+}
+
+// ---------- invoices (Phase F.2) ----------
+
+export type InvoiceStatus = "PROFORMA" | "ISSUED" | "PAID" | "CANCELLED";
+
+/** One row in /admin/invoices and /brand/campaigns/[id]/edit invoice card. */
+export interface InvoiceRow {
+  id: string;
+  serialNumber: string;
+  issueDate: Date;
+  description: string;
+  baseCents: number;
+  ivaRatePercent: number;
+  ivaCents: number;
+  totalCents: number;
+  ivaNote: string; // "ES" | "REVERSE_CHARGE" | "EXPORT"
+  status: InvoiceStatus;
+  brandUserId: string;
+  brandName: string; // display name (BrandProfile.brandName ?? Profile.displayName)
+  campaignId: string | null;
+  campaignTitle: string | null;
+  paidAt: Date | null;
 }
 
 // ---------- notifications ----------

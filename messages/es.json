@@ -149,7 +149,7 @@
         "steps": {
           "displayName": "Nombre visible",
           "socials": "Al menos una red social",
-          "payout": "Método y datos de cobro"
+          "fiscal": "Datos fiscales (IBAN, DNI/NIE, dirección)"
         }
       }
     },
@@ -204,6 +204,8 @@
         "UNAUTHENTICATED": "Inicia sesión primero",
         "NOT_A_CREATOR": "Solo los creadores pueden enviar clips",
         "DUPLICATE": "Ya enviaste este enlace a esta campaña.",
+        "MISSING_FISCAL": "Completa primero tus datos fiscales en el perfil para poder enviar trabajos.",
+        "AUTONOMO_REQUIRED": "Has alcanzado el límite de 1.000 €/año. Date de alta como autónomo para seguir enviando trabajos.",
         "GENERIC": "No se pudo enviar. Inténtalo de nuevo."
       }
     },
@@ -241,13 +243,13 @@
     },
     "profilePage": {
       "title": "Perfil",
-      "subtitle": "Actualiza tu nombre, redes sociales y método de cobro.",
+      "subtitle": "Actualiza tu nombre, redes sociales y datos fiscales.",
       "sections": {
         "basics": "Información básica",
         "socials": "Redes sociales",
         "socialsHint": "Pega tu @usuario o el enlace a tu perfil. Vacío significa sin completar.",
-        "payout": "Método de cobro",
-        "payoutHint": "¿Cómo te enviamos el dinero? Por ahora pagamos manualmente — cuanto más concreto, mejor (correo PayPal / IBAN + titular / wallet, etc.)."
+        "fiscal": "Datos fiscales",
+        "fiscalHint": "Los necesitamos para pagarte y aplicar la retención de IRPF correcta. Sin ellos no podrás enviar trabajos."
       },
       "fields": {
         "displayName": "Nombre",
@@ -261,15 +263,27 @@
         "twitch": "Twitch",
         "placeholder": "@usuario o enlace al perfil"
       },
-      "payout": {
-        "method": "Método",
-        "methods": {
-          "paypal": "PayPal",
-          "bank": "Cuenta bancaria",
-          "other": "Otro"
+      "fiscal": {
+        "legalName": "Nombre legal completo",
+        "taxIdType": "Tipo de documento",
+        "selectType": "Selecciona…",
+        "types": {
+          "DNI": "DNI",
+          "NIE": "NIE",
+          "OTHER": "Otro"
         },
-        "details": "Detalles del cobro",
-        "detailsPlaceholder": "Ejemplo:\nPayPal: tucorreo@email.com\nO banco: IBAN + titular"
+        "taxId": "Número",
+        "birthDate": "Fecha de nacimiento",
+        "address": "Dirección",
+        "streetPlaceholder": "Calle, número, piso",
+        "postalCode": "Código postal",
+        "city": "Ciudad",
+        "region": "Provincia",
+        "iban": "IBAN para cobros",
+        "isAutonomo": "Estoy dado de alta como autónomo en España",
+        "isAutonomoHint": "Si no estás dado de alta, puedes ganar hasta 1.000 €/año; al superarlo necesitarás darte de alta para seguir cobrando.",
+        "autonomoSince": "Fecha de alta como autónomo",
+        "autonomoSinceHint": "Los primeros 2 años se aplica una retención reducida del 7%; después, 15%."
       },
       "save": "Guardar",
       "saving": "Guardando…",
@@ -377,6 +391,7 @@
       "errors": {
         "INVALID": "Revisa el formulario",
         "MISSING_BRAND_PROFILE": "Completa primero tu perfil de marca",
+        "MISSING_BILLING": "Completa primero los datos de facturación en tu perfil de marca.",
         "NOT_FOUND": "Campaña no encontrada o sin permisos",
         "ARCHIVED": "Las campañas archivadas no se pueden editar",
         "UNAUTHENTICATED": "Inicia sesión primero",
@@ -450,7 +465,9 @@
       "verified": "Verificada",
       "verifiedHint": "Insignia oficial otorgada por el equipo de KlippUp tras revisión.",
       "sections": {
-        "basics": "Información básica"
+        "basics": "Información básica",
+        "billing": "Datos de facturación",
+        "billingHint": "Datos necesarios para emitir las facturas de las campañas que contrates. Sin ellos no podrás crear campañas."
       },
       "fields": {
         "brandName": "Nombre de la marca",
@@ -458,10 +475,41 @@
         "website": "Sitio web",
         "description": "Descripción"
       },
+      "billing": {
+        "legalName": "Razón social",
+        "taxIdType": "Tipo de identificación",
+        "selectType": "Selecciona…",
+        "types": {
+          "NIF": "NIF (persona física)",
+          "CIF": "CIF / NIF de empresa",
+          "VAT": "VAT (UE intracomunitario)",
+          "OTHER": "Otro"
+        },
+        "taxId": "Número",
+        "country": "País (ISO-2)",
+        "countryHint": "Por defecto ES. Para empresas UE con VAT, IVA = 0% (inversión del sujeto pasivo).",
+        "billingEmail": "Correo de facturación",
+        "address": "Domicilio fiscal",
+        "streetPlaceholder": "Calle, número, piso",
+        "postalCode": "Código postal",
+        "city": "Ciudad",
+        "region": "Provincia"
+      },
       "save": "Guardar",
       "saving": "Guardando…",
       "saved": "Guardado",
       "saveError": "No se pudo guardar"
+    },
+    "invoices": {
+      "title": "Facturas de esta campaña",
+      "subtitle": "Las emite el equipo de KlippUp y aparecerán aquí en cuanto estén disponibles.",
+      "empty": "Aún no hay facturas para esta campaña.",
+      "status": {
+        "PROFORMA": "Proforma",
+        "ISSUED": "Emitida",
+        "PAID": "Pagada",
+        "CANCELLED": "Anulada"
+      }
     },
     "campaignTabs": {
       "submissions": "Envíos",
@@ -495,6 +543,7 @@
       "dashboard": "Panel",
       "campaigns": "Campañas",
       "submissions": "Envíos",
+      "invoices": "Facturas",
       "payouts": "Pagos",
       "users": "Usuarios",
       "categories": "Categorías",
@@ -672,11 +721,22 @@
       "historyTitle": "Historial",
       "historyEmpty": "Aún no hay pagos.",
       "noMethod": "Sin método",
+      "noIban": "Sin IBAN",
+      "noIbanHint": "El creador aún no ha completado sus datos fiscales. No se puede pagar hasta que añada un IBAN en su perfil.",
+      "autonomo": "Autónomo",
+      "notAutonomo": "No autónomo",
+      "copy": "Copiar",
+      "copied": "Copiado",
+      "copyIban": "Copiar IBAN",
+      "holder": "Titular",
+      "irpfPreview": "IRPF -{rate}% ({irpf}) · Neto {net}",
+      "irpfLabel": "IRPF retenido ({rate}%)",
+      "netLabel": "Neto a transferir",
       "subsLabel": "envíos",
       "recordPayment": "Registrar pago",
       "payoutDetailsLabel": "Datos del creador",
       "formTitle": "Pagar a {name}",
-      "totalLabel": "Total",
+      "totalLabel": "Total bruto",
       "method": "Método",
       "methods": {
         "paypal": "PayPal",
@@ -710,6 +770,47 @@
         "txnRef": "Referencia",
         "submissions": "Envíos",
         "paidAt": "Fecha"
+      }
+    },
+    "invoices": {
+      "title": "Facturas",
+      "count": "{count} facturas",
+      "empty": "Aún no se ha emitido ninguna factura.",
+      "statusChanged": "Estado actualizado",
+      "download": "Descargar PDF",
+      "columns": {
+        "serial": "Nº",
+        "client": "Cliente",
+        "campaign": "Campaña",
+        "base": "Base",
+        "iva": "IVA",
+        "total": "Total",
+        "status": "Estado",
+        "date": "Fecha",
+        "actions": "Acciones"
+      },
+      "status": {
+        "PROFORMA": "Proforma",
+        "ISSUED": "Emitida",
+        "PAID": "Pagada",
+        "CANCELLED": "Anulada"
+      },
+      "actions": {
+        "generate": "Generar factura",
+        "generated": "Factura generada",
+        "download": "Descargar factura",
+        "errors": {
+          "CAMPAIGN_NOT_FOUND": "Campaña no encontrada",
+          "PLATFORM_CAMPAIGN_NO_BRAND": "Las campañas de plataforma no se facturan",
+          "BRAND_BILLING_INCOMPLETE": "Faltan los datos de facturación de la marca",
+          "ALREADY_HAS_INVOICE": "La campaña ya tiene una factura activa",
+          "UNAUTHENTICATED": "Inicia sesión",
+          "NOT_ADMIN": "Solo administradores",
+          "GENERIC": "No se pudo generar la factura"
+        }
+      },
+      "errors": {
+        "statusChange": "No se pudo cambiar el estado"
       }
     },
     "categories": {

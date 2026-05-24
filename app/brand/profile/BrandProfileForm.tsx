@@ -15,9 +15,13 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
   brandProfileFormSchema,
+  brandTaxIdTypes,
   type BrandProfileFormValues
 } from "@/lib/validators";
 import type { BrandProfileData } from "@/lib/types";
+
+const SELECT_CLS =
+  "flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50";
 
 export default function BrandProfileForm({ initial }: { initial: BrandProfileData }) {
   const t = useTranslations("brand.profilePage");
@@ -33,7 +37,8 @@ export default function BrandProfileForm({ initial }: { initial: BrandProfileDat
     defaultValues: {
       brandName: initial.brandName,
       website: initial.website,
-      description: initial.description
+      description: initial.description,
+      billing: initial.billing
     }
   });
 
@@ -84,6 +89,81 @@ export default function BrandProfileForm({ initial }: { initial: BrandProfileDat
           <div className="space-y-1.5">
             <Label htmlFor="description">{t("fields.description")}</Label>
             <Textarea id="description" rows={4} {...register("description")} />
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">{t("sections.billing")}</CardTitle>
+          <p className="text-xs text-muted-foreground">{t("sections.billingHint")}</p>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <Label htmlFor="legalName">{t("billing.legalName")}</Label>
+              <Input id="legalName" {...register("billing.legalName")} />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="billingEmail">{t("billing.billingEmail")}</Label>
+              <Input
+                id="billingEmail"
+                type="email"
+                placeholder="facturacion@empresa.com"
+                {...register("billing.billingEmail")}
+              />
+              {errors.billing?.billingEmail && (
+                <p className="text-xs text-destructive">
+                  {errors.billing.billingEmail.message}
+                </p>
+              )}
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="taxIdType">{t("billing.taxIdType")}</Label>
+              <select
+                id="taxIdType"
+                className={SELECT_CLS}
+                {...register("billing.taxIdType")}
+              >
+                <option value="">{t("billing.selectType")}</option>
+                {brandTaxIdTypes.map((tt) => (
+                  <option key={tt} value={tt}>
+                    {t(`billing.types.${tt}`)}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="taxId">{t("billing.taxId")}</Label>
+              <Input id="taxId" placeholder="B12345678" {...register("billing.taxId")} />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="country">{t("billing.country")}</Label>
+              <Input id="country" maxLength={2} placeholder="ES" {...register("billing.country")} />
+              <p className="text-xs text-muted-foreground">{t("billing.countryHint")}</p>
+            </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <Label>{t("billing.address")}</Label>
+            <Input
+              placeholder={t("billing.streetPlaceholder")}
+              {...register("billing.address.street")}
+            />
+            <div className="grid grid-cols-3 gap-2 mt-2">
+              <Input
+                placeholder={t("billing.postalCode")}
+                {...register("billing.address.postalCode")}
+              />
+              <Input
+                placeholder={t("billing.city")}
+                {...register("billing.address.city")}
+              />
+              <Input
+                placeholder={t("billing.region")}
+                {...register("billing.address.region")}
+              />
+            </div>
           </div>
         </CardContent>
       </Card>

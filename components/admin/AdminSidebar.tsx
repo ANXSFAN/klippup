@@ -3,6 +3,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import {
+  FileText,
   FolderTree,
   LayoutDashboard,
   Megaphone,
@@ -19,6 +20,7 @@ const NAV: { href: string; key: string; icon: LucideIcon; exact?: boolean }[] = 
   { href: "/admin", key: "dashboard", icon: LayoutDashboard, exact: true },
   { href: "/admin/campaigns", key: "campaigns", icon: Megaphone },
   { href: "/admin/submissions", key: "submissions", icon: Send },
+  { href: "/admin/invoices", key: "invoices", icon: FileText },
   { href: "/admin/payouts", key: "payouts", icon: Wallet },
   { href: "/admin/users", key: "users", icon: Users },
   { href: "/admin/categories", key: "categories", icon: FolderTree },

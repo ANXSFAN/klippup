@@ -12,7 +12,9 @@ import {
   TableRow
 } from "@/components/ui/table";
 import DeleteCampaignButton from "@/components/admin/DeleteCampaignButton";
+import InvoiceCampaignButton from "@/components/admin/InvoiceCampaignButton";
 import PublishCampaignButton from "@/components/admin/PublishCampaignButton";
+import { prisma } from "@/lib/db";
 import { formatMoney } from "@/lib/format";
 import { getAdminCampaigns } from "@/lib/queries";
 import type { CampaignStatus } from "@/lib/types";
@@ -25,7 +27,24 @@ const STATUS_VARIANT: Record<CampaignStatus, "default" | "secondary" | "outline"
 
 export default async function AdminCampaignsPage() {
   const t = await getTranslations("admin.campaigns");
-  const rows = await getAdminCampaigns();
+  const [rows, invoices] = await Promise.all([
+    getAdminCampaigns(),
+    prisma.invoice.findMany({
+      where: { status: { not: "CANCELLED" }, campaignId: { not: null } },
+      orderBy: { createdAt: "desc" },
+      select: { id: true, campaignId: true, serialNumber: true }
+    })
+  ]);
+  // First (most recent) non-cancelled invoice per campaign.
+  const invoiceByCampaign = new Map<string, { id: string; serial: string }>();
+  for (const inv of invoices) {
+    if (inv.campaignId && !invoiceByCampaign.has(inv.campaignId)) {
+      invoiceByCampaign.set(inv.campaignId, {
+        id: inv.id,
+        serial: inv.serialNumber
+      });
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -127,6 +146,13 @@ export default async function AdminCampaignsPage() {
                   <div className="flex items-center justify-end gap-1">
                     {c.status === "DRAFT" && (
                       <PublishCampaignButton id={c.id} name={c.title} />
+                    )}
+                    {c.brandOwnerName && (
+                      <InvoiceCampaignButton
+                        campaignId={c.id}
+                        invoiceId={invoiceByCampaign.get(c.id)?.id ?? null}
+                        invoiceSerial={invoiceByCampaign.get(c.id)?.serial ?? null}
+                      />
                     )}
                     <Button
                       asChild

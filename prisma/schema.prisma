@@ -39,6 +39,7 @@ model Profile {
   reviewed      Submission[]    @relation("ReviewedSubmissions")
   payouts       Payout[]
   notifications Notification[]
+  invoices      Invoice[]
 }
 
 model CreatorProfile {
@@ -46,11 +47,29 @@ model CreatorProfile {
   user        Profile  @relation(fields: [userId], references: [id], onDelete: Cascade)
   // socials = { tiktok?: string; youtube?: string; instagram?: string; ... }
   socials     Json?
-  // payoutInfo = { method: "paypal"|"bank"|"other"; details: string }
+  // LEGACY (pre-Phase F): { method, details }. Replaced by iban + payoutMethod;
+  // kept until the back-fill is done so old reads don't break.
   payoutInfo  Json?
   // Stored in cents; updated by the manual settlement flow.
   totalEarned Int      @default(0)
   status      String   @default("ACTIVE") // ACTIVE | SUSPENDED
+
+  // Fiscal / KYC — Spain-only v1, but `country` keeps the door open.
+  // All optional at signup; required before first submission (see lib/tax.ts).
+  legalName     String?
+  taxIdType     TaxIdType?
+  taxId         String?
+  country       String?    @default("ES") // ISO-2
+  birthDate     DateTime?
+  // address = { street, city, postalCode, region }
+  address       Json?
+  isAutonomo    Boolean    @default(false)
+  // First day of `actividad económica` — used to compute the 7%→15% IRPF step.
+  autonomoSince DateTime?
+  iban          String?
+  // Optional DNI/NIE scan; required once cumulative PAID ≥ €1000.
+  idDocumentUrl String?
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -63,8 +82,31 @@ model BrandProfile {
   website     String?
   description String?
   status      String   @default("ACTIVE") // ACTIVE | SUSPENDED
+
+  // Billing — required before publishing a campaign (see lib/tax.ts).
+  // `country + taxIdType` decide IVA: ES = 21%, EU+VAT = reverse charge 0%,
+  // non-EU = export of services 0%.
+  legalName     String?
+  taxIdType     TaxIdType?
+  taxId         String?
+  country       String?    @default("ES") // ISO-2
+  // address = { street, city, postalCode, region }
+  address       Json?
+  billingEmail  String?
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+// Shared across creators (DNI/NIE) and brands (NIF/CIF/VAT). OTHER is for
+// non-Spain fallbacks we don't ship as separate flows yet.
+enum TaxIdType {
+  DNI
+  NIE
+  NIF
+  CIF
+  VAT
+  OTHER
 }
 
 // ---------- taxonomy ----------
@@ -145,6 +187,7 @@ model Campaign {
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   submissions Submission[]
+  invoices    Invoice[]
 
   @@index([status])
 }
@@ -258,6 +301,70 @@ model Payout {
   updatedAt DateTime @updatedAt
 
   @@index([creatorId])
+}
+
+// ---------- invoices ----------
+//
+// Spain factura (Phase F.2). Each invoice freezes a snapshot of both the
+// issuer (KlippUp platform main subject, from env) and the recipient (brand)
+// at issue time — historical invoices must NEVER change when someone edits
+// their profile. Serial numbers are atomic per year via InvoiceCounter.
+
+enum InvoiceStatus {
+  PROFORMA
+  ISSUED
+  PAID
+  CANCELLED
+}
+
+model Invoice {
+  id String @id @default(cuid())
+
+  // F-YYYY-NNNN — globally unique, resets per year via InvoiceCounter.
+  serialNumber String @unique
+  year         Int
+
+  brandUser   Profile @relation(fields: [brandUserId], references: [id])
+  brandUserId String
+
+  // Nullable: future ad-hoc / monthly aggregate invoices won't tie to one campaign.
+  campaign   Campaign? @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+  campaignId String?
+
+  issueDate   DateTime @default(now())
+  description String
+
+  // Money is in cents; IVA stored as integer percent (21 = 21%, 0 = reverse charge / export).
+  baseCents      Int
+  ivaRatePercent Int
+  ivaCents       Int
+  totalCents     Int
+  // "ES" | "REVERSE_CHARGE" | "EXPORT" — matches lib/tax.ts IvaNote.
+  ivaNote        String
+
+  // Issuer + recipient snapshots, captured at create time.
+  snapshotPlatform Json
+  snapshotBrand    Json
+
+  status InvoiceStatus @default(PROFORMA)
+  paidAt DateTime?
+  notes  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([brandUserId])
+  @@index([campaignId])
+  @@index([status])
+  @@index([year])
+}
+
+// Atomic per-year serial counter. Increment inside a transaction with an
+// upsert + update returning so two parallel issuances never collide.
+model InvoiceCounter {
+  year       Int      @id
+  lastNumber Int      @default(0)
+  updatedAt  DateTime @updatedAt
 }
 
 // ---------- notifications ----------

@@ -7,6 +7,10 @@ import { prisma } from "@/lib/db";
 import { fetchVideoMetrics } from "@/lib/platforms/metrics";
 import { parseVideoUrl } from "@/lib/platforms/parse";
 import {
+  exceedsAutonomoThreshold,
+  isCreatorFinancialComplete
+} from "@/lib/tax";
+import {
   profileFormSchema,
   submissionFormSchema,
   type ProfileFormValues,
@@ -42,6 +46,36 @@ export async function createSubmission(
   const parsed = submissionFormSchema.safeParse(input);
   if (!parsed.success) return { ok: false, error: "INVALID" };
   const v = parsed.data;
+
+  // Fiscal gate — creators cannot file submissions until they've filled in
+  // legalName/taxId/birthDate/address/iban. Spanish non-autónomos additionally
+  // get blocked once cumulative paid earnings cross €1,000 (see lib/tax.ts).
+  const creator = await prisma.creatorProfile.findUnique({
+    where: { userId: profile.id },
+    select: {
+      legalName: true,
+      taxIdType: true,
+      taxId: true,
+      country: true,
+      birthDate: true,
+      address: true,
+      isAutonomo: true,
+      iban: true,
+      totalEarned: true
+    }
+  });
+  if (!creator || !isCreatorFinancialComplete(creator)) {
+    return { ok: false, error: "MISSING_FISCAL" };
+  }
+  if (
+    exceedsAutonomoThreshold({
+      country: creator.country,
+      isAutonomo: creator.isAutonomo,
+      totalEarnedCents: creator.totalEarned
+    })
+  ) {
+    return { ok: false, error: "AUTONOMO_REQUIRED" };
+  }
 
   const campaign = await prisma.campaign.findUnique({
     where: { id: v.campaignId },
@@ -127,10 +161,38 @@ export async function updateCreatorProfile(
   const socials = trimSocials(v.socials);
   const socialsValue =
     Object.keys(socials).length === 0 ? Prisma.DbNull : (socials as Prisma.InputJsonValue);
-  const payoutValue: Prisma.InputJsonValue | typeof Prisma.DbNull =
-    v.payout.method && v.payout.details.trim()
-      ? ({ method: v.payout.method, details: v.payout.details.trim() } as Prisma.InputJsonValue)
-      : Prisma.DbNull;
+
+  const fiscal = v.fiscal;
+  const addressValues = {
+    street: fiscal.address.street.trim(),
+    city: fiscal.address.city.trim(),
+    postalCode: fiscal.address.postalCode.trim(),
+    region: fiscal.address.region.trim()
+  };
+  const hasAnyAddress = Object.values(addressValues).some(Boolean);
+  const addressValue: Prisma.InputJsonValue | typeof Prisma.DbNull = hasAnyAddress
+    ? (addressValues as Prisma.InputJsonValue)
+    : Prisma.DbNull;
+
+  const birthDate = fiscal.birthDate ? new Date(`${fiscal.birthDate}T00:00:00`) : null;
+  const autonomoSince = fiscal.autonomoSince
+    ? new Date(`${fiscal.autonomoSince}T00:00:00`)
+    : null;
+  // Normalize IBAN — strip spaces, uppercase. Empty string → null.
+  const ibanNorm = fiscal.iban ? fiscal.iban.replace(/\s+/g, "").toUpperCase() : "";
+
+  const fiscalData = {
+    legalName: fiscal.legalName.trim() || null,
+    taxIdType: fiscal.taxIdType === "" ? null : fiscal.taxIdType,
+    taxId: fiscal.taxId.trim() || null,
+    country: fiscal.country.trim().toUpperCase() || "ES",
+    birthDate,
+    address: addressValue,
+    isAutonomo: fiscal.isAutonomo,
+    // autonomoSince is only meaningful when isAutonomo = true.
+    autonomoSince: fiscal.isAutonomo ? autonomoSince : null,
+    iban: ibanNorm || null
+  };
 
   await prisma.$transaction([
     prisma.profile.update({
@@ -142,11 +204,11 @@ export async function updateCreatorProfile(
       create: {
         userId: profile.id,
         socials: socialsValue,
-        payoutInfo: payoutValue
+        ...fiscalData
       },
       update: {
         socials: socialsValue,
-        payoutInfo: payoutValue
+        ...fiscalData
       }
     })
   ]);

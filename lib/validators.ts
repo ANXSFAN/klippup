@@ -137,6 +137,21 @@ export type SubmissionFormValues = z.infer<typeof submissionFormSchema>;
 
 // ---------- creator profile ----------
 
+export const creatorTaxIdTypes = ["DNI", "NIE", "OTHER"] as const;
+export const brandTaxIdTypes = ["NIF", "CIF", "VAT", "OTHER"] as const;
+
+const addressSchema = z.object({
+  street: z.string().default(""),
+  city: z.string().default(""),
+  postalCode: z.string().default(""),
+  region: z.string().default("")
+});
+export type AddressFormValues = z.infer<typeof addressSchema>;
+
+export function emptyAddress(): AddressFormValues {
+  return { street: "", city: "", postalCode: "", region: "" };
+}
+
 export const profileFormSchema = z.object({
   displayName: z.string().min(1, "Obligatorio"),
   socials: z.object({
@@ -146,9 +161,24 @@ export const profileFormSchema = z.object({
     x: z.string().default(""),
     twitch: z.string().default("")
   }),
-  payout: z.object({
-    method: z.enum(["paypal", "bank", "other", ""]).default(""),
-    details: z.string().default("")
+  fiscal: z.object({
+    legalName: z.string().default(""),
+    taxIdType: z.enum(["", ...creatorTaxIdTypes]).default(""),
+    taxId: z.string().default(""),
+    country: z.string().default("ES"),
+    birthDate: z.string().default(""), // YYYY-MM-DD or ""
+    address: addressSchema,
+    isAutonomo: z.boolean().default(false),
+    autonomoSince: z.string().default(""), // YYYY-MM-DD or ""
+    iban: z
+      .string()
+      .default("")
+      // Optional in the form — server-side guard enforces presence before
+      // first submission. But if filled, it must look like an IBAN.
+      .refine(
+        (v) => v === "" || /^[A-Z]{2}\d{2}[A-Z0-9]{1,30}$/.test(v.replace(/\s+/g, "").toUpperCase()),
+        "IBAN inválido"
+      )
   })
 });
 export type ProfileFormValues = z.infer<typeof profileFormSchema>;
@@ -205,7 +235,18 @@ export function emptyBrandCampaignForm(): BrandCampaignFormValues {
 export const brandProfileFormSchema = z.object({
   brandName: z.string().min(1, "Obligatorio"),
   website: z.string().default(""),
-  description: z.string().default("")
+  description: z.string().default(""),
+  billing: z.object({
+    legalName: z.string().default(""),
+    taxIdType: z.enum(["", ...brandTaxIdTypes]).default(""),
+    taxId: z.string().default(""),
+    country: z.string().default("ES"),
+    address: addressSchema,
+    billingEmail: z
+      .string()
+      .default("")
+      .refine((v) => v === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), "Email inválido")
+  })
 });
 export type BrandProfileFormValues = z.infer<typeof brandProfileFormSchema>;
 

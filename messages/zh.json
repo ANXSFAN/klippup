@@ -149,7 +149,7 @@
         "steps": {
           "displayName": "显示名称",
           "socials": "至少一个社交账号",
-          "payout": "收款方式与详情"
+          "fiscal": "税务信息（IBAN / DNI / 地址）"
         }
       }
     },
@@ -204,6 +204,8 @@
         "UNAUTHENTICATED": "请先登录",
         "NOT_A_CREATOR": "只有创作者账号可以投稿",
         "DUPLICATE": "这条链接你已经投过这个活动了。",
+        "MISSING_FISCAL": "请先在个人资料里填完税务信息再投稿。",
+        "AUTONOMO_REQUIRED": "年累计收入已达 1000 € 上限，请先登记 autónomo 才能继续投稿。",
         "GENERIC": "提交失败，请重试"
       }
     },
@@ -241,13 +243,13 @@
     },
     "profilePage": {
       "title": "个人资料",
-      "subtitle": "更新你的昵称、社交账号和收款方式。",
+      "subtitle": "更新你的昵称、社交账号和税务信息。",
       "sections": {
         "basics": "基本信息",
         "socials": "社交账号",
         "socialsHint": "把你的账号链接或用户名贴进来；为空表示未填。",
-        "payout": "收款方式",
-        "payoutHint": "怎么把钱给你？我们暂时人工对账，越具体越好（PayPal 邮箱 / 银行卡号 / 加密钱包地址等）。"
+        "fiscal": "税务信息",
+        "fiscalHint": "需要这些信息才能给你打款并按西班牙规定预扣 IRPF。未填完之前无法投稿。"
       },
       "fields": {
         "displayName": "昵称",
@@ -261,15 +263,27 @@
         "twitch": "Twitch",
         "placeholder": "@用户名 或主页链接"
       },
-      "payout": {
-        "method": "方式",
-        "methods": {
-          "paypal": "PayPal",
-          "bank": "银行账户",
-          "other": "其他"
+      "fiscal": {
+        "legalName": "法定全名",
+        "taxIdType": "证件类型",
+        "selectType": "请选择…",
+        "types": {
+          "DNI": "DNI（西班牙身份证）",
+          "NIE": "NIE（外国人居留号）",
+          "OTHER": "其他"
         },
-        "details": "收款详情",
-        "detailsPlaceholder": "示例：\nPayPal: yourname@email.com\n或银行：银行名 / 账号 / 持有人姓名"
+        "taxId": "证件号码",
+        "birthDate": "出生日期",
+        "address": "地址",
+        "streetPlaceholder": "街道、门牌号、楼层",
+        "postalCode": "邮编",
+        "city": "城市",
+        "region": "省份",
+        "iban": "收款 IBAN",
+        "isAutonomo": "我已在西班牙登记为 autónomo（自雇）",
+        "isAutonomoHint": "未登记时年累计收入上限 1000 €；超过后需要先登记 autónomo 才能继续提现。",
+        "autonomoSince": "Autónomo 登记日期",
+        "autonomoSinceHint": "登记后头 2 年享 7% 优惠 IRPF 预扣；之后 15%。"
       },
       "save": "保存",
       "saving": "保存中…",
@@ -377,6 +391,7 @@
       "errors": {
         "INVALID": "请检查表单",
         "MISSING_BRAND_PROFILE": "请先完善品牌资料",
+        "MISSING_BILLING": "请先在品牌资料里填完开票信息。",
         "NOT_FOUND": "活动不存在或无权访问",
         "ARCHIVED": "已归档的活动不能再编辑",
         "UNAUTHENTICATED": "请先登录",
@@ -450,7 +465,9 @@
       "verified": "已认证",
       "verifiedHint": "由平台审核后授予的官方认证标识。",
       "sections": {
-        "basics": "基本信息"
+        "basics": "基本信息",
+        "billing": "开票信息",
+        "billingHint": "用于为你下单的活动开具发票；未填完之前无法创建活动。"
       },
       "fields": {
         "brandName": "品牌名",
@@ -458,10 +475,41 @@
         "website": "官网",
         "description": "品牌介绍"
       },
+      "billing": {
+        "legalName": "公司法定名称",
+        "taxIdType": "证件类型",
+        "selectType": "请选择…",
+        "types": {
+          "NIF": "NIF（自雇/个人）",
+          "CIF": "CIF / 公司 NIF",
+          "VAT": "VAT（欧盟跨境）",
+          "OTHER": "其他"
+        },
+        "taxId": "号码",
+        "country": "国家代码（ISO-2）",
+        "countryHint": "默认 ES。欧盟带 VAT 号的企业按 reverse charge 0% 出票。",
+        "billingEmail": "发票邮箱",
+        "address": "注册地址",
+        "streetPlaceholder": "街道、门牌号、楼层",
+        "postalCode": "邮编",
+        "city": "城市",
+        "region": "省份"
+      },
       "save": "保存",
       "saving": "保存中…",
       "saved": "已保存",
       "saveError": "保存失败"
+    },
+    "invoices": {
+      "title": "本活动的发票",
+      "subtitle": "由 KlippUp 平台开具，开出后会出现在这里。",
+      "empty": "本活动暂无发票。",
+      "status": {
+        "PROFORMA": "Proforma",
+        "ISSUED": "已开票",
+        "PAID": "已付款",
+        "CANCELLED": "已作废"
+      }
     },
     "campaignTabs": {
       "submissions": "投稿",
@@ -495,6 +543,7 @@
       "dashboard": "看板",
       "campaigns": "活动",
       "submissions": "投稿",
+      "invoices": "发票",
       "payouts": "结算",
       "users": "用户",
       "categories": "分类",
@@ -672,11 +721,22 @@
       "historyTitle": "结算历史",
       "historyEmpty": "还没有结算记录。",
       "noMethod": "未填收款方式",
+      "noIban": "未填 IBAN",
+      "noIbanHint": "创作者还没在资料里填写税务信息，无法结算。",
+      "autonomo": "Autónomo",
+      "notAutonomo": "未登记",
+      "copy": "复制",
+      "copied": "已复制",
+      "copyIban": "复制 IBAN",
+      "holder": "收款人",
+      "irpfPreview": "IRPF -{rate}% ({irpf}) · 实付 {net}",
+      "irpfLabel": "IRPF 预扣 ({rate}%)",
+      "netLabel": "实际转账",
       "subsLabel": "笔",
       "recordPayment": "记一笔付款",
       "payoutDetailsLabel": "创作者填写的收款信息",
       "formTitle": "给 {name} 付款",
-      "totalLabel": "本次合计",
+      "totalLabel": "毛额合计",
       "method": "付款方式",
       "methods": {
         "paypal": "PayPal",
@@ -710,6 +770,47 @@
         "txnRef": "凭证号",
         "submissions": "笔数",
         "paidAt": "时间"
+      }
+    },
+    "invoices": {
+      "title": "发票",
+      "count": "共 {count} 张发票",
+      "empty": "暂无发票。",
+      "statusChanged": "状态已更新",
+      "download": "下载 PDF",
+      "columns": {
+        "serial": "编号",
+        "client": "客户",
+        "campaign": "活动",
+        "base": "税前",
+        "iva": "IVA",
+        "total": "合计",
+        "status": "状态",
+        "date": "日期",
+        "actions": "操作"
+      },
+      "status": {
+        "PROFORMA": "Proforma",
+        "ISSUED": "已开票",
+        "PAID": "已付款",
+        "CANCELLED": "已作废"
+      },
+      "actions": {
+        "generate": "生成发票",
+        "generated": "发票已生成",
+        "download": "下载发票",
+        "errors": {
+          "CAMPAIGN_NOT_FOUND": "活动不存在",
+          "PLATFORM_CAMPAIGN_NO_BRAND": "平台自营活动无需开票",
+          "BRAND_BILLING_INCOMPLETE": "品牌方开票信息未填完",
+          "ALREADY_HAS_INVOICE": "该活动已有有效发票",
+          "UNAUTHENTICATED": "请先登录",
+          "NOT_ADMIN": "仅管理员可操作",
+          "GENERIC": "生成发票失败"
+        }
+      },
+      "errors": {
+        "statusChange": "状态切换失败"
       }
     },
     "categories": {

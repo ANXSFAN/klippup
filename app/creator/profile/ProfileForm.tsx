@@ -11,12 +11,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { profileFormSchema, type ProfileFormValues } from "@/lib/validators";
+import {
+  creatorTaxIdTypes,
+  profileFormSchema,
+  type ProfileFormValues
+} from "@/lib/validators";
 import type { CreatorProfileData } from "@/lib/types";
 
 const SOCIAL_KEYS = ["tiktok", "youtube", "instagram", "x", "twitch"] as const;
-const PAYOUT_METHODS = ["paypal", "bank", "other"] as const;
+const SELECT_CLS =
+  "flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50";
 
 export default function ProfileForm({ initial }: { initial: CreatorProfileData }) {
   const t = useTranslations("creator.profilePage");
@@ -27,17 +31,16 @@ export default function ProfileForm({ initial }: { initial: CreatorProfileData }
     register,
     handleSubmit,
     watch,
-    setValue,
     formState: { errors }
   } = useForm({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
       displayName: initial.displayName,
       socials: initial.socials,
-      payout: { method: initial.payout.method, details: initial.payout.details }
+      fiscal: initial.fiscal
     }
   });
-  const method = watch("payout.method");
+  const isAutonomo = watch("fiscal.isAutonomo");
 
   const onSubmit = (values: ProfileFormValues) =>
     startTransition(async () => {
@@ -92,38 +95,97 @@ export default function ProfileForm({ initial }: { initial: CreatorProfileData }
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">{t("sections.payout")}</CardTitle>
-          <p className="text-xs text-muted-foreground">{t("sections.payoutHint")}</p>
+          <CardTitle className="text-base">{t("sections.fiscal")}</CardTitle>
+          <p className="text-xs text-muted-foreground">{t("sections.fiscalHint")}</p>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="space-y-1.5">
-            <Label>{t("payout.method")}</Label>
-            <div className="grid grid-cols-3 gap-2">
-              {PAYOUT_METHODS.map((m) => (
-                <button
-                  key={m}
-                  type="button"
-                  onClick={() => setValue("payout.method", m, { shouldValidate: true })}
-                  className={`rounded-lg border px-3 py-2 text-sm transition ${
-                    method === m
-                      ? "border-primary bg-primary/5 ring-2 ring-primary/20 font-medium"
-                      : "border-border hover:bg-secondary"
-                  }`}
-                >
-                  {t(`payout.methods.${m}`)}
-                </button>
-              ))}
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <Label htmlFor="legalName">{t("fiscal.legalName")}</Label>
+              <Input id="legalName" {...register("fiscal.legalName")} />
             </div>
-            <input type="hidden" {...register("payout.method")} />
+            <div className="space-y-1.5">
+              <Label htmlFor="birthDate">{t("fiscal.birthDate")}</Label>
+              <Input id="birthDate" type="date" {...register("fiscal.birthDate")} />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="taxIdType">{t("fiscal.taxIdType")}</Label>
+              <select id="taxIdType" className={SELECT_CLS} {...register("fiscal.taxIdType")}>
+                <option value="">{t("fiscal.selectType")}</option>
+                {creatorTaxIdTypes.map((tt) => (
+                  <option key={tt} value={tt}>
+                    {t(`fiscal.types.${tt}`)}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="taxId">{t("fiscal.taxId")}</Label>
+              <Input id="taxId" placeholder="12345678X" {...register("fiscal.taxId")} />
+            </div>
           </div>
+
           <div className="space-y-1.5">
-            <Label htmlFor="payoutDetails">{t("payout.details")}</Label>
-            <Textarea
-              id="payoutDetails"
-              rows={4}
-              placeholder={t("payout.detailsPlaceholder")}
-              {...register("payout.details")}
+            <Label>{t("fiscal.address")}</Label>
+            <Input
+              placeholder={t("fiscal.streetPlaceholder")}
+              {...register("fiscal.address.street")}
             />
+            <div className="grid grid-cols-3 gap-2 mt-2">
+              <Input
+                placeholder={t("fiscal.postalCode")}
+                {...register("fiscal.address.postalCode")}
+              />
+              <Input
+                placeholder={t("fiscal.city")}
+                {...register("fiscal.address.city")}
+              />
+              <Input
+                placeholder={t("fiscal.region")}
+                {...register("fiscal.address.region")}
+              />
+            </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <Label htmlFor="iban">{t("fiscal.iban")}</Label>
+            <Input
+              id="iban"
+              placeholder="ES00 0000 0000 0000 00000000"
+              {...register("fiscal.iban")}
+            />
+            {errors.fiscal?.iban && (
+              <p className="text-xs text-destructive">{errors.fiscal.iban.message}</p>
+            )}
+          </div>
+
+          <div className="rounded-lg border bg-secondary/30 p-3 space-y-3">
+            <label className="flex items-start gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                {...register("fiscal.isAutonomo")}
+                className="mt-1"
+              />
+              <span className="text-sm">
+                <span className="font-medium">{t("fiscal.isAutonomo")}</span>
+                <span className="block text-xs text-muted-foreground mt-0.5">
+                  {t("fiscal.isAutonomoHint")}
+                </span>
+              </span>
+            </label>
+            {isAutonomo && (
+              <div className="space-y-1.5 pl-6">
+                <Label htmlFor="autoSince">{t("fiscal.autonomoSince")}</Label>
+                <Input
+                  id="autoSince"
+                  type="date"
+                  {...register("fiscal.autonomoSince")}
+                />
+                <p className="text-xs text-muted-foreground">
+                  {t("fiscal.autonomoSinceHint")}
+                </p>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

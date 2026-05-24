@@ -5,7 +5,14 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { ChevronDown, ChevronRight, ExternalLink, Wallet } from "lucide-react";
+import {
+  Check,
+  ChevronDown,
+  ChevronRight,
+  Copy,
+  ExternalLink,
+  Wallet
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { createPayout } from "./actions";
 import { Badge } from "@/components/ui/badge";
@@ -21,6 +28,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { calculateIrpf } from "@/lib/tax";
 import { cn } from "@/lib/utils";
 import {
   createPayoutSchema,
@@ -28,12 +36,43 @@ import {
 } from "@/lib/validators";
 import type { PendingPayoutCreator } from "@/lib/types";
 
-const formatCents = (cents: number) =>
-  `$${(cents / 100).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+const formatEUR = (cents: number) =>
+  (cents / 100).toLocaleString("es-ES", { style: "currency", currency: "EUR" });
 
-const METHODS = ["paypal", "bank", "other"] as const;
+// Bank-first because every Spanish-resident creator gets paid via SEPA in the
+// manual-transfer phase. PayPal / "other" stay as escape hatches.
+const METHODS = ["bank", "paypal", "other"] as const;
 
-export default function PayoutsClient({ creators }: { creators: PendingPayoutCreator[] }) {
+function formatIban(raw: string): string {
+  return raw.replace(/\s+/g, "").replace(/(.{4})/g, "$1 ").trim();
+}
+
+function CopyButton({ value, label }: { value: string; label: string }) {
+  const [copied, setCopied] = useState(false);
+  const t = useTranslations("admin.payouts");
+  return (
+    <button
+      type="button"
+      onClick={async () => {
+        await navigator.clipboard.writeText(value);
+        setCopied(true);
+        toast.success(t("copied"));
+        setTimeout(() => setCopied(false), 1500);
+      }}
+      className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
+      aria-label={label}
+    >
+      {copied ? <Check className="size-3" /> : <Copy className="size-3" />}
+      {t("copy")}
+    </button>
+  );
+}
+
+export default function PayoutsClient({
+  creators
+}: {
+  creators: PendingPayoutCreator[];
+}) {
   const [expanded, setExpanded] = useState<string | null>(null);
   const [paying, setPaying] = useState<PendingPayoutCreator | null>(null);
 
@@ -52,7 +91,11 @@ export default function PayoutsClient({ creators }: { creators: PendingPayoutCre
       <Dialog open={!!paying} onOpenChange={(o) => !o && setPaying(null)}>
         <DialogContent className="sm:max-w-lg">
           {paying && (
-            <PayoutForm key={paying.creatorId} creator={paying} onClose={() => setPaying(null)} />
+            <PayoutForm
+              key={paying.creatorId}
+              creator={paying}
+              onClose={() => setPaying(null)}
+            />
           )}
         </DialogContent>
       </Dialog>
@@ -72,6 +115,15 @@ function CreatorCard({
   onPay: () => void;
 }) {
   const t = useTranslations("admin.payouts");
+  const irpf = calculateIrpf({
+    country: creator.country,
+    isAutonomo: creator.isAutonomo,
+    autonomoSince: creator.autonomoSince
+  });
+  const irpfCents = Math.round(creator.totalCents * irpf.rate);
+  const netCents = creator.totalCents - irpfCents;
+  const missingIban = !creator.iban;
+
   return (
     <Card className="overflow-hidden">
       <div className="flex items-center gap-3 p-3">
@@ -86,22 +138,36 @@ function CreatorCard({
             <ChevronRight className="size-4 text-muted-foreground shrink-0" />
           )}
           <div className="flex-1 min-w-0">
-            <div className="text-sm font-medium">{creator.creatorName}</div>
-            <div className="text-[11px] text-muted-foreground">{creator.creatorEmail}</div>
+            <div className="text-sm font-medium">
+              {creator.legalName || creator.creatorName}
+            </div>
+            <div className="text-[11px] text-muted-foreground">
+              {creator.creatorEmail}
+            </div>
           </div>
           <div className="flex items-center gap-2">
-            <Badge variant="outline" className="text-[10px] uppercase">
-              {creator.payoutMethod || t("noMethod")}
-            </Badge>
+            {missingIban ? (
+              <Badge className="border-transparent bg-rose-100 text-rose-900 text-[10px]">
+                {t("noIban")}
+              </Badge>
+            ) : creator.isAutonomo ? (
+              <Badge className="border-transparent bg-emerald-100 text-emerald-900 text-[10px]">
+                {t("autonomo")}
+              </Badge>
+            ) : (
+              <Badge variant="outline" className="text-[10px]">
+                {t("notAutonomo")}
+              </Badge>
+            )}
             <Badge className="border-transparent bg-amber-100 text-amber-900">
               {creator.submissions.length} {t("subsLabel")}
             </Badge>
           </div>
           <div className="text-base font-semibold tabular-nums ml-2 shrink-0">
-            {formatCents(creator.totalCents)}
+            {formatEUR(creator.totalCents)}
           </div>
         </button>
-        <Button size="sm" onClick={onPay}>
+        <Button size="sm" onClick={onPay} disabled={missingIban}>
           <Wallet className="size-4 mr-1" />
           {t("recordPayment")}
         </Button>
@@ -109,11 +175,28 @@ function CreatorCard({
 
       {isExpanded && (
         <div className="border-t bg-secondary/30 divide-y">
-          {creator.payoutDetails && (
-            <div className="px-4 py-2 text-xs text-muted-foreground">
-              <span className="font-medium text-foreground">{t("payoutDetailsLabel")}:</span>{" "}
-              <span className="whitespace-pre-wrap">{creator.payoutDetails}</span>
+          {creator.iban ? (
+            <div className="px-4 py-2 flex flex-wrap items-center gap-3 text-xs">
+              <span className="font-medium text-foreground">IBAN:</span>
+              <span className="font-mono select-all">{formatIban(creator.iban)}</span>
+              <CopyButton value={creator.iban} label={t("copyIban")} />
+              {creator.legalName && (
+                <span className="text-muted-foreground">
+                  {t("holder")}: <span className="text-foreground">{creator.legalName}</span>
+                </span>
+              )}
+              {irpf.rate > 0 && (
+                <span className="ml-auto text-muted-foreground tabular-nums">
+                  {t("irpfPreview", {
+                    rate: Math.round(irpf.rate * 100),
+                    irpf: formatEUR(irpfCents),
+                    net: formatEUR(netCents)
+                  })}
+                </span>
+              )}
             </div>
+          ) : (
+            <div className="px-4 py-2 text-xs text-rose-700">{t("noIbanHint")}</div>
           )}
           {creator.submissions.map((s) => (
             <div key={s.id} className="px-4 py-2 flex items-center gap-3 text-sm">
@@ -131,7 +214,7 @@ function CreatorCard({
               <span className="text-xs text-muted-foreground tabular-nums">
                 {s.viewsVerified != null ? s.viewsVerified.toLocaleString() : "—"}
               </span>
-              <span className="font-medium tabular-nums">{formatCents(s.earningsCents)}</span>
+              <span className="font-medium tabular-nums">{formatEUR(s.earningsCents)}</span>
             </div>
           ))}
         </div>
@@ -164,8 +247,15 @@ function PayoutForm({
     resolver: zodResolver(createPayoutSchema),
     defaultValues: {
       creatorId: creator.creatorId,
-      method: (creator.payoutMethod || "paypal") as "paypal" | "bank" | "other",
-      details: creator.payoutDetails,
+      method: "bank" as "paypal" | "bank" | "other",
+      // Pre-fill details with the IBAN + holder so admin only has to add
+      // the transaction reference after the transfer goes through.
+      details: [
+        creator.iban ? `IBAN: ${formatIban(creator.iban)}` : "",
+        creator.legalName ? `${t("holder")}: ${creator.legalName}` : ""
+      ]
+        .filter(Boolean)
+        .join("\n"),
       txnRef: "",
       notes: "",
       submissionIds: creator.submissions.map((s) => s.id)
@@ -176,6 +266,14 @@ function PayoutForm({
   const totalCents = creator.submissions
     .filter((s) => selectedIds.has(s.id))
     .reduce((sum, s) => sum + s.earningsCents, 0);
+
+  const irpf = calculateIrpf({
+    country: creator.country,
+    isAutonomo: creator.isAutonomo,
+    autonomoSince: creator.autonomoSince
+  });
+  const irpfCents = Math.round(totalCents * irpf.rate);
+  const netCents = totalCents - irpfCents;
 
   const toggle = (id: string) => {
     const next = new Set(selectedIds);
@@ -200,7 +298,9 @@ function PayoutForm({
   return (
     <>
       <DialogHeader>
-        <DialogTitle>{t("formTitle", { name: creator.creatorName })}</DialogTitle>
+        <DialogTitle>
+          {t("formTitle", { name: creator.legalName || creator.creatorName })}
+        </DialogTitle>
       </DialogHeader>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <input type="hidden" {...register("creatorId")} />
@@ -221,17 +321,37 @@ function PayoutForm({
               />
               <span className="flex-1 truncate">{s.campaignTitle}</span>
               <span className="text-xs text-muted-foreground">{s.platformLabel}</span>
-              <span className="font-medium tabular-nums">{formatCents(s.earningsCents)}</span>
+              <span className="font-medium tabular-nums">
+                {formatEUR(s.earningsCents)}
+              </span>
             </label>
           ))}
         </div>
         {errors.submissionIds && (
-          <p className="text-xs text-destructive">{errors.submissionIds.message as string}</p>
+          <p className="text-xs text-destructive">
+            {errors.submissionIds.message as string}
+          </p>
         )}
 
-        <div className="bg-secondary/40 rounded-md px-3 py-2 flex items-center justify-between">
-          <span className="text-sm text-muted-foreground">{t("totalLabel")}</span>
-          <span className="text-lg font-semibold tabular-nums">{formatCents(totalCents)}</span>
+        <div className="bg-secondary/40 rounded-md px-3 py-2 space-y-1">
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-muted-foreground">{t("totalLabel")}</span>
+            <span className="text-lg font-semibold tabular-nums">
+              {formatEUR(totalCents)}
+            </span>
+          </div>
+          {irpf.rate > 0 && (
+            <>
+              <div className="flex items-center justify-between text-xs text-muted-foreground">
+                <span>{t("irpfLabel", { rate: Math.round(irpf.rate * 100) })}</span>
+                <span className="tabular-nums">- {formatEUR(irpfCents)}</span>
+              </div>
+              <div className="flex items-center justify-between text-sm font-medium pt-1 border-t border-border/50">
+                <span>{t("netLabel")}</span>
+                <span className="tabular-nums">{formatEUR(netCents)}</span>
+              </div>
+            </>
+          )}
         </div>
 
         <div className="space-y-1.5">
@@ -260,7 +380,7 @@ function PayoutForm({
           <Label htmlFor="details">{t("details")}</Label>
           <Textarea
             id="details"
-            rows={2}
+            rows={3}
             placeholder={t("detailsPlaceholder")}
             {...register("details")}
           />

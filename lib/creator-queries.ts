@@ -195,10 +195,9 @@ export async function getCreatorProfile(
   if (!profile) return null;
 
   const socials = (profile.creator?.socials ?? {}) as Record<string, unknown>;
-  const payoutInfo = (profile.creator?.payoutInfo ?? {}) as Record<string, unknown>;
-  const method = typeof payoutInfo.method === "string" ? payoutInfo.method : "";
-  const validMethod: "paypal" | "bank" | "other" | "" =
-    method === "paypal" || method === "bank" || method === "other" ? method : "";
+  const taxIdType = profile.creator?.taxIdType;
+  const validTaxIdType: CreatorProfileData["fiscal"]["taxIdType"] =
+    taxIdType === "DNI" || taxIdType === "NIE" || taxIdType === "OTHER" ? taxIdType : "";
 
   return {
     id: profile.id,
@@ -212,13 +211,37 @@ export async function getCreatorProfile(
       x: stringOr(socials.x, ""),
       twitch: stringOr(socials.twitch, "")
     },
-    payout: {
-      method: validMethod,
-      details: stringOr(payoutInfo.details, "")
+    fiscal: {
+      legalName: profile.creator?.legalName ?? "",
+      taxIdType: validTaxIdType,
+      taxId: profile.creator?.taxId ?? "",
+      country: profile.creator?.country ?? "ES",
+      birthDate: profile.creator?.birthDate
+        ? profile.creator.birthDate.toISOString().slice(0, 10)
+        : "",
+      address: parseAddress(profile.creator?.address),
+      isAutonomo: profile.creator?.isAutonomo ?? false,
+      autonomoSince: profile.creator?.autonomoSince
+        ? profile.creator.autonomoSince.toISOString().slice(0, 10)
+        : "",
+      iban: profile.creator?.iban ?? ""
     }
   };
 }
 
 function stringOr(v: unknown, fallback: string): string {
   return typeof v === "string" ? v : fallback;
+}
+
+function parseAddress(raw: unknown): CreatorProfileData["fiscal"]["address"] {
+  if (!raw || typeof raw !== "object") {
+    return { street: "", city: "", postalCode: "", region: "" };
+  }
+  const o = raw as Record<string, unknown>;
+  return {
+    street: stringOr(o.street, ""),
+    city: stringOr(o.city, ""),
+    postalCode: stringOr(o.postalCode, ""),
+    region: stringOr(o.region, "")
+  };
 }
